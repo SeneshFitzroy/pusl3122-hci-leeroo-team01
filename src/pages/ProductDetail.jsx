@@ -197,6 +197,7 @@ export default function ProductDetail() {
                   name={product.name}
                   originalPrice={product.originalPrice}
                   price={product.price}
+                  discountPercent={product.discountPercent}
                   presetAngle={presetAngle}
                 />
                 {/* Angle preset buttons BELOW 3D viewer */}
@@ -345,7 +346,7 @@ export default function ProductDetail() {
                 )}
                 {product.originalPrice && (
                   <span className="bg-red-100 dark:bg-red-900/20 text-red-600 dark:text-red-400 px-2 py-1 rounded-full text-sm font-medium">
-                    {t('product.save')} {formatPrice(product.originalPrice - product.price)}
+                    {product.discountPercent ? `${product.discountPercent}% OFF` : `${t('product.save')} ${formatPrice(product.originalPrice - product.price)}`}
                   </span>
                 )}
               </div>

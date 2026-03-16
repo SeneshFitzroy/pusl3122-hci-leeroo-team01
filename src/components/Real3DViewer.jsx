@@ -151,6 +151,7 @@ export default function Real3DViewer({
   name = '',
   originalPrice,
   price,
+  discountPercent,
   presetAngle,
 }) {
   const [autoRotate, setAutoRotate] = useState(true)
@@ -205,11 +206,11 @@ export default function Real3DViewer({
         </div>
       </div>
 
-      {/* ─── Sale badge ─── */}
-      {originalPrice && price && originalPrice > price && (
+      {/* ─── Sale badge — uses discountPercent for 100% sync across pages ─── */}
+      {(discountPercent != null || (originalPrice && price && originalPrice > price)) && (
         <div className="absolute top-3 right-16 z-20">
           <span className="bg-red-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-lg">
-            {Math.round((1 - price / originalPrice) * 100)}% OFF
+            {discountPercent != null ? discountPercent : Math.round((1 - price / originalPrice) * 100)}% OFF
           </span>
         </div>
       )}

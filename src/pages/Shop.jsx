@@ -370,9 +370,9 @@ export default function Shop() {
                           {t('shop.featured')}
                         </span>
                       )}
-                      {product.onSale && (
+                      {(product.onSale || product.discountPercent) && (
                         <span className="block bg-red-500 text-white px-2.5 py-1 rounded-full text-xs font-semibold shadow-sm">
-                          {t('shop.onSale')}
+                          {product.discountPercent ? `${product.discountPercent}% OFF` : t('shop.onSale')}
                         </span>
                       )}
                     </div>
