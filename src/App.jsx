@@ -102,6 +102,8 @@ function App() {
 
   return (
     <div className={darkMode ? 'dark' : ''}>
+      {/* Preload hero video during splash so it's ready when Landing shows */}
+      <video src="/hero-bg.mp4" preload="auto" muted playsInline className="hidden absolute w-0 h-0" aria-hidden="true" />
       {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
 
       <Toaster
