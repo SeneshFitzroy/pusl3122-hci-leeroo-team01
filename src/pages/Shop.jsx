@@ -5,6 +5,7 @@ import {
   Search, 
   Grid3X3, 
   List, 
+  Plus,
   Heart,
   ShoppingCart,
   Star,
