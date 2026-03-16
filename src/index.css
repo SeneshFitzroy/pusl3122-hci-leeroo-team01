@@ -243,3 +243,15 @@ input[type="range"] {
 .a11y-high-contrast.a11y-tritanopia {
   filter: url('#tritanopia-filter') contrast(1.3);
 }
+
+/* ── Dark mode: 100% visible text — cookie banner & placeholders ── */
+html.dark .cookie-consent-banner,
+html.dark .cookie-consent-banner h3,
+html.dark .cookie-consent-banner p,
+html.dark .cookie-consent-banner button {
+  color: #FFFFFF !important;
+}
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #FFFFFF !important;
+}

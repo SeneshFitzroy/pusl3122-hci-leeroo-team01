@@ -69,17 +69,17 @@ export default function CookieConsent() {
         exit={{ y: 120, opacity: 0 }}
         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
       >
-        <div className="max-w-2xl mx-auto rounded-2xl shadow-2xl border border-warm-200 dark:border-dark-border bg-white dark:bg-dark-card p-4 sm:p-5">
+        <div className="cookie-consent-banner max-w-2xl mx-auto rounded-2xl shadow-2xl border border-warm-200 dark:border-dark-border bg-white dark:bg-dark-card p-4 sm:p-5">
           <div className="flex flex-col sm:flex-row sm:items-start gap-4">
             <div className="flex gap-3 flex-1">
               <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-clay/10 dark:bg-clay/20 flex items-center justify-center">
                 <Cookie className="h-5 w-5 text-clay" />
               </div>
               <div>
-                <h3 className="font-bold text-darkwood dark:text-white text-sm sm:text-base mb-1">
+                <h3 className="font-bold text-darkwood dark:!text-white text-sm sm:text-base mb-1">
                   Cookie & Location
                 </h3>
-                <p className="text-xs sm:text-sm text-darkwood/70 dark:text-white/95">
+                <p className="text-xs sm:text-sm text-darkwood/70 dark:!text-white">
                   We use cookies for preferences and personalization. Accept to allow optional location detection so
                   we can suggest your region, currency, and language automatically.
                 </p>
@@ -88,7 +88,7 @@ export default function CookieConsent() {
             <div className="flex items-center gap-2 flex-shrink-0">
               <button
                 onClick={handleDecline}
-                className="px-4 py-2.5 rounded-xl text-sm font-medium border border-warm-200 dark:border-dark-border text-darkwood dark:text-white hover:bg-warm-50 dark:hover:bg-dark-surface transition-colors"
+                className="px-4 py-2.5 rounded-xl text-sm font-medium border border-warm-200 dark:border-dark-border text-darkwood dark:!text-white hover:bg-warm-50 dark:hover:bg-dark-surface transition-colors"
               >
                 Decline
               </button>
@@ -111,8 +111,8 @@ export default function CookieConsent() {
               </button>
             </div>
           </div>
-          <p className="mt-3 text-[10px] text-darkwood/50 dark:text-white/90 flex items-center gap-1.5">
-            <Shield className="h-3.5 w-3.5 flex-shrink-0" />
+          <p className="mt-3 text-[10px] text-darkwood/50 dark:!text-white flex items-center gap-1.5">
+            <Shield className="h-3.5 w-3.5 flex-shrink-0 dark:!text-white" />
             Your data stays local. No tracking without consent. Location is optional and used only to customize your experience.
           </p>
         </div>

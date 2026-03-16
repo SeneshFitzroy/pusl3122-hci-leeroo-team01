@@ -415,7 +415,7 @@ export default function DesignerPanel() {
                   aria-label="Search designs"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 border border-warm-200 dark:border-dark-border bg-white dark:bg-dark-card rounded-xl text-sm text-darkwood dark:text-white placeholder:text-warm-400 dark:placeholder:text-white focus:ring-2 focus:ring-clay/30 focus:border-clay outline-none"
+                  className="w-full pl-10 pr-4 py-2.5 border border-warm-200 dark:border-dark-border bg-white dark:bg-dark-card rounded-xl text-sm text-darkwood dark:!text-white placeholder:text-warm-400 dark:placeholder:!text-white focus:ring-2 focus:ring-clay/30 focus:border-clay outline-none"
                 />
               </div>
               <select
@@ -508,7 +508,7 @@ export default function DesignerPanel() {
                         <Users className="h-3 w-3" />
                         {design.userName || 'Customer'}
                       </p>
-                      <div className="flex items-center gap-4 text-xs text-darkwood/60 dark:text-white">
+                      <div className="flex items-center gap-4 text-xs text-darkwood/60 dark:!text-white">
                         <span>{design.rooms?.reduce((acc, r) => acc + (r.furnitureItems?.length || 0), 0) || 0} items</span>
                         <span>{design.rooms?.length || 1} rooms</span>
                         <span>{design.comments?.length || 0} comments</span>
