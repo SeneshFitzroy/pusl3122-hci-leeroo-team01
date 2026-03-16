@@ -48,11 +48,31 @@ const HERO_POSTER = 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ac
 /** Dark placeholder so video appears first — no distracting image before video plays */
 const HERO_PLACEHOLDER = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="1" height="1"%3E%3Crect fill="%231a120b" width="1" height="1"/%3E%3C/svg%3E'
 
-/** Single source: hero-bg.mp4 from public/ — preloaded in index.html. Uses dark placeholder so video appears first. */
+/** Hero video: fallback to poster if video fails or stalls (black frame). */
 function LandingHeroMedia() {
   const [videoError, setVideoError] = useState(false)
+  const [videoStalled, setVideoStalled] = useState(false)
+  const videoRef = useRef(null)
+  const stallTimerRef = useRef(null)
 
-  if (videoError) {
+  // Fallback to poster if video doesn't play within 4s (black screen fix)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const v = videoRef.current
+      if (v && (v.readyState < 2 || v.paused)) {
+        setVideoStalled(true)
+      }
+    }, 4000)
+    stallTimerRef.current = timer
+    return () => {
+      clearTimeout(timer)
+      stallTimerRef.current = null
+    }
+  }, [])
+
+  const showFallback = videoError || videoStalled
+
+  if (showFallback) {
     return (
       <div
         className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat"
@@ -64,15 +84,29 @@ function LandingHeroMedia() {
 
   return (
     <video
+      ref={videoRef}
       className="absolute inset-0 w-full h-full object-cover"
       autoPlay
       muted
       loop
       playsInline
       preload="auto"
-      poster={HERO_PLACEHOLDER}
+      poster={HERO_POSTER}
       aria-label="Background video of furniture and living spaces"
       onError={() => setVideoError(true)}
+      onStalled={() => setVideoStalled(true)}
+      onCanPlay={() => {
+        if (stallTimerRef.current) {
+          clearTimeout(stallTimerRef.current)
+          stallTimerRef.current = null
+        }
+      }}
+      onLoadedData={() => {
+        if (stallTimerRef.current) {
+          clearTimeout(stallTimerRef.current)
+          stallTimerRef.current = null
+        }
+      }}
     >
       <source src="/hero-bg.mp4" type="video/mp4" />
     </video>
