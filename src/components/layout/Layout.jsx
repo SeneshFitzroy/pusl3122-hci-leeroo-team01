@@ -8,7 +8,7 @@ export default function Layout() {
   const isEditor = pathname?.startsWith('/editor')
 
   return (
-    <div className={`bg-warm-50 dark:bg-dark-bg flex flex-col overflow-x-hidden ${isEditor ? 'h-screen max-h-screen overflow-hidden' : 'min-h-screen'}`}>
+    <div className={`bg-warm-50 dark:bg-dark-bg flex flex-col overflow-x-hidden ${isEditor ? 'h-screen overflow-hidden' : 'min-h-screen'}`}>
       {!isEditor && (
         <a
           href="#main-content"
@@ -18,12 +18,7 @@ export default function Layout() {
         </a>
       )}
       <Navbar />
-      <main
-        id="main-content"
-        className={`flex-1 min-w-0 ${isEditor ? 'min-h-0 overflow-hidden' : 'overflow-x-hidden'}`}
-        role="main"
-        aria-label="Main content"
-      >
+      <main id="main-content" className="flex-1 min-w-0 overflow-x-hidden" role="main" aria-label="Main content">
         <Outlet />
       </main>
       {!isEditor && <Footer />}
