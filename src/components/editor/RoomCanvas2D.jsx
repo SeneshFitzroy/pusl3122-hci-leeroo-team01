@@ -222,16 +222,27 @@ const RoomCanvas2D = forwardRef(function RoomCanvas2D(_, ref) {
   }
 
   useEffect(() => {
-    const handleResize = () => {
-      const container = containerRef.current
-      if (container) {
-        setStageWidth(container.offsetWidth)
-        setStageHeight(container.offsetHeight)
+    const container = containerRef.current
+    if (!container) return
+
+    const measure = () => {
+      const w = container.offsetWidth
+      const h = container.offsetHeight
+      if (w > 0 && h > 0) {
+        setStageWidth(w)
+        setStageHeight(h)
       }
     }
-    handleResize()
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
+
+    measure()
+
+    const ro = new ResizeObserver(measure)
+    ro.observe(container)
+    window.addEventListener('resize', measure)
+    return () => {
+      ro.disconnect()
+      window.removeEventListener('resize', measure)
+    }
   }, [])
 
   const roomWidthPx = (roomSettings.width) * 50

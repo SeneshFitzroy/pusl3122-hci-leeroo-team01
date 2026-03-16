@@ -324,7 +324,7 @@ export default function RoomEditor() {
   }
 
   return (
-    <div className="absolute inset-0 flex flex-col bg-warm-50 dark:bg-dark-bg overflow-hidden">
+    <div className="flex-1 min-h-0 flex flex-col bg-warm-50 dark:bg-dark-bg overflow-hidden">
       {showTemplates && (
         <TemplateSelector onSelect={handleTemplateSelect} onClose={() => setShowTemplates(false)} />
       )}
@@ -332,7 +332,7 @@ export default function RoomEditor() {
       <div className="flex-1 flex flex-col lg:flex-row min-h-0 overflow-hidden">
         {/* ── Left Sidebar (resizable; collapsible on mobile) ── */}
         <div
-          className={`w-full lg:flex-none bg-white dark:bg-dark-card border-r border-warm-200 dark:border-dark-border flex flex-col shrink-0 z-30 overflow-hidden
+          className={`w-full lg:flex-none bg-white dark:bg-dark-card border-r border-warm-200 dark:border-dark-border flex flex-col shrink-0 z-30 overflow-hidden relative
             ${sidebarOpenOnMobile ? 'flex' : 'hidden'} lg:flex`}
           style={sidebarStyle}
         >
@@ -398,7 +398,7 @@ export default function RoomEditor() {
         </div>
 
         {/* ── Main Canvas Area ── */}
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col min-h-0 min-w-0 overflow-hidden">
           {/* Room Tabs */}
           <div className="bg-white dark:bg-dark-card border-b border-warm-200 dark:border-dark-border px-4 pt-2 flex items-center gap-1 overflow-x-auto scrollbar-hide">
             {rooms.map((room, idx) => (
