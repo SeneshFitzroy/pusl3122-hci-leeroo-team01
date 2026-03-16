@@ -80,6 +80,16 @@ export default function ProductDetail() {
     })
   }
 
+  const handleBuyNow = () => {
+    if (isInCart) {
+      updateQuantity(product.id, (cartItem?.quantity || 0) + quantity)
+    } else {
+      addToCart({ ...product, selectedColor, quantity })
+    }
+    toast.success(`${product.name} ${t('wishlist.addedToCart')}`)
+    navigate('/checkout')
+  }
+
   const handleAddToWishlist = () => {
     addToWishlist(product)
     toast.success(`${product.name} ${t('wishlist.removedFromWishlist')}`)
@@ -187,6 +197,7 @@ export default function ProductDetail() {
                   name={product.name}
                   originalPrice={product.originalPrice}
                   price={product.price}
+                  discountPercent={product.discountPercent}
                   presetAngle={presetAngle}
                 />
                 {/* Angle preset buttons BELOW 3D viewer */}
@@ -335,7 +346,7 @@ export default function ProductDetail() {
                 )}
                 {product.originalPrice && (
                   <span className="bg-red-100 dark:bg-red-900/20 text-red-600 dark:text-red-400 px-2 py-1 rounded-full text-sm font-medium">
-                    {t('product.save')} {formatPrice(product.originalPrice - product.price)}
+                    {product.discountPercent ? `${product.discountPercent}% OFF` : `${t('product.save')} ${formatPrice(product.originalPrice - product.price)}`}
                   </span>
                 )}
               </div>
@@ -424,7 +435,17 @@ export default function ProductDetail() {
                 </div>
               </div>
 
-              <div className="flex space-x-4">
+              <div className="flex flex-col sm:flex-row gap-3">
+                <motion.button
+                  onClick={handleBuyNow}
+                  className="flex-1 bg-forest hover:bg-forest-light text-white font-semibold flex items-center justify-center space-x-2 py-3 rounded-xl shadow-lg shadow-forest/20 transition-all"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  disabled={!product.inStock}
+                >
+                  <Package className="h-5 w-5" />
+                  <span>{t('product.buyNow')}</span>
+                </motion.button>
                 <motion.button
                   onClick={handleAddToCart}
                   className="flex-1 btn-primary flex items-center justify-center space-x-2 py-3"

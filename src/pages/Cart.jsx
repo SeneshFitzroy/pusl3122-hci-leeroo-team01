@@ -14,7 +14,8 @@ import {
   X,
   CreditCard,
   Gift,
-  ChevronRight
+  ChevronRight,
+  Heart
 } from 'lucide-react'
 import useCartStore from '@/store/useCartStore'
 import useThemeStore from '@/store/useThemeStore'
@@ -23,7 +24,7 @@ import Mini3DPreview from '@/components/Mini3DPreview'
 import { useTranslation } from 'react-i18next'
 
 export default function Cart() {
-  const { items: cart, removeFromCart, clearCart, updateQuantity } = useCartStore()
+  const { items: cart, removeFromCart, clearCart, updateQuantity, addToWishlist } = useCartStore()
   const { formatPrice } = useThemeStore()
   const { t } = useTranslation()
 
@@ -161,12 +162,21 @@ export default function Cart() {
                       <span className="text-lg font-bold text-clay">
                         {formatPrice(item.price * (item.quantity || 1))}
                       </span>
-                      <button
-                        onClick={() => removeFromCart(item.id)}
-                        className="p-2 text-warm-300 dark:text-dark-border hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all"
-                      >
-                        <X className="h-4 w-4" />
-                      </button>
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={() => { addToWishlist(item); removeFromCart(item.id) }}
+                          className="p-2 text-warm-400 dark:text-warm-500 hover:text-clay dark:hover:text-clay rounded-lg transition-all"
+                          title={t('cart.saveForLater')}
+                        >
+                          <Heart className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => removeFromCart(item.id)}
+                          className="p-2 text-warm-300 dark:text-dark-border hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      </div>
                     </div>
                   </motion.div>
                 ))}

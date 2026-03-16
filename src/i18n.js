@@ -470,6 +470,7 @@ const resources = {
       'cart.freeDelivery': 'Free Delivery over {{amount}}',
       'cart.easyReturns': '30-Day Easy Returns',
       'cart.giftWrap': 'Gift Wrapping Available',
+      'cart.saveForLater': 'Save for Later',
 
       /* ─── Wishlist ─── */
       'wishlist.title': 'My Wishlist',
@@ -587,7 +588,7 @@ const resources = {
       'settings.promotions': 'Promotions',
       'settings.promotionsDesc': 'Receive special offers and discounts',
       'settings.newsletter': 'Newsletter',
-      'settings.newsletterDesc': 'Weekly design inspiration and tips',
+      'settings.newsletterDesc': 'Weekly design ideas and tips',
       'settings.designTips': 'Design Tips',
       'settings.designTipsDesc': 'Room design recommendations',
       'settings.sounds': 'Sounds',
@@ -776,6 +777,8 @@ const resources = {
       'product.category': 'Category',
       'product.previewActive': 'Preview active',
       'product.updateCart': 'Update Cart',
+      'product.buyNow': 'Buy Now',
+      'product.buyNowDesc': 'Added to cart, proceeding to checkout',
       'product.freeShipping': 'Free Shipping',
       'product.ordersOver': 'Orders over',
       'product.fullCoverage': 'Full coverage',

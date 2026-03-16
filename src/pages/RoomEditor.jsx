@@ -29,6 +29,8 @@ import {
   Share2,
   GripVertical,
   PanelLeft,
+  ChevronDown,
+  MoreHorizontal,
 } from 'lucide-react'
 import { toast } from 'sonner'
 
@@ -93,6 +95,7 @@ export default function RoomEditor() {
   const [editingRoomIdx, setEditingRoomIdx] = useState(null)
   const [editingRoomName, setEditingRoomName] = useState('')
   const [showExportMenu, setShowExportMenu] = useState(false)
+  const [showMoreMenu, setShowMoreMenu] = useState(false)
   const [viewTransitionMsg, setViewTransitionMsg] = useState('')
   const [sizeAlerts, setSizeAlerts] = useState([])
   const [showShortcuts, setShowShortcuts] = useState(false)
@@ -446,31 +449,33 @@ export default function RoomEditor() {
             <div className="flex items-center justify-between flex-wrap gap-3">
               {/* Left: View + History */}
               <div className="flex items-center gap-3 flex-wrap">
-                {/* View Mode Toggle */}
-                <div className="flex bg-warm-100 dark:bg-dark-surface rounded-xl p-1 shadow-inner">
+                {/* View Mode Toggle — clear 2D vs 3D visual difference */}
+                <div className="flex bg-warm-100 dark:bg-dark-surface rounded-xl p-1.5 shadow-inner border border-warm-200/50 dark:border-dark-border/50">
                   <button
                     onClick={() => handleViewSwitch('2d')}
-                    className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2 ${
+                    className={`px-4 py-2.5 rounded-lg text-sm font-bold transition-all flex items-center gap-2 ${
                       viewMode === '2d'
-                        ? 'bg-gradient-to-r from-clay to-clay-dark text-white shadow-sm'
-                        : 'text-darkwood/70 dark:text-warm-400 hover:bg-warm-200/50 dark:hover:bg-dark-border/50'
+                        ? 'bg-[#3F5E45] text-white shadow-md border-2 border-forest'
+                        : 'text-darkwood/70 dark:text-warm-400 hover:bg-warm-200/50 dark:hover:bg-dark-border/50 border-2 border-transparent'
                     }`}
-                    aria-label="Switch to 2D floor plan view"
+                    aria-label="2D floor plan — flat top-down view"
+                    title="2D Floor Plan — drag to reposition items"
                   >
-                    <Layers className="h-4 w-4" />
-                    <span>{t('editor.view2d')}</span>
+                    <Layers className="h-5 w-5" />
+                    <span>2D Plan</span>
                   </button>
                   <button
                     onClick={() => handleViewSwitch('3d')}
-                    className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2 ${
+                    className={`px-4 py-2.5 rounded-lg text-sm font-bold transition-all flex items-center gap-2 ${
                       viewMode === '3d'
-                        ? 'bg-gradient-to-r from-clay to-clay-dark text-white shadow-sm'
-                        : 'text-darkwood/70 dark:text-warm-400 hover:bg-warm-200/50 dark:hover:bg-dark-border/50'
+                        ? 'bg-clay text-white shadow-md border-2 border-clay-dark'
+                        : 'text-darkwood/70 dark:text-warm-400 hover:bg-warm-200/50 dark:hover:bg-dark-border/50 border-2 border-transparent'
                     }`}
-                    aria-label="Switch to 3D perspective view"
+                    aria-label="3D perspective — orbit to explore"
+                    title="3D View — drag to rotate camera"
                   >
-                    <Eye className="h-4 w-4" />
-                    <span>{t('editor.view3d')}</span>
+                    <Eye className="h-5 w-5" />
+                    <span>3D View</span>
                   </button>
                 </div>
                 <div className="hidden sm:block w-px h-8 bg-warm-200 dark:bg-dark-border" />
@@ -493,30 +498,46 @@ export default function RoomEditor() {
               <div className="flex items-center gap-2 flex-wrap">
                 <div className="w-px h-6 bg-warm-200 dark:bg-dark-border mx-1 hidden sm:block" />
 
-                <button onClick={() => setShowTemplates(true)}
-                  className="px-3 py-2 text-sm font-medium text-darkwood/70 dark:text-warm-400 hover:bg-warm-100 dark:hover:bg-dark-surface rounded-lg transition-colors">
-                  {t('editor.templates')}
-                </button>
-                <button onClick={handleReset}
-                  className="px-3 py-2 text-sm font-medium text-darkwood/70 dark:text-warm-400 hover:bg-warm-100 dark:hover:bg-dark-surface rounded-lg transition-colors">
-                  Reset
-                </button>
-                <button
-                  onClick={() => setShowShortcuts(true)}
-                  className="p-2 rounded-lg hover:bg-warm-100 dark:hover:bg-dark-surface transition-colors"
-                  title="Keyboard shortcuts (?)"
-                  aria-label="Show keyboard shortcuts"
-                >
-                  <Keyboard className="h-5 w-5 text-darkwood/50 dark:text-warm-400" />
-                </button>
-                <button
-                  onClick={() => setShowTutorial(true)}
-                  className="p-2 rounded-lg hover:bg-warm-100 dark:hover:bg-dark-surface transition-colors"
-                  title="Tutorial / Help"
-                  aria-label="Show tutorial"
-                >
-                  <HelpCircle className="h-5 w-5 text-darkwood/50 dark:text-warm-400" />
-                </button>
+                {/* More — advanced tools (simplified canvas per user feedback) */}
+                <div className="relative">
+                  <button
+                    onClick={() => setShowMoreMenu(!showMoreMenu)}
+                    className="px-3 py-2 text-sm font-medium text-darkwood/70 dark:text-warm-400 hover:bg-warm-100 dark:hover:bg-dark-surface rounded-lg transition-colors flex items-center gap-1"
+                    aria-label="More options"
+                  >
+                    <MoreHorizontal className="h-5 w-5" />
+                    <span className="hidden sm:inline">More</span>
+                    <ChevronDown className={`h-4 w-4 transition-transform ${showMoreMenu ? 'rotate-180' : ''}`} />
+                  </button>
+                  <AnimatePresence>
+                    {showMoreMenu && (
+                      <motion.div
+                        className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-dark-card rounded-xl shadow-xl border border-warm-200 dark:border-dark-border py-1 z-50"
+                        initial={{ opacity: 0, y: -4 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -4 }}
+                        onClick={() => setShowMoreMenu(false)}
+                      >
+                        <button onClick={() => { setShowTemplates(true); setShowMoreMenu(false) }}
+                          className="flex items-center gap-2 w-full px-4 py-2 text-sm text-darkwood dark:text-warm-200 hover:bg-warm-50 dark:hover:bg-dark-surface">
+                          <Grid3x3 className="h-4 w-4" /> {t('editor.templates')}
+                        </button>
+                        <button onClick={() => { handleReset(); setShowMoreMenu(false) }}
+                          className="flex items-center gap-2 w-full px-4 py-2 text-sm text-darkwood dark:text-warm-200 hover:bg-warm-50 dark:hover:bg-dark-surface">
+                          <Trash2 className="h-4 w-4" /> Reset
+                        </button>
+                        <button onClick={() => { setShowShortcuts(true); setShowMoreMenu(false) }}
+                          className="flex items-center gap-2 w-full px-4 py-2 text-sm text-darkwood dark:text-warm-200 hover:bg-warm-50 dark:hover:bg-dark-surface">
+                          <Keyboard className="h-4 w-4" /> Shortcuts (?)
+                        </button>
+                        <button onClick={() => { setShowTutorial(true); setShowMoreMenu(false) }}
+                          className="flex items-center gap-2 w-full px-4 py-2 text-sm text-darkwood dark:text-warm-200 hover:bg-warm-50 dark:hover:bg-dark-surface">
+                          <HelpCircle className="h-4 w-4" /> Tutorial
+                        </button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
                 <button
                   onClick={() => {
                     const id = designId || currentDesign?.id

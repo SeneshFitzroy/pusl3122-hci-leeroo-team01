@@ -21,6 +21,7 @@ export default function Product3DViewer({
   defaultColor,
   originalPrice,
   price,
+  discountPercent,
   currentView: externalView,
   onViewChange,
 }) {
@@ -258,11 +259,11 @@ export default function Product3DViewer({
         </div>
       </div>
 
-      {/* --------- Sale badge --------- */}
-      {originalPrice && price && originalPrice > price && (
+      {/* --------- Sale badge — use discountPercent when available for sync across pages --------- */}
+      {((discountPercent != null && discountPercent > 0) || (originalPrice && price && originalPrice > price)) && (
         <div className="absolute top-3 right-16 z-30">
           <span className="bg-red-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-lg">
-            {Math.round((1 - price / originalPrice) * 100)}% OFF
+            {discountPercent != null ? discountPercent : Math.round((1 - price / originalPrice) * 100)}% OFF
           </span>
         </div>
       )}

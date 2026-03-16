@@ -232,16 +232,23 @@ export default function Checkout() {
                   <h2 className="text-lg sm:text-xl font-bold text-darkwood dark:text-warm-100 mb-6 flex items-center gap-2">
                     <CreditCard className="h-5 w-5 text-clay" /> {t('checkout.paymentMethod')}
                   </h2>
-                  <div className="flex gap-3 mb-6">
-                    {[{ id: 'card', label: t('checkout.creditCard'), icon: CreditCard }, { id: 'cod', label: t('checkout.cod'), icon: Package }].map(m => (
+                  <div className="flex flex-wrap gap-3 mb-6">
+                    {[
+                      { id: 'card', label: t('checkout.creditCard'), icon: CreditCard },
+                      { id: 'paypal', label: 'PayPal', icon: CreditCard },
+                      { id: 'applepay', label: 'Apple Pay', icon: CreditCard },
+                      { id: 'cod', label: t('checkout.cod'), icon: Package }
+                    ].map(m => (
                       <button key={m.id} onClick={() => setPayment({...payment, method: m.id})}
                         className={`flex-1 flex items-center justify-center gap-2 p-3 sm:p-4 rounded-xl border-2 text-sm font-semibold transition-all ${payment.method === m.id ? 'border-clay bg-clay/5 text-clay' : 'border-warm-200 dark:border-dark-border text-darkwood/50 dark:text-warm-400 hover:border-warm-300'}`}>
                         <m.icon className="h-5 w-5" /> <span className="hidden sm:inline">{m.label}</span>
                       </button>
                     ))}
                   </div>
-                  {payment.method === 'card' && (
+                  {(payment.method === 'card' || payment.method === 'paypal' || payment.method === 'applepay') && payment.method !== 'cod' && (
                     <div className="space-y-4">
+                      {payment.method === 'card' && (
+                        <>
                       <Inp label={t('checkout.cardNumber')} name="cardNumber" value={payment.cardNumber} onChange={e => setPayment({...payment, cardNumber: fmtCard(e.target.value)})} placeholder="1234 5678 9012 3456" error={errors.cardNumber} icon={CreditCard} />
                       <Inp label={t('checkout.cardName')} name="cardName" value={payment.cardName} onChange={e => setPayment({...payment, cardName: e.target.value})} placeholder="John Doe" error={errors.cardName} icon={User} />
                       <div className="grid grid-cols-2 gap-4">
@@ -252,6 +259,16 @@ export default function Checkout() {
                         <Shield className="h-4 w-4 text-forest flex-shrink-0" />
                         <p className="text-xs text-forest dark:text-forest-light">{t('checkout.secureNote')}</p>
                       </div>
+                        </>
+                      )}
+                      {(payment.method === 'paypal' || payment.method === 'applepay') && (
+                        <div className="bg-warm-50 dark:bg-dark-surface rounded-xl p-6 text-center">
+                          <CreditCard className="h-10 w-10 text-clay mx-auto mb-3" />
+                          <p className="text-sm text-darkwood/70 dark:text-warm-300">
+                            {payment.method === 'applepay' ? 'You will be redirected to Apple Pay at checkout.' : 'You will be redirected to PayPal to complete payment.'}
+                          </p>
+                        </div>
+                      )}
                     </div>
                   )}
                   {payment.method === 'cod' && (
@@ -280,7 +297,9 @@ export default function Checkout() {
                       <h3 className="text-sm font-semibold text-darkwood dark:text-warm-100 flex items-center gap-2"><CreditCard className="h-4 w-4 text-clay" />{t('checkout.paymentMethod')}</h3>
                       <button onClick={() => setStep(2)} className="text-xs text-clay hover:text-clay-dark font-medium">{t('checkout.edit')}</button>
                     </div>
-                    <p className="text-sm text-darkwood/70 dark:text-warm-300">{payment.method === 'card' ? `${t('checkout.creditCard')} •••• ${payment.cardNumber.slice(-4)}` : t('checkout.cod')}</p>
+                    <p className="text-sm text-darkwood/70 dark:text-warm-300">
+                      {payment.method === 'card' ? `${t('checkout.creditCard')} •••• ${payment.cardNumber.slice(-4)}` : payment.method === 'paypal' ? 'PayPal' : payment.method === 'applepay' ? 'Apple Pay' : t('checkout.cod')}
+                    </p>
                   </div>
                   <div>
                     <h3 className="text-sm font-semibold text-darkwood dark:text-warm-100 mb-3">{t('checkout.items')} ({cart.length})</h3>

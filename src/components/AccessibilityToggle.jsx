@@ -46,7 +46,7 @@ export default function AccessibilityToggle() {
         className={`fixed bottom-6 left-6 z-40 w-11 h-11 rounded-full backdrop-blur-xl border shadow-lg flex items-center justify-center transition-all hover:scale-110 ${
           anyActive
             ? 'bg-forest/90 border-forest-light/60 text-white'
-            : 'bg-white/90 dark:bg-dark-card/90 border-warm-200/60 dark:border-dark-border/60 text-darkwood/60 dark:text-warm-400 hover:text-forest dark:hover:text-forest-light'
+            : 'bg-white/90 dark:bg-dark-card/90 border-warm-200/60 dark:border-dark-border/60 text-darkwood/60 dark:text-gray-200 hover:text-forest dark:hover:text-forest-light'
         }`}
         aria-label="Accessibility settings"
         initial={{ opacity: 0, scale: 0 }}
@@ -79,7 +79,7 @@ export default function AccessibilityToggle() {
               {/* Header - Rosewood-style loading state */}
               <div className="flex items-center justify-between px-5 py-4 border-b border-warm-100 dark:border-dark-border">
                 {isLoading ? (
-                  <div className="flex items-center gap-2.5 text-darkwood/60 dark:text-warm-400">
+                  <div className="flex items-center gap-2.5 text-darkwood/60 dark:text-gray-200">
                     <div className="w-5 h-5 border-2 border-forest/40 border-t-forest rounded-full animate-spin" />
                     <span className="text-sm font-medium">Loading Accessibility Mode...</span>
                   </div>
@@ -90,13 +90,13 @@ export default function AccessibilityToggle() {
                         <Accessibility className="h-4 w-4 text-forest dark:text-forest-light" />
                       </div>
                       <div>
-                        <h3 className="text-sm font-semibold text-darkwood dark:text-warm-100">Accessibility</h3>
-                        <p className="text-[10px] text-darkwood/40 dark:text-warm-500">Customize your experience</p>
+                        <h3 className="text-sm font-semibold text-darkwood dark:text-white">Accessibility</h3>
+                        <p className="text-[10px] text-darkwood/40 dark:text-gray-300">Customize your experience</p>
                       </div>
                     </div>
                     <button
                       onClick={() => setIsOpen(false)}
-                      className="p-1.5 rounded-lg hover:bg-warm-100 dark:hover:bg-dark-surface text-darkwood/40 dark:text-warm-500 transition-colors"
+                      className="p-1.5 rounded-lg hover:bg-warm-100 dark:hover:bg-dark-surface text-darkwood/40 dark:text-gray-300 transition-colors"
                       aria-label="Close accessibility panel"
                     >
                       <X className="h-4 w-4" />
@@ -118,13 +118,13 @@ export default function AccessibilityToggle() {
                   aria-pressed={a11y.highContrast}
                 >
                   <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                    a11y.highContrast ? 'bg-forest text-white' : 'bg-warm-100 dark:bg-dark-border text-darkwood/40 dark:text-warm-500'
+                    a11y.highContrast ? 'bg-forest text-white' : 'bg-warm-100 dark:bg-dark-border text-darkwood/40 dark:text-gray-300'
                   }`}>
                     <Eye className="h-4 w-4" />
                   </div>
                   <div className="text-left flex-1">
-                    <p className="text-sm font-medium text-darkwood dark:text-warm-100">High Contrast</p>
-                    <p className="text-[10px] text-darkwood/40 dark:text-warm-500">Enhanced visibility</p>
+                    <p className="text-sm font-medium text-darkwood dark:text-white">High Contrast</p>
+                    <p className="text-[10px] text-darkwood/40 dark:text-gray-300">Enhanced visibility</p>
                   </div>
                   <div className={`w-10 h-6 rounded-full transition-colors ${
                     a11y.highContrast ? 'bg-forest' : 'bg-warm-200 dark:bg-dark-border'
@@ -148,13 +148,13 @@ export default function AccessibilityToggle() {
                   aria-pressed={a11y.largeText}
                 >
                   <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                    a11y.largeText ? 'bg-forest text-white' : 'bg-warm-100 dark:bg-dark-border text-darkwood/40 dark:text-warm-500'
+                    a11y.largeText ? 'bg-forest text-white' : 'bg-warm-100 dark:bg-dark-border text-darkwood/40 dark:text-gray-300'
                   }`}>
                     <Type className="h-4 w-4" />
                   </div>
                   <div className="text-left flex-1">
-                    <p className="text-sm font-medium text-darkwood dark:text-warm-100">Large Text</p>
-                    <p className="text-[10px] text-darkwood/40 dark:text-warm-500">Bigger readable fonts</p>
+                    <p className="text-sm font-medium text-darkwood dark:text-white">Large Text</p>
+                    <p className="text-[10px] text-darkwood/40 dark:text-gray-300">Bigger readable fonts</p>
                   </div>
                   <div className={`w-10 h-6 rounded-full transition-colors ${
                     a11y.largeText ? 'bg-forest' : 'bg-warm-200 dark:bg-dark-border'
@@ -170,12 +170,12 @@ export default function AccessibilityToggle() {
                 {/* Color Blindness Filter */}
                 <div className="px-4 py-3 rounded-xl border bg-warm-50 dark:bg-dark-surface border-warm-100 dark:border-dark-border">
                   <div className="flex items-center gap-3 mb-3">
-                    <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-warm-100 dark:bg-dark-border text-darkwood/40 dark:text-warm-500">
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-warm-100 dark:bg-dark-border text-darkwood/40 dark:text-gray-300">
                       <Palette className="h-4 w-4" />
                     </div>
                     <div className="text-left">
-                      <p className="text-sm font-medium text-darkwood dark:text-warm-100">Color Vision</p>
-                      <p className="text-[10px] text-darkwood/40 dark:text-warm-500">Adjust for color blindness</p>
+                      <p className="text-sm font-medium text-darkwood dark:text-white">Color Vision</p>
+                      <p className="text-[10px] text-darkwood/40 dark:text-gray-300">Adjust for color blindness</p>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-1.5">
@@ -186,7 +186,7 @@ export default function AccessibilityToggle() {
                         className={`px-3 py-2 rounded-lg text-xs font-medium transition-all ${
                           a11y.colorBlindMode === mode.value
                             ? 'bg-forest text-white'
-                            : 'bg-white dark:bg-dark-card text-darkwood/60 dark:text-warm-400 hover:bg-warm-100 dark:hover:bg-dark-border'
+                            : 'bg-white dark:bg-dark-card text-darkwood/60 dark:text-gray-200 hover:bg-warm-100 dark:hover:bg-dark-border'
                         }`}
                         aria-pressed={a11y.colorBlindMode === mode.value}
                       >
