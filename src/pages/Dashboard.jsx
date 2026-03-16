@@ -346,7 +346,7 @@ export default function Dashboard() {
           )}
         </motion.div>
 
-        {/* Tips & Inspiration Section */}
+        {/* Tips & Ideas Section */}
         <motion.div
           className="grid grid-cols-1 lg:grid-cols-2 gap-6"
           initial="initial"

@@ -531,6 +531,19 @@ export default function DesignerPanel() {
                     Client: {selectedDesign.userName || 'Customer'} • {selectedDesign.userEmail || '—'}
                   </p>
 
+                  {/* Client link sharing — primary action */}
+                  <div className="mb-4 p-4 bg-clay/10 dark:bg-clay/5 rounded-xl border border-clay/20">
+                    <p className="text-sm font-medium text-darkwood dark:text-warm-100 mb-2">Share live design with client</p>
+                    <p className="text-xs text-darkwood/60 dark:text-warm-400 mb-3">Send a link instead of exporting PDF. Client opens the design directly in the editor.</p>
+                    <button
+                      onClick={() => handleCopyShareLink(selectedDesign)}
+                      className="inline-flex items-center gap-2 px-5 py-2.5 bg-clay hover:bg-clay-dark text-white font-semibold rounded-xl text-sm transition-all shadow-md shadow-clay/20"
+                      title="Copy live link"
+                    >
+                      <Share2 className="h-5 w-5" /> Share with Client
+                    </button>
+                  </div>
+
                   {/* Quick actions */}
                   <div className="mt-6 flex flex-wrap gap-2">
                     <Link
@@ -547,13 +560,6 @@ export default function DesignerPanel() {
                         <Mail className="h-4 w-4" /> Email client
                       </a>
                     )}
-                    <button
-                      onClick={() => handleCopyShareLink(selectedDesign)}
-                      className="inline-flex items-center gap-2 px-4 py-2.5 border border-warm-200 dark:border-dark-border text-darkwood dark:text-warm-200 hover:border-clay hover:text-clay rounded-xl text-sm font-medium transition-all"
-                      title="Copy share link"
-                    >
-                      <Share2 className="h-4 w-4" /> Copy link
-                    </button>
                     <button
                       onClick={() => handleExportDesignPDF(selectedDesign)}
                       className="inline-flex items-center gap-2 px-4 py-2.5 border border-warm-200 dark:border-dark-border text-darkwood dark:text-warm-200 hover:border-clay hover:text-clay rounded-xl text-sm font-medium transition-all"

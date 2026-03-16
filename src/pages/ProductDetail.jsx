@@ -80,6 +80,16 @@ export default function ProductDetail() {
     })
   }
 
+  const handleBuyNow = () => {
+    if (isInCart) {
+      updateQuantity(product.id, (cartItem?.quantity || 0) + quantity)
+    } else {
+      addToCart({ ...product, selectedColor, quantity })
+    }
+    toast.success(`${product.name} ${t('wishlist.addedToCart')}`)
+    navigate('/checkout')
+  }
+
   const handleAddToWishlist = () => {
     addToWishlist(product)
     toast.success(`${product.name} ${t('wishlist.removedFromWishlist')}`)
@@ -424,7 +434,17 @@ export default function ProductDetail() {
                 </div>
               </div>
 
-              <div className="flex space-x-4">
+              <div className="flex flex-col sm:flex-row gap-3">
+                <motion.button
+                  onClick={handleBuyNow}
+                  className="flex-1 bg-forest hover:bg-forest-light text-white font-semibold flex items-center justify-center space-x-2 py-3 rounded-xl shadow-lg shadow-forest/20 transition-all"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  disabled={!product.inStock}
+                >
+                  <Package className="h-5 w-5" />
+                  <span>{t('product.buyNow')}</span>
+                </motion.button>
                 <motion.button
                   onClick={handleAddToCart}
                   className="flex-1 btn-primary flex items-center justify-center space-x-2 py-3"

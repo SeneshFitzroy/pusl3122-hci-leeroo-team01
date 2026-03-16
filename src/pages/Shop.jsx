@@ -391,14 +391,14 @@ export default function Shop() {
                       <div className="flex gap-2">
                         <button
                           onClick={(e) => { e.preventDefault(); handleAddToCart(product) }}
-                          className={`px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-200 backdrop-blur-sm ${
+                          className={`p-3 rounded-xl font-medium text-sm transition-all duration-200 backdrop-blur-sm ${
                             isInCart(product.id)
                               ? 'bg-green-500 text-white'
                               : 'bg-white/95 text-darkwood hover:bg-clay hover:text-white'
                           }`}
+                          title={isInCart(product.id) ? t('shop.added') : t('shop.addToCart')}
                         >
-                          <ShoppingCart className="h-4 w-4 mr-1.5 inline" />
-                          {isInCart(product.id) ? t('shop.added') : t('shop.addToCart')}
+                          <Plus className="h-5 w-5" />
                         </button>
                       </div>
                     </div>
@@ -483,14 +483,14 @@ export default function Shop() {
                       <div className="flex items-center space-x-2 mt-4">
                         <button
                           onClick={() => handleAddToCart(product)}
-                          className={`flex-1 py-2.5 px-4 rounded-xl font-medium text-sm transition-all ${
+                          className={`p-2.5 rounded-xl font-medium text-sm transition-all ${
                             isInCart(product.id)
                               ? 'bg-green-500 text-white'
                               : 'bg-clay hover:bg-clay-dark text-white'
                           }`}
+                          title={isInCart(product.id) ? t('shop.added') : t('shop.addToCart')}
                         >
-                          <ShoppingCart className="h-4 w-4 mr-2 inline" />
-                          {isInCart(product.id) ? t('shop.added') : t('shop.addToCart')}
+                          <Plus className="h-5 w-5" />
                         </button>
                         <Link
                           to={`/shop/${product.id}`}

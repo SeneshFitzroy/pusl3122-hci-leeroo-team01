@@ -441,6 +441,19 @@ export default function RoomViewer3D() {
         </div>
       </div>
 
+      {/* Rotation indicator — visible overlay so users know they can rotate */}
+      <div className="absolute bottom-4 right-4 z-10 bg-clay/90 dark:bg-clay/80 backdrop-blur-sm rounded-xl px-4 py-3 flex items-center gap-3 shadow-lg border-2 border-white/20">
+        <div className="w-10 h-10 rounded-full bg-white/30 flex items-center justify-center">
+          <svg className="w-6 h-6 text-white animate-spin-slow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+        </div>
+        <div>
+          <div className="text-white font-semibold text-sm">Drag to rotate</div>
+          <div className="text-white/80 text-xs">Orbit the 3D view with mouse</div>
+        </div>
+      </div>
+
       {/* Instructions */}
       <div className="absolute bottom-4 left-4 z-10 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm rounded-lg p-3 text-xs text-gray-500 dark:text-gray-400">
         <div>Mouse: Orbit • Wheel: Zoom • Click: Select furniture</div>
