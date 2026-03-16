@@ -68,7 +68,7 @@ export default function Footer() {
   }
 
   return (
-    <footer className="bg-darkwood text-warm-300 mt-auto" role="contentinfo">
+    <footer className="bg-darkwood text-white mt-auto" role="contentinfo">
       {/* CTA Banner — only on homepage (redirect home → shop) */}
       {isHomePage && (
       <div className="relative overflow-hidden bg-gradient-to-r from-clay to-clay-dark">
@@ -101,10 +101,10 @@ export default function Footer() {
               <LogoIcon size={40} />
               <div className="flex flex-col leading-tight">
                 <span className="text-xl font-bold text-white font-display">Lee Roo</span>
-                <span className="text-[10px] text-warm-400 -mt-0.5">{String.fromCharCode(0x0DBD, 0x0DD3)} {String.fromCharCode(0x0DBB, 0x0DD6)} &middot; Wood Designs</span>
+                <span className="text-[10px] text-white -mt-0.5">{String.fromCharCode(0x0DBD, 0x0DD3)} {String.fromCharCode(0x0DBB, 0x0DD6)} &middot; Wood Designs</span>
               </div>
             </div>
-            <p className="text-warm-400 text-sm leading-relaxed mb-6 max-w-xs">
+            <p className="text-white text-sm leading-relaxed mb-6 max-w-xs">
               {t('footer.brandDesc')}
             </p>
             <div className="flex gap-3">
@@ -117,7 +117,7 @@ export default function Footer() {
                   key={label}
                   href={href}
                   aria-label={`Follow us on ${label}`}
-                  className="w-10 h-10 bg-white/10 hover:bg-clay/80 rounded-xl flex items-center justify-center text-warm-400 hover:text-white transition-all duration-200 hover:-translate-y-0.5"
+                  className="w-10 h-10 bg-white/10 hover:bg-clay/80 rounded-xl flex items-center justify-center text-white hover:text-white transition-all duration-200 hover:-translate-y-0.5"
                 >
                   <Icon className="h-4 w-4" />
                 </a>
@@ -127,7 +127,7 @@ export default function Footer() {
 
           {/* Quick Links */}
           <AnimatedFooterSection className="lg:col-span-2" delay={100}>
-            <h4 className="text-sm font-semibold text-warm-200 uppercase tracking-wider mb-4">{t('footer.quickLinks')}</h4>
+            <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">{t('footer.quickLinks')}</h4>
             <ul className="space-y-2.5 text-sm">
               {[
                 { to: '/shop', label: t('footer.shopFurniture') },
@@ -137,7 +137,7 @@ export default function Footer() {
                 { to: '/my-designs', label: t('footer.myDesigns') },
               ].map(({ to, label }) => (
                 <li key={to}>
-                  <Link to={to} className="text-warm-400 hover:text-white transition-colors inline-flex items-center gap-1 group">
+                  <Link to={to} className="text-white hover:text-white transition-colors inline-flex items-center gap-1 group">
                     <span className="w-0 group-hover:w-3 overflow-hidden transition-all duration-200">
                       <ArrowRight className="h-3 w-3 text-clay" />
                     </span>
@@ -150,7 +150,7 @@ export default function Footer() {
 
           {/* Services — Interior Define style */}
           <AnimatedFooterSection className="lg:col-span-2" delay={200}>
-            <h4 className="text-sm font-semibold text-warm-200 uppercase tracking-wider mb-4">{t('footer.services')}</h4>
+            <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">{t('footer.services')}</h4>
             <ul className="space-y-2.5 text-sm">
               {[
                 { to: '/shop?gift-cards', label: t('footer.giftCards') },
@@ -161,7 +161,7 @@ export default function Footer() {
                 { to: '/trade-program', label: t('footer.tradeProgram') },
               ].map(({ to, label }) => (
                 <li key={`svc-${to}`}>
-                  <Link to={to} className="text-warm-400 hover:text-white transition-colors inline-flex items-center gap-1 group">
+                  <Link to={to} className="text-white hover:text-white transition-colors inline-flex items-center gap-1 group">
                     <span className="w-0 group-hover:w-3 overflow-hidden transition-all duration-200">
                       <ArrowRight className="h-3 w-3 text-clay" />
                     </span>
@@ -174,8 +174,8 @@ export default function Footer() {
 
           {/* Contact & Newsletter */}
           <AnimatedFooterSection className="lg:col-span-4" delay={300}>
-            <h4 className="text-sm font-semibold text-warm-200 uppercase tracking-wider mb-4">{t('footer.contact')}</h4>
-            <ul className="space-y-3 text-sm text-warm-400 mb-6">
+            <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">{t('footer.contact')}</h4>
+            <ul className="space-y-3 text-sm text-white mb-6">
               <li className="flex items-center gap-2.5">
                 <div className="w-8 h-8 bg-white/5 rounded-lg flex items-center justify-center flex-shrink-0">
                   <Phone className="h-4 w-4 text-forest-light" />
@@ -204,8 +204,8 @@ export default function Footer() {
 
             {/* Newsletter */}
             <div className="bg-white/5 rounded-xl p-4 border border-white/10">
-              <h5 className="text-sm font-semibold text-warm-200 mb-2">{t('footer.stayInspired')}</h5>
-              <p className="text-xs text-warm-500 mb-3">{t('footer.newsletterDesc')}</p>
+              <h5 className="text-sm font-semibold text-white mb-2">{t('footer.stayInspired')}</h5>
+              <p className="text-xs text-white/90 mb-3">{t('footer.newsletterDesc')}</p>
               <form onSubmit={handleNewsletter} className="flex gap-2">
                 <div className="relative flex-1">
                   <input
@@ -213,7 +213,7 @@ export default function Footer() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="your@email.com"
-                    className="w-full px-3 py-2 bg-white/10 border border-white/10 rounded-lg text-sm text-warm-200 placeholder:text-warm-500 focus:outline-none focus:border-clay/50 focus:ring-1 focus:ring-clay/30 transition-colors"
+                    className="w-full px-3 py-2 bg-white/10 border border-white/10 rounded-lg text-sm text-white placeholder:text-white/90 focus:outline-none focus:border-clay/50 focus:ring-1 focus:ring-clay/30 transition-colors"
                     aria-label="Email for newsletter"
                     required
                   />
@@ -243,7 +243,7 @@ export default function Footer() {
       {/* Trust Badges — consistent with app-wide policies */}
       <div className="border-t border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8 text-sm text-warm-400 font-medium">
+          <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8 text-sm text-white font-medium">
             <span className="flex items-center gap-2">
               <Truck className="h-4 w-4 text-clay" />
               {t('footer.freeShippingOver')} {formatPrice(FREE_SHIPPING_THRESHOLD)}
@@ -267,14 +267,14 @@ export default function Footer() {
       {/* Bottom Bar */}
       <div className="border-t border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row justify-between items-center gap-3">
-          <span className="text-xs text-warm-500 text-center sm:text-left">
+          <span className="text-xs text-white/90 text-center sm:text-left">
             &copy; {currentYear} ලී රූ (Lee Roo) &middot; Wood Designs. {t('footer.allRights')}
           </span>
           <div className="flex items-center gap-4">
-            <span className="text-xs text-warm-500">{t('footer.handcrafted')}</span>
+            <span className="text-xs text-white/90">{t('footer.handcrafted')}</span>
             <button
               onClick={scrollToTop}
-              className="w-8 h-8 bg-white/10 hover:bg-clay/80 rounded-lg flex items-center justify-center text-warm-400 hover:text-white transition-all duration-200 hover:-translate-y-0.5"
+              className="w-8 h-8 bg-white/10 hover:bg-clay/80 rounded-lg flex items-center justify-center text-white hover:text-white transition-all duration-200 hover:-translate-y-0.5"
               aria-label="Scroll to top"
             >
               <ArrowUp className="h-4 w-4" />
