@@ -18,9 +18,9 @@ export default function ProtectedRoute({ children, requireAdmin = false }) {
     )
   }
 
-  // If not authenticated, redirect to login with return URL
+  // If not authenticated, redirect to dashboard (/) — never force login page after splash/setup
   if (!user) {
-    return <Navigate to="/login" state={{ from: location }} replace />
+    return <Navigate to="/" state={{ from: location }} replace />
   }
 
   // If admin required but user is not admin, redirect appropriately

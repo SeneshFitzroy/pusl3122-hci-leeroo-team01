@@ -3,7 +3,7 @@ import { Toaster } from 'sonner'
 import useAuthStore from './store/useAuthStore'
 import useThemeStore from './store/useThemeStore'
 import useCartStore from './store/useCartStore'
-import { useEffect, useState, lazy, Suspense } from 'react'
+import { useEffect, useState, useRef, lazy, Suspense } from 'react'
 import { seedProductsToFirestore } from './lib/seedProducts'
 import { ensureDefaultAccounts } from './lib/setupAdmin'
 import SplashScreen from './components/SplashScreen'
@@ -67,11 +67,27 @@ function App() {
   const pathname = (location.pathname || '/').replace(/\/$/, '') || '/'
   const skipSplash = AUTH_PAGES.includes(pathname)
   const [showSplash, setShowSplash] = useState(!skipSplash)
+  const splashJustCompleted = useRef(false)
 
   // Never show splash on auth pages (direct visit or navigation to /login, etc.)
   useEffect(() => {
     if (skipSplash) setShowSplash(false)
   }, [skipSplash])
+
+  // Safeguard: after splash, if we ever land on auth page within 3s, force back to dashboard
+  useEffect(() => {
+    if (!splashJustCompleted.current) return
+    if (AUTH_PAGES.includes(pathname)) {
+      navigate('/', { replace: true })
+    }
+  }, [pathname, navigate])
+
+  useEffect(() => {
+    if (!showSplash && splashJustCompleted.current) {
+      const t = setTimeout(() => { splashJustCompleted.current = false }, 3000)
+      return () => clearTimeout(t)
+    }
+  }, [showSplash])
 
   useEffect(() => {
     initAuth()
@@ -118,9 +134,10 @@ function App() {
       {showSplash && !skipSplash && (
         <SplashScreen
           onComplete={() => {
+            splashJustCompleted.current = true
             setShowSplash(false)
-            // Always navigate to dashboard (Landing) after splash — never leave user on login
-            navigate('/', { replace: true })
+            // Always force navigate to dashboard — overrides any redirect-to-login race
+            setTimeout(() => navigate('/', { replace: true }), 0)
           }}
         />
       )}
