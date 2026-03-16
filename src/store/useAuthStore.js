@@ -57,8 +57,12 @@ const getAuthErrorMessage = (error) => {
     'auth/credential-already-in-use': 'This credential is already used by another account.',
     'auth/user-mismatch': 'Account mismatch. Please sign in with the correct account.',
   }
-  const msg = errorMessages[code] || error?.message || 'Something unexpected happened. Please try again or contact support if the issue persists.'
-  return msg
+  // 400 often means API key HTTP referrer restriction — surface a helpful message
+  const fallback =
+    !code && (error?.message?.includes('400') || error?.message?.toLowerCase?.().includes('bad request'))
+      ? 'This domain may not be allowed. Add it in: (1) Firebase Console → Authentication → Settings → Authorized domains. (2) Google Cloud Console → Credentials → your API key → HTTP referrers: https://lee-roo-wood-designs.vercel.app/* and http://localhost:*'
+      : 'Something unexpected happened. Please try again or contact support if the issue persists.'
+  return errorMessages[code] || error?.message || fallback
 }
 
 const useAuthStore = create((set, get) => ({

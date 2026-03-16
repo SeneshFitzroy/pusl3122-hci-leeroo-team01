@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { Toaster } from 'sonner'
 import useAuthStore from './store/useAuthStore'
 import useThemeStore from './store/useThemeStore'
@@ -54,13 +54,24 @@ function PageLoader() {
   )
 }
 
+const AUTH_PAGES = ['/login', '/register', '/forgot-password', '/admin/login']
+
 function App() {
+  const location = useLocation()
+  const navigate = useNavigate()
   const { darkMode } = useThemeStore()
   const initAuth = useAuthStore((s) => s.initAuth)
   const user = useAuthStore((s) => s.user)
   const loadFromFirestore = useCartStore((s) => s.loadFromFirestore)
   const setUid = useCartStore((s) => s.setUid)
-  const [showSplash, setShowSplash] = useState(true)
+  const pathname = (location.pathname || '/').replace(/\/$/, '') || '/'
+  const skipSplash = AUTH_PAGES.includes(pathname)
+  const [showSplash, setShowSplash] = useState(!skipSplash)
+
+  // Never show splash on auth pages (direct visit or navigation to /login, etc.)
+  useEffect(() => {
+    if (skipSplash) setShowSplash(false)
+  }, [skipSplash])
 
   useEffect(() => {
     initAuth()
@@ -102,7 +113,17 @@ function App() {
 
   return (
     <div className={darkMode ? 'dark' : ''}>
-      {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
+      {/* Preload hero video during splash so it's ready when Landing shows */}
+      <video src="/hero-bg.mp4" preload="auto" muted playsInline className="hidden absolute w-0 h-0" aria-hidden="true" />
+      {showSplash && !skipSplash && (
+        <SplashScreen
+          onComplete={() => {
+            setShowSplash(false)
+            // Always navigate to dashboard (Landing) after splash — never leave user on login
+            navigate('/', { replace: true })
+          }}
+        />
+      )}
 
       <Toaster
         position="top-right"

@@ -45,8 +45,10 @@ function useInView(ref, threshold = 0.15) {
 }
 
 const HERO_POSTER = 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1920&h=1080&fit=crop&q=80'
+/** Dark placeholder so video appears first — no distracting image before video plays */
+const HERO_PLACEHOLDER = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="1" height="1"%3E%3Crect fill="%231a120b" width="1" height="1"/%3E%3C/svg%3E'
 
-/** Single source: hero-bg.mp4 from public/ — 100% local, no external URLs, no Firestore */
+/** Single source: hero-bg.mp4 from public/ — preloaded in index.html. Uses dark placeholder so video appears first. */
 function LandingHeroMedia() {
   const [videoError, setVideoError] = useState(false)
 
@@ -68,7 +70,7 @@ function LandingHeroMedia() {
       loop
       playsInline
       preload="auto"
-      poster={HERO_POSTER}
+      poster={HERO_PLACEHOLDER}
       aria-label="Background video of furniture and living spaces"
       onError={() => setVideoError(true)}
     >

@@ -97,15 +97,24 @@ vercel
 Or connect your GitHub repo to Vercel for auto-deploys.
 
 ### Firebase — Fix 400 on Sign Up/Login
-For auth to work on your Vercel domain (e.g. `lee-roo-wood-designs.vercel.app`):
+A **400** on sign-up/login usually means your domain is not authorized. Do **both** steps below.
 
+**Step 1 — Firebase Authorized Domains**
 1. Open [Firebase Console](https://console.firebase.google.com) → your project
 2. Go to **Authentication** → **Settings** (gear) → **Authorized domains**
 3. Click **Add domain**
-4. Add your Vercel domain(s): `lee-roo-wood-designs.vercel.app`, `d-designs.vercel.app`, or whatever `*.vercel.app` URL your deployment uses
+4. Add: `lee-roo-wood-designs.vercel.app`, `d-designs.vercel.app`, or your exact Vercel URL
 5. Save
 
-Without this, Firebase rejects requests with `400` from unauthorized domains.
+**Step 2 — Google Cloud API Key HTTP Referrers** (if Step 1 alone doesn't fix it)
+1. Open [Google Cloud Console](https://console.cloud.google.com) → select project **pusl3122-group-01**
+2. Go to **APIs & Services** → **Credentials**
+3. Find the **Browser key** (auto-created by Firebase) or your API key
+4. Click it → **Application restrictions** → **HTTP referrers**
+5. Add: `https://lee-roo-wood-designs.vercel.app/*`, `https://*.vercel.app/*`, `http://localhost:*`
+6. Save (may take a few minutes to apply)
+
+Without these, Firebase rejects requests with `400` from unauthorized domains.
 
 ### Cloudflare (optional — CDN/DNS proxy)
 
