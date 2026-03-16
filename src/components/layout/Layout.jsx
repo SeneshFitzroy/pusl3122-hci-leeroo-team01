@@ -18,7 +18,7 @@ export default function Layout() {
         </a>
       )}
       <Navbar />
-      <main id="main-content" className="flex-1 min-w-0 overflow-x-hidden" role="main" aria-label="Main content">
+      <main id="main-content" className={`flex-1 min-w-0 ${isEditor ? 'min-h-0 overflow-hidden' : 'overflow-x-hidden'}`} role="main" aria-label="Main content">
         <Outlet />
       </main>
       {!isEditor && <Footer />}
