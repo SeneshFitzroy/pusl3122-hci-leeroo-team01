@@ -379,7 +379,7 @@ export default function DesignerPanel() {
           <div className="flex flex-col gap-6">
             {/* Filter row */}
             <div>
-              <p className="text-xs font-semibold text-darkwood/50 dark:text-warm-500 uppercase tracking-wider mb-3">Filter by status</p>
+              <p className="text-xs font-semibold text-darkwood dark:text-warm-200 uppercase tracking-wider mb-3">Filter by status</p>
               <div className="flex flex-wrap gap-2">
                 {[
                   { id: 'all', label: 'All designs' },
@@ -408,13 +408,14 @@ export default function DesignerPanel() {
             {/* Search, sort, actions row */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
               <div className="relative flex-1 sm:max-w-xs">
-                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-darkwood/40 dark:text-warm-500" />
+                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-darkwood dark:text-warm-300" />
                 <input
                   type="text"
                   placeholder="Search by design name, client, or email..."
+                  aria-label="Search designs"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 border border-warm-200 dark:border-dark-border bg-white dark:bg-dark-card rounded-xl text-sm text-darkwood dark:text-warm-100 placeholder:text-warm-400 focus:ring-2 focus:ring-clay/30 focus:border-clay outline-none"
+                  className="w-full pl-10 pr-4 py-2.5 border border-warm-200 dark:border-dark-border bg-white dark:bg-dark-card rounded-xl text-sm text-darkwood dark:text-warm-100 placeholder:text-warm-400 dark:placeholder:text-warm-300 focus:ring-2 focus:ring-clay/30 focus:border-clay outline-none"
                 />
               </div>
               <select
@@ -431,7 +432,7 @@ export default function DesignerPanel() {
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => loadDesigns()}
-                  className="p-2.5 rounded-xl border border-warm-200 dark:border-dark-border text-darkwood/60 dark:text-warm-400 hover:border-clay hover:text-clay transition-all"
+                  className="p-2.5 rounded-xl border border-warm-200 dark:border-dark-border text-darkwood dark:text-warm-100 hover:border-clay hover:text-clay transition-all"
                   title="Refresh (Ctrl+R)"
                 >
                   <RefreshCw className="h-4 w-4" />
@@ -453,17 +454,17 @@ export default function DesignerPanel() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Design queue — left column */}
           <div className="lg:col-span-1">
-            <h2 className="text-sm font-semibold text-darkwood/60 dark:text-warm-400 mb-4 flex items-center gap-2">
+            <h2 className="text-sm font-semibold text-darkwood dark:text-warm-100 mb-4 flex items-center gap-2">
               <FolderOpen className="h-4 w-4" /> Design queue
             </h2>
             <div className="space-y-3">
               {filteredDesigns.length === 0 ? (
                 <div className="bg-white dark:bg-dark-card rounded-2xl p-10 border border-warm-200 dark:border-dark-border text-center">
-                  <FolderOpen className="h-14 w-14 text-warm-300 dark:text-warm-600 mx-auto mb-4 opacity-60" />
-                  <p className="text-darkwood/60 dark:text-warm-400 mb-1 font-medium">
+                  <FolderOpen className="h-14 w-14 text-warm-300 dark:text-warm-300 mx-auto mb-4 opacity-60" />
+                  <p className="text-darkwood dark:text-warm-200 mb-1 font-medium">
                     {designs.length === 0 ? 'No designs yet' : 'No designs match filters'}
                   </p>
-                  <p className="text-sm text-darkwood/40 dark:text-warm-500 mb-6">
+                  <p className="text-sm text-darkwood/70 dark:text-warm-300 mb-6">
                     {designs.length === 0 ? 'Load demo data to explore features, or start a new design.' : 'Try changing filters or clearing search.'}
                   </p>
                   {designs.length === 0 ? (
@@ -503,11 +504,11 @@ export default function DesignerPanel() {
                           <StatusIcon className="h-3 w-3" /> {statusCfg.label}
                         </span>
                       </div>
-                      <p className="text-xs text-darkwood/50 dark:text-warm-500 mb-3 flex items-center gap-1.5">
+                      <p className="text-xs text-darkwood/70 dark:text-warm-300 mb-3 flex items-center gap-1.5">
                         <Users className="h-3 w-3" />
                         {design.userName || 'Customer'}
                       </p>
-                      <div className="flex items-center gap-4 text-xs text-darkwood/40 dark:text-warm-600">
+                      <div className="flex items-center gap-4 text-xs text-darkwood/60 dark:text-warm-300">
                         <span>{design.rooms?.reduce((acc, r) => acc + (r.furnitureItems?.length || 0), 0) || 0} items</span>
                         <span>{design.rooms?.length || 1} rooms</span>
                         <span>{design.comments?.length || 0} comments</span>
@@ -526,7 +527,7 @@ export default function DesignerPanel() {
                 {/* Header */}
                 <div className="p-6 sm:p-8 border-b border-warm-200 dark:border-dark-border bg-warm-50/50 dark:bg-dark-surface/30">
                   <h2 className="text-2xl font-bold text-darkwood dark:text-warm-100 font-display mb-1">{selectedDesign.name}</h2>
-                  <p className="text-sm text-darkwood/60 dark:text-warm-400">
+                  <p className="text-sm text-darkwood dark:text-warm-100">
                     Client: {selectedDesign.userName || 'Customer'} • {selectedDesign.userEmail || '—'}
                   </p>
 
@@ -564,7 +565,7 @@ export default function DesignerPanel() {
 
                   {/* Status controls */}
                   <div className="mt-6 pt-6 border-t border-warm-200 dark:border-dark-border">
-                    <p className="text-xs font-semibold text-darkwood/50 dark:text-warm-500 uppercase tracking-wider mb-3">Update status</p>
+                    <p className="text-xs font-semibold text-darkwood dark:text-warm-300 uppercase tracking-wider mb-3">Update status</p>
                     <div className="flex flex-wrap gap-2">
                       {['pending', 'approved', 'revision', 'completed'].map(s => {
                         const cfg = STATUS_CONFIG[s]
@@ -576,7 +577,7 @@ export default function DesignerPanel() {
                             className={`inline-flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium transition-all ${
                               selectedDesign.status === s
                                 ? `${cfg.color} border border-transparent`
-                                : 'border border-warm-200 dark:border-dark-border text-darkwood/60 dark:text-warm-400 hover:border-clay hover:text-clay'
+                                : 'border border-warm-200 dark:border-dark-border text-darkwood dark:text-warm-100 hover:border-clay hover:text-clay'
                             }`}
                             title={cfg.label}
                           >
@@ -593,25 +594,25 @@ export default function DesignerPanel() {
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                     <div className="bg-warm-50 dark:bg-dark-surface rounded-xl p-4 text-center">
                       <div className="text-xl font-bold text-darkwood dark:text-warm-100">{selectedDesign.rooms?.length || 1}</div>
-                      <div className="text-xs text-darkwood/50 dark:text-warm-500 font-medium mt-0.5">Rooms</div>
+                      <div className="text-xs text-darkwood dark:text-warm-300 font-medium mt-0.5">Rooms</div>
                     </div>
                     <div className="bg-warm-50 dark:bg-dark-surface rounded-xl p-4 text-center">
                       <div className="text-xl font-bold text-darkwood dark:text-warm-100">
                         {selectedDesign.rooms?.reduce((acc, r) => acc + (r.furnitureItems?.length || 0), 0) || 0}
                       </div>
-                      <div className="text-xs text-darkwood/50 dark:text-warm-500 font-medium mt-0.5">Items</div>
+                      <div className="text-xs text-darkwood dark:text-warm-300 font-medium mt-0.5">Items</div>
                     </div>
                     <div className="bg-warm-50 dark:bg-dark-surface rounded-xl p-4 text-center">
                       <div className="text-xl font-bold text-darkwood dark:text-warm-100">
                         {selectedDesign.roomWidth || 5}m × {selectedDesign.roomDepth || 4}m
                       </div>
-                      <div className="text-xs text-darkwood/50 dark:text-warm-500 font-medium mt-0.5">Dimensions</div>
+                      <div className="text-xs text-darkwood dark:text-warm-300 font-medium mt-0.5">Dimensions</div>
                     </div>
                     <div className="bg-warm-50 dark:bg-dark-surface rounded-xl p-4 text-center">
                       <div className="text-xl font-bold text-darkwood dark:text-warm-100">
                         {new Date(selectedDesign.createdAt || Date.now()).toLocaleDateString()}
                       </div>
-                      <div className="text-xs text-darkwood/50 dark:text-warm-500 font-medium mt-0.5">Created</div>
+                      <div className="text-xs text-darkwood dark:text-warm-300 font-medium mt-0.5">Created</div>
                     </div>
                   </div>
 
@@ -626,7 +627,7 @@ export default function DesignerPanel() {
                           <div key={idx} className="bg-warm-50 dark:bg-dark-surface rounded-xl p-4">
                             <div className="flex items-center gap-2 mb-2">
                               <span className="text-sm font-medium text-darkwood dark:text-warm-100">{room.name}</span>
-                              <span className="text-xs text-darkwood/40 dark:text-warm-600">({room.furnitureItems?.length || 0} items)</span>
+                              <span className="text-xs text-darkwood dark:text-warm-300">({room.furnitureItems?.length || 0} items)</span>
                             </div>
                             <div className="flex flex-wrap gap-2">
                               {room.furnitureItems?.map((item, fi) => (
@@ -648,13 +649,13 @@ export default function DesignerPanel() {
                     <StickyNote className="h-4 w-4 text-clay" />
                     Private notes (designer only)
                   </h4>
-                  <p className="text-xs text-darkwood/50 dark:text-warm-500 mb-3">Client preferences, budget notes, follow-up reminders — not visible to clients.</p>
+                  <p className="text-xs text-darkwood dark:text-warm-300 mb-3">Client preferences, budget notes, follow-up reminders — not visible to clients.</p>
                   <textarea
                     value={designerNotes}
                     onChange={(e) => setDesignerNotes(e.target.value)}
                     placeholder="e.g. Client prefers natural wood finish. Follow up next week."
                     rows={3}
-                    className="w-full px-4 py-3 border border-warm-200 dark:border-dark-border bg-white dark:bg-dark-card rounded-xl text-sm text-darkwood dark:text-warm-100 placeholder:text-warm-400 focus:ring-2 focus:ring-clay/30 outline-none resize-none"
+                    className="w-full px-4 py-3 border border-warm-200 dark:border-dark-border bg-white dark:bg-dark-card rounded-xl text-sm text-darkwood dark:text-warm-100 placeholder:text-warm-400 dark:placeholder:text-warm-300 focus:ring-2 focus:ring-clay/30 outline-none resize-none"
                   />
                   <button
                     onClick={handleSaveDesignerNotes}
@@ -675,9 +676,9 @@ export default function DesignerPanel() {
                   <div className="space-y-4 mb-6 max-h-72 overflow-y-auto">
                     {(!selectedDesign.comments || selectedDesign.comments.length === 0) && (
                       <div className="text-center py-10 rounded-xl bg-warm-50 dark:bg-dark-surface/50 border border-dashed border-warm-200 dark:border-dark-border">
-                        <MessageSquare className="h-10 w-10 mx-auto mb-3 text-warm-300 dark:text-warm-600 opacity-60" />
-                        <p className="text-sm font-medium text-darkwood/60 dark:text-warm-400 mb-1">No comments yet</p>
-                        <p className="text-xs text-darkwood/40 dark:text-warm-500">Add your first review below.</p>
+                        <MessageSquare className="h-10 w-10 mx-auto mb-3 text-warm-300 dark:text-warm-300 opacity-60" />
+                        <p className="text-sm font-medium text-darkwood dark:text-warm-100 mb-1">No comments yet</p>
+                        <p className="text-xs text-darkwood dark:text-warm-300">Add your first review below.</p>
                       </div>
                     )}
                     {selectedDesign.comments?.map((c, ci) => (
@@ -689,7 +690,7 @@ export default function DesignerPanel() {
                             </div>
                             <span className="text-sm font-semibold text-darkwood dark:text-warm-100">{c.author}</span>
                           </div>
-                          <span className="text-xs text-darkwood/40 dark:text-warm-600">
+                          <span className="text-xs text-darkwood dark:text-warm-300">
                             {c.date ? new Date(c.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : ''}
                           </span>
                         </div>
@@ -713,7 +714,7 @@ export default function DesignerPanel() {
                       onChange={(e) => setComment(e.target.value)}
                       placeholder="Share your feedback on this design..."
                       rows={3}
-                      className="w-full px-4 py-3 border border-warm-200 dark:border-dark-border bg-warm-50 dark:bg-dark-surface rounded-xl text-sm text-darkwood dark:text-warm-100 placeholder:text-warm-400 focus:ring-2 focus:ring-clay/30 focus:border-clay outline-none resize-none mb-4"
+                      className="w-full px-4 py-3 border border-warm-200 dark:border-dark-border bg-warm-50 dark:bg-dark-surface rounded-xl text-sm text-darkwood dark:text-warm-100 placeholder:text-warm-400 dark:placeholder:text-warm-300 focus:ring-2 focus:ring-clay/30 focus:border-clay outline-none resize-none mb-4"
                     />
                     <button
                       onClick={() => handleAddComment(selectedDesign.id)}
@@ -728,9 +729,9 @@ export default function DesignerPanel() {
               </div>
             ) : (
               <div className="bg-white dark:bg-dark-card rounded-2xl border border-warm-200 dark:border-dark-border p-16 text-center">
-                <Eye className="h-20 w-20 text-warm-300 dark:text-warm-600 mx-auto mb-5 opacity-50" />
-                <h3 className="text-xl font-bold text-darkwood dark:text-warm-200 mb-2">Select a design to review</h3>
-                <p className="text-darkwood/50 dark:text-warm-400 max-w-sm mx-auto leading-relaxed">
+                <Eye className="h-20 w-20 text-warm-400 dark:text-warm-300 mx-auto mb-5 opacity-70" />
+                <h3 className="text-xl font-bold text-darkwood dark:text-warm-100 mb-2">Select a design to review</h3>
+                <p className="text-darkwood/70 dark:text-warm-300 max-w-sm mx-auto leading-relaxed">
                   Choose a design from the list to view details, add comments, and update its status.
                 </p>
               </div>
