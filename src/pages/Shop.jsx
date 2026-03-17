@@ -257,7 +257,7 @@ export default function Shop() {
                           className={`px-3 py-1.5 text-xs font-medium rounded-full transition-all duration-200 border ${
                             quickFilters[key]
                               ? 'bg-clay text-white border-clay'
-                              : 'bg-warm-50 dark:bg-dark-surface text-darkwood dark:text-warm-200 border-warm-200 dark:border-dark-border hover:border-clay/40 hover:text-clay'
+                              : 'bg-warm-50 dark:bg-dark-surface text-[#1C1C1C] dark:text-white border-warm-200 dark:border-dark-border hover:border-clay/40 dark:hover:border-clay/50 hover:text-clay dark:hover:text-clay'
                           }`}
                         >
                           {label}

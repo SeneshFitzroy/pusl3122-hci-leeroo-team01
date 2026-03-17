@@ -368,10 +368,10 @@ export default function Landing() {
                     </button>
                   </div>
                   <div className="p-8">
-                    <p className="text-xs font-medium text-oak uppercase tracking-wider mb-2">{t(CATEGORY_LABEL_KEYS[product.category] || 'shop.category.livingRoom')}</p>
-                    <h3 className="font-display font-medium text-xl text-charcoal dark:text-stone-100 group-hover:text-oak transition-colors">{product.name}</h3>
+                    <p className="text-xs font-medium text-oak dark:text-clay uppercase tracking-wider mb-2">{t(CATEGORY_LABEL_KEYS[product.category] || 'shop.category.livingRoom')}</p>
+                    <h3 className="font-display font-medium text-xl text-[#1C1C1C] dark:text-white group-hover:text-oak transition-colors">{product.name}</h3>
                     <div className="flex items-center justify-between mt-4">
-                      <span className="text-xl font-medium text-charcoal dark:text-stone-100">{formatPrice(product.price)}</span>
+                      <span className="text-xl font-medium text-[#1C1C1C] dark:text-white">{formatPrice(product.price)}</span>
                       <div className="flex items-center gap-1" aria-label={`Rating: ${product.rating} out of 5`}>
                         {[...Array(5)].map((_, i) => (
                           <Star key={i} className={`h-4 w-4 ${i < Math.round(product.rating || 0) ? 'text-amber-500 fill-amber-500' : 'text-stone-200 dark:text-dark-border'}`} />
@@ -442,7 +442,7 @@ export default function Landing() {
           </div>
 
           <AnimatedSection className="text-center mt-14">
-            <Link to="/shop" className="inline-flex items-center justify-center gap-2 px-10 py-4 border-2 border-charcoal text-charcoal dark:border-warm-200 dark:text-warm-200 font-medium text-sm uppercase tracking-widest hover:bg-charcoal hover:text-stone-50 dark:hover:bg-warm-200 dark:hover:text-gray-900 transition-all duration-300 rounded-xl">
+            <Link to="/shop" className="inline-flex items-center justify-center gap-2 px-10 py-4 border-2 border-charcoal text-charcoal dark:border-white dark:text-white font-medium text-sm uppercase tracking-widest hover:bg-charcoal hover:text-stone-50 dark:hover:bg-white dark:hover:text-gray-900 transition-all duration-300 rounded-xl">
               {t('landing.viewAllProducts')} <ArrowRight className="h-4 w-4" />
             </Link>
           </AnimatedSection>
