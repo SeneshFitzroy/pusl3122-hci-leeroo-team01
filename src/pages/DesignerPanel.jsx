@@ -349,7 +349,7 @@ export default function DesignerPanel() {
               <Link
                 to="/editor"
                 title="Create New Design (Ctrl+N)"
-                className="inline-flex items-center gap-2 px-5 py-3 bg-white text-darkwood hover:bg-warm-50 rounded-xl font-semibold text-sm transition-all shadow-lg hover:shadow-xl hover:scale-[1.02]"
+                className="inline-flex items-center gap-2 px-5 py-3 bg-white text-gray-900 hover:bg-warm-50 rounded-xl font-semibold text-sm transition-all shadow-lg hover:shadow-xl hover:scale-[1.02]"
               >
                 <Plus className="h-4 w-4" /> Create New Design
               </Link>

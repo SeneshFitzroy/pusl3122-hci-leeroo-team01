@@ -266,7 +266,7 @@ export default function MyDesigns() {
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-200 flex items-center justify-center opacity-0 group-hover:opacity-100">
                     <Link
                       to={`/editor/${design.id}`}
-                      className="bg-white text-darkwood px-4 py-2 rounded-lg font-medium hover:bg-warm-50 transition-colors"
+                      className="bg-white text-gray-900 px-4 py-2 rounded-lg font-medium hover:bg-warm-50 transition-colors"
                     >
                       <Eye className="h-4 w-4 mr-2 inline" />
                       {t('myDesigns.open')}

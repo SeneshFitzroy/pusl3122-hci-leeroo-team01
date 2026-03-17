@@ -245,6 +245,38 @@ input[type="range"] {
 }
 
 /* ── Dark mode: global text visibility fixes ── */
+
+/* Force darkwood text (all opacity variants) to white in dark mode */
+html.dark .text-darkwood,
+html.dark .text-darkwood\/50,
+html.dark .text-darkwood\/60,
+html.dark .text-darkwood\/70,
+html.dark .text-darkwood\/80,
+html.dark .text-darkwood\/90,
+html.dark .text-darkwood-light {
+  color: #FFFFFF !important;
+}
+
+/* Force charcoal text (all opacity variants) to white in dark mode */
+html.dark .text-charcoal\/40,
+html.dark .text-charcoal\/50,
+html.dark .text-charcoal\/60,
+html.dark .text-charcoal\/70,
+html.dark .text-charcoal\/80,
+html.dark .text-charcoal\/90 {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+/* Force warm muted text to be visible in dark mode */
+html.dark .text-warm-300 { color: rgba(255, 255, 255, 0.6) !important; }
+html.dark .text-warm-400 { color: rgba(255, 255, 255, 0.7) !important; }
+html.dark .text-warm-500 { color: rgba(255, 255, 255, 0.8) !important; }
+html.dark .text-warm-600 { color: rgba(255, 255, 255, 0.85) !important; }
+html.dark .text-warm-700 { color: #FFFFFF !important; }
+html.dark .text-warm-800 { color: #FFFFFF !important; }
+html.dark .text-warm-900 { color: #FFFFFF !important; }
+html.dark .text-warm-950 { color: #FFFFFF !important; }
+
 html.dark .cookie-consent-banner,
 html.dark .cookie-consent-banner h3,
 html.dark .cookie-consent-banner p,
@@ -272,12 +304,22 @@ footer.bg-darkwood input::placeholder {
 /* Dark mode placeholders */
 html.dark input::placeholder,
 html.dark textarea::placeholder {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+html.dark select {
   color: #FFFFFF !important;
 }
 
-/* Dark mode: all text inside dark-bg/dark-card containers should be white */
+/* Dark mode: all text inside dark containers should be white */
 html.dark .dark\:bg-dark-bg,
 html.dark .dark\:bg-dark-card,
 html.dark .dark\:bg-dark-surface {
   color: #FFFFFF;
+}
+
+/* Elements on bg-white/bg-stone in dark mode should keep dark text */
+html.dark .bg-white .text-charcoal,
+html.dark .bg-stone-50 .text-charcoal,
+html.dark [class*="bg-white"] > .text-charcoal {
+  color: #1C1C1C !important;
 }

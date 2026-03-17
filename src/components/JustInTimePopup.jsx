@@ -58,7 +58,7 @@ export default function JustInTimePopup() {
         >
           <button
             onClick={handleClose}
-            className="absolute top-4 right-4 p-1.5 rounded-lg hover:bg-warm-100 dark:hover:bg-dark-surface text-darkwood/50 transition-colors z-10"
+            className="absolute top-4 right-4 p-1.5 rounded-lg hover:bg-warm-100 dark:hover:bg-dark-surface text-darkwood/50 dark:text-white transition-colors z-10"
             aria-label="Close"
           >
             <X className="h-5 w-5" />

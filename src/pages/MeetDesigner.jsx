@@ -447,7 +447,7 @@ export default function MeetDesigner() {
             </motion.div>
 
             <motion.a variants={fadeInUp} href="#designers"
-              className="inline-flex items-center px-8 py-4 bg-white hover:bg-warm-50 text-darkwood font-bold rounded-full transition-all duration-300 group shadow-2xl hover:scale-105"
+              className="inline-flex items-center px-8 py-4 bg-white hover:bg-warm-50 text-gray-900 font-bold rounded-full transition-all duration-300 group shadow-2xl hover:scale-105"
             >
               <span>Browse Designers</span>
               <ArrowRight className="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -674,14 +674,14 @@ export default function MeetDesigner() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a href="#designers"
-                className="inline-flex items-center justify-center px-8 py-4 bg-white hover:bg-warm-50 text-darkwood font-bold rounded-full transition-all group shadow-2xl hover:scale-105"
+                className="inline-flex items-center justify-center px-8 py-4 bg-white hover:bg-warm-50 text-gray-900 font-bold rounded-full transition-all group shadow-2xl hover:scale-105"
               >
                 <Calendar className="h-5 w-5 mr-2" />
                 <span>Book Free Consultation</span>
                 <ArrowRight className="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform" />
               </a>
               <Link to="/shop"
-                className="inline-flex items-center justify-center px-8 py-4 bg-transparent border-2 border-white hover:bg-white hover:text-darkwood text-white font-bold rounded-full transition-all group shadow-xl"
+                className="inline-flex items-center justify-center px-8 py-4 bg-transparent border-2 border-white hover:bg-white hover:text-gray-900 text-white font-bold rounded-full transition-all group shadow-xl"
               >
                 <span>Browse Furniture</span>
                 <ArrowRight className="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform" />

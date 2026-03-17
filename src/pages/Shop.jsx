@@ -395,7 +395,7 @@ export default function Shop() {
                           className={`p-3 rounded-xl font-medium text-sm transition-all duration-200 backdrop-blur-sm ${
                             isInCart(product.id)
                               ? 'bg-green-500 text-white'
-                              : 'bg-white/95 text-darkwood hover:bg-clay hover:text-white'
+                              : 'bg-white/95 text-gray-900 hover:bg-clay hover:text-white'
                           }`}
                           title={isInCart(product.id) ? t('shop.added') : t('shop.addToCart')}
                         >

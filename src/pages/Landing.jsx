@@ -281,7 +281,7 @@ export default function Landing() {
           >
             <Link
               to="/shop"
-              className="inline-flex items-center justify-center gap-2.5 px-10 py-4 border-2 border-white bg-white/95 text-charcoal font-medium text-sm uppercase tracking-widest hover:bg-white hover:border-white transition-all duration-300 drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)] focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-transparent focus:ring-offset-4"
+              className="inline-flex items-center justify-center gap-2.5 px-10 py-4 border-2 border-white bg-white/95 text-gray-900 font-medium text-sm uppercase tracking-widest hover:bg-white hover:border-white transition-all duration-300 drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)] focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-transparent focus:ring-offset-4"
             >
               {t('footer.shopCollection')}
               <ArrowRight className="h-4 w-4" />
@@ -413,7 +413,7 @@ export default function Landing() {
                     <span className="absolute top-4 left-4 px-3 py-1.5 rounded-lg bg-oak/90 text-stone-50 text-xs font-medium" aria-hidden="true">
                       {t('landing.bestSeller')}
                     </span>
-                    <button onClick={() => addToWishlist(product)} className="absolute top-4 right-4 p-2.5 rounded-xl bg-stone-50/90 backdrop-blur-sm text-charcoal/40 hover:text-red-500 transition-colors" aria-label={`Add ${product.name} to wishlist`}>
+                    <button onClick={() => addToWishlist(product)} className="absolute top-4 right-4 p-2.5 rounded-xl bg-stone-50/90 dark:bg-dark-card/90 backdrop-blur-sm text-charcoal/40 dark:text-white/60 hover:text-red-500 transition-colors" aria-label={`Add ${product.name} to wishlist`}>
                       <Heart className="h-4 w-4" />
                     </button>
                   </div>
@@ -442,7 +442,7 @@ export default function Landing() {
           </div>
 
           <AnimatedSection className="text-center mt-14">
-            <Link to="/shop" className="inline-flex items-center justify-center gap-2 px-10 py-4 border-2 border-charcoal text-charcoal font-medium text-sm uppercase tracking-widest hover:bg-charcoal hover:text-stone-50 transition-all duration-300 rounded-xl">
+            <Link to="/shop" className="inline-flex items-center justify-center gap-2 px-10 py-4 border-2 border-charcoal text-charcoal dark:border-warm-200 dark:text-warm-200 font-medium text-sm uppercase tracking-widest hover:bg-charcoal hover:text-stone-50 dark:hover:bg-warm-200 dark:hover:text-gray-900 transition-all duration-300 rounded-xl">
               {t('landing.viewAllProducts')} <ArrowRight className="h-4 w-4" />
             </Link>
           </AnimatedSection>
@@ -460,10 +460,10 @@ export default function Landing() {
               {t('landing.cta.desc')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/shop" className="inline-flex items-center justify-center gap-2 px-10 py-4 bg-white text-charcoal font-semibold text-sm uppercase tracking-widest hover:bg-stone-100 transition-all duration-300 rounded-xl shadow-lg">
+              <Link to="/shop" className="inline-flex items-center justify-center gap-2 px-10 py-4 bg-white text-gray-900 font-semibold text-sm uppercase tracking-widest hover:bg-stone-100 transition-all duration-300 rounded-xl shadow-lg">
                 {t('footer.shopCollection')} <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link to="/shop" className="inline-flex items-center justify-center gap-2 px-10 py-4 border-2 border-white text-white font-semibold text-sm uppercase tracking-widest hover:bg-white hover:text-charcoal transition-all duration-300 rounded-xl">
+              <Link to="/shop" className="inline-flex items-center justify-center gap-2 px-10 py-4 border-2 border-white text-white font-semibold text-sm uppercase tracking-widest hover:bg-white hover:text-gray-900 transition-all duration-300 rounded-xl">
                 {t('landing.exploreMore')}
               </Link>
             </div>

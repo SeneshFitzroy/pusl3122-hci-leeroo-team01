@@ -381,7 +381,7 @@ export default function PropertiesPanel({ selectedItem }) {
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-gray-500 dark:text-white">Instance ID:</span>
-            <span className="font-mono text-xs text-gray-400 dark:text-gray-500">
+            <span className="font-mono text-xs text-gray-400 dark:text-gray-300">
               {selectedItem.instanceId?.substring(0, 8)}...
             </span>
           </div>
