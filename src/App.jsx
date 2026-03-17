@@ -35,6 +35,10 @@ const MeetDesigner = lazy(() => import('./pages/MeetDesigner'))
 const DesignerPanel = lazy(() => import('./pages/DesignerPanel'))
 const TrackDelivery = lazy(() => import('./pages/TrackDelivery'))
 
+// Preload critical pages so navigation is instant
+const preloadPages = () => { import('./pages/Shop'); import('./pages/ProductDetail'); import('./pages/Cart') }
+setTimeout(preloadPages, 1000)
+
 /** Redirect /dashboard: designers → designer-panel, others → shop */
 function DashboardRedirect() {
   const isDesignerOnly = useAuthStore((s) => s.isDesignerOnly)
@@ -69,6 +73,11 @@ function App() {
   const skipSplash = AUTH_PAGES.includes(pathname)
   const [showSplash, setShowSplash] = useState(!skipSplash)
   const splashJustCompleted = useRef(false)
+
+  // Scroll to top on every route change for snappy navigation feel
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
 
   // Never show splash on auth pages (direct visit or navigation to /login, etc.)
   useEffect(() => {

@@ -23,7 +23,7 @@ export default function SplashScreen({ onComplete }) {
     setAudioUnlocked(true)
     unlockAndPlayAmbient()
     setPhase('exiting')
-    setTimeout(() => onComplete?.(), 800)
+    setTimeout(() => onComplete?.(), 400)
   }, [onComplete, setAudioUnlocked])
 
   const handleTap = useCallback(() => {
@@ -35,14 +35,14 @@ export default function SplashScreen({ onComplete }) {
 
   useEffect(() => {
     const start = Date.now()
-    const duration = 3200
+    const duration = 1800
     let raf
     const tick = () => {
       const elapsed = Date.now() - start
       const pct = Math.min(100, Math.round((1 - Math.pow(1 - elapsed / duration, 3)) * 100))
       setProgress(pct)
       if (pct < 100) raf = requestAnimationFrame(tick)
-      else setTimeout(handleComplete, 500)
+      else setTimeout(handleComplete, 200)
     }
     raf = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(raf)
