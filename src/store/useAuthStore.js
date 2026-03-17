@@ -65,15 +65,18 @@ const getAuthErrorMessage = (error) => {
   return errorMessages[code] || error?.message || fallback
 }
 
+let _authUnsubscribe = null
+
 const useAuthStore = create((set, get) => ({
   user: null,
   userProfile: null,
   loading: true,
   error: null,
 
-  // Initialize auth listener + handle Google redirect result (mobile sign-in)
+  // Initialize auth listener (runs once) + handle Google redirect result (mobile sign-in)
   initAuth: () => {
-    onAuthStateChanged(auth, async (user) => {
+    if (_authUnsubscribe) return
+    _authUnsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         let userProfile = null
         try {

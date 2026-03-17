@@ -399,7 +399,7 @@ export default function RoomEditor() {
         </div>
 
         {/* ── Main Canvas Area ── */}
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col min-w-[320px]">
           {/* Room Tabs */}
           <div className="bg-white dark:bg-dark-card border-b border-warm-200 dark:border-dark-border px-4 pt-2 flex items-center gap-1 overflow-x-auto scrollbar-hide">
             {rooms.map((room, idx) => (

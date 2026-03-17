@@ -154,7 +154,7 @@ export default function Cart() {
                             <Plus className="h-3.5 w-3.5 text-darkwood/60 dark:text-white" />
                           </button>
                         </div>
-                        <span className="text-xs text-warm-400">x {formatPrice(item.price)}</span>
+                        <span className="text-xs text-warm-400 dark:text-white/70">x {formatPrice(item.price)}</span>
                       </div>
                     </div>
 
@@ -208,11 +208,11 @@ export default function Cart() {
 
                 <div className="flex gap-2">
                   <div className="relative flex-1">
-                    <Tag className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-warm-400" />
+                    <Tag className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-warm-400 dark:text-white/70" />
                     <input
                       type="text"
                       placeholder={t('cart.promoCode')}
-                      className="w-full pl-10 pr-4 py-2.5 bg-warm-50 dark:bg-dark-bg border border-warm-200 dark:border-dark-border rounded-xl text-sm text-darkwood dark:text-white placeholder-warm-400 focus:outline-none focus:ring-2 focus:ring-clay/40 focus:border-clay transition-all"
+                      className="w-full pl-10 pr-4 py-2.5 bg-warm-50 dark:bg-dark-bg border border-warm-200 dark:border-dark-border rounded-xl text-sm text-darkwood dark:text-white placeholder:text-warm-400 dark:placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-clay/40 focus:border-clay transition-all"
                     />
                   </div>
                   <button className="px-4 py-2.5 bg-warm-100 dark:bg-dark-surface text-darkwood/70 dark:text-white rounded-xl text-sm font-semibold hover:bg-warm-200 dark:hover:bg-dark-border transition-colors">

@@ -4,6 +4,8 @@ import {
   Home,
   ShoppingCart,
   Heart,
+  Search,
+  Truck,
   Moon,
   Sun,
   LogOut,
@@ -298,6 +300,38 @@ export default function Navbar() {
                 </motion.div>
               </AnimatePresence>
             </button>
+
+            {/* Search — links to shop (has search bar) */}
+            {!designerOnly && (
+              <Link
+                to="/shop"
+                className={`relative p-2 rounded-xl transition-colors ${
+                  isLandingPage && !isScrolled
+                    ? 'text-white/70 hover:text-white hover:bg-white/10'
+                    : 'text-darkwood/50 dark:text-white hover:bg-warm-100 dark:hover:bg-dark-surface'
+                }`}
+                aria-label="Search products"
+                title={t('nav.search') || 'Search'}
+              >
+                <Search className="h-5 w-5" />
+              </Link>
+            )}
+
+            {/* Delivery track — from user pathway diagram */}
+            {!designerOnly && (
+              <Link
+                to="/track-delivery"
+                className={`relative p-2 rounded-xl transition-colors ${
+                  isLandingPage && !isScrolled
+                    ? 'text-white/70 hover:text-white hover:bg-white/10'
+                    : 'text-darkwood/50 dark:text-white hover:bg-warm-100 dark:hover:bg-dark-surface'
+                }`}
+                aria-label="Track delivery"
+                title={t('nav.trackDelivery') || 'Track delivery'}
+              >
+                <Truck className="h-5 w-5" />
+              </Link>
+            )}
 
             {/* Cart — hidden for designer-only users */}
             {!designerOnly && (

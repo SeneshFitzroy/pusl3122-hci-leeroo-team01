@@ -28,7 +28,8 @@ export default function AccessibilityToggle() {
   useEffect(() => {
     const root = document.documentElement
     root.classList.toggle('a11y-high-contrast', a11y.highContrast)
-    root.classList.toggle('a11y-large-text', a11y.largeText)
+    root.classList.toggle('a11y-large-text', (a11y.fontSizeScale || 100) > 100)
+    root.style.setProperty('--a11y-font-scale', `${a11y.fontSizeScale ?? 100}%`)
 
     root.classList.remove('a11y-protanopia', 'a11y-deuteranopia', 'a11y-tritanopia')
     if (a11y.colorBlindMode !== 'none') {
@@ -36,17 +37,17 @@ export default function AccessibilityToggle() {
     }
   }, [a11y])
 
-  const anyActive = a11y.highContrast || a11y.largeText || a11y.colorBlindMode !== 'none'
+  const anyActive = a11y.highContrast || (a11y.fontSizeScale ?? 100) > 100 || a11y.colorBlindMode !== 'none'
 
   return (
     <>
       {/* Floating trigger */}
       <motion.button
         onClick={handleOpen}
-        className={`fixed bottom-6 left-6 z-40 w-11 h-11 rounded-full backdrop-blur-xl border shadow-lg flex items-center justify-center transition-all hover:scale-110 ${
+        className={`fixed bottom-6 left-6 z-40 w-11 h-11 rounded-full backdrop-blur-xl border-2 shadow-lg flex items-center justify-center transition-all hover:scale-110 ${
           anyActive
-            ? 'bg-forest/90 border-forest-light/60 text-white'
-            : 'bg-white/90 dark:bg-dark-card/90 border-warm-200/60 dark:border-dark-border/60 text-darkwood/60 dark:text-white hover:text-forest dark:hover:text-forest-light'
+            ? 'bg-forest border-forest-light text-white'
+            : 'bg-white dark:bg-dark-card border-warm-300 dark:border-dark-border text-charcoal dark:text-white hover:text-forest dark:hover:text-forest-light hover:border-forest/50'
         }`}
         aria-label="Accessibility settings"
         initial={{ opacity: 0, scale: 0 }}
@@ -137,35 +138,36 @@ export default function AccessibilityToggle() {
                   </div>
                 </button>
 
-                {/* Large Text */}
-                <button
-                  onClick={() => setA11y('largeText', !a11y.largeText)}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border transition-all ${
-                    a11y.largeText
-                      ? 'bg-forest/10 dark:bg-forest/20 border-forest/30 dark:border-forest/40'
-                      : 'bg-warm-50 dark:bg-dark-surface border-warm-100 dark:border-dark-border hover:border-forest/30'
-                  }`}
-                  aria-pressed={a11y.largeText}
-                >
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                    a11y.largeText ? 'bg-forest text-white' : 'bg-warm-100 dark:bg-dark-border text-darkwood/40 dark:text-white'
-                  }`}>
-                    <Type className="h-4 w-4" />
+                {/* Font Size Slider */}
+                <div className="px-4 py-3 rounded-xl border bg-warm-50 dark:bg-dark-surface border-warm-100 dark:border-dark-border">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                      (a11y.fontSizeScale ?? 100) > 100 ? 'bg-forest text-white' : 'bg-warm-100 dark:bg-dark-border text-darkwood/40 dark:text-white'
+                    }`}>
+                      <Type className="h-4 w-4" />
+                    </div>
+                    <div className="text-left flex-1">
+                      <p className="text-sm font-medium text-darkwood dark:text-white">Font Size</p>
+                      <p className="text-[10px] text-darkwood/40 dark:text-white">
+                        {a11y.fontSizeScale ?? 100}% — adjust to any amount
+                      </p>
+                    </div>
                   </div>
-                  <div className="text-left flex-1">
-                    <p className="text-sm font-medium text-darkwood dark:text-white">Large Text</p>
-                    <p className="text-[10px] text-darkwood/40 dark:text-white">Bigger readable fonts</p>
-                  </div>
-                  <div className={`w-10 h-6 rounded-full transition-colors ${
-                    a11y.largeText ? 'bg-forest' : 'bg-warm-200 dark:bg-dark-border'
-                  }`}>
-                    <motion.div
-                      className="w-5 h-5 bg-white rounded-full shadow-sm mt-0.5"
-                      animate={{ x: a11y.largeText ? 18 : 2 }}
-                      transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] text-darkwood/50 dark:text-white/70 font-mono">75%</span>
+                    <input
+                      type="range"
+                      min="75"
+                      max="200"
+                      step="5"
+                      value={a11y.fontSizeScale ?? 100}
+                      onChange={(e) => setA11y('fontSizeScale', Number(e.target.value))}
+                      className="flex-1 h-2 bg-warm-200 dark:bg-dark-border rounded-full appearance-none cursor-pointer accent-forest"
+                      aria-label="Font size"
                     />
+                    <span className="text-[10px] text-darkwood/50 dark:text-white/70 font-mono">200%</span>
                   </div>
-                </button>
+                </div>
 
                 {/* Color Blindness Filter */}
                 <div className="px-4 py-3 rounded-xl border bg-warm-50 dark:bg-dark-surface border-warm-100 dark:border-dark-border">
@@ -203,7 +205,7 @@ export default function AccessibilityToggle() {
                   <button
                     onClick={() => {
                       setA11y('highContrast', false)
-                      setA11y('largeText', false)
+                      setA11y('fontSizeScale', 100)
                       setA11y('colorBlindMode', 'none')
                     }}
                     className="w-full py-2.5 rounded-xl text-xs font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors"

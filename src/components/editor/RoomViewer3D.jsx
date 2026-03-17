@@ -413,32 +413,31 @@ export default function RoomViewer3D() {
         </div>
       </div>
 
-      {/* View Controls */}
-      <div className="absolute top-4 right-4 z-10 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm rounded-lg p-3">
-        <div className="flex flex-col space-y-2">
-          <button
-            onClick={() => setShowWireframe(!showWireframe)}
-            className={`px-3 py-1 text-xs rounded transition-colors ${
-              showWireframe
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-700'
-            }`}
-          >
-            Wireframe
-          </button>
-          <button
-            onClick={() => {
-              // Reset camera view
-              const width = roomSettings?.width || 5
-              const height = roomSettings?.height || 4
-              const distance = Math.max(width, height) * 1.5
-              setCameraPosition([distance, distance * 0.8, distance])
-            }}
-            className="px-3 py-1 text-xs bg-amber-600 text-white rounded hover:bg-amber-700 transition-colors"
-          >
-            Reset View
-          </button>
-        </div>
+      {/* View Controls — positioned to stay visible when sidebar resizes */}
+      <div className="absolute top-4 right-4 z-10 flex flex-col gap-2 pointer-events-auto">
+        <button
+          onClick={() => setShowWireframe(!showWireframe)}
+          className={`px-3 py-2 text-xs font-medium rounded-lg shadow-md transition-colors whitespace-nowrap ${
+            showWireframe
+              ? 'bg-blue-600 text-white'
+              : 'bg-white/95 dark:bg-dark-card/95 text-darkwood dark:text-white hover:bg-warm-100 dark:hover:bg-dark-surface border border-warm-200 dark:border-dark-border'
+          }`}
+          title="Toggle wireframe mode for 3D mesh"
+        >
+          Wireframe
+        </button>
+        <button
+          onClick={() => {
+            const width = roomSettings?.width || 5
+            const height = roomSettings?.height || 4
+            const distance = Math.max(width, height) * 1.5
+            setCameraPosition([distance, distance * 0.8, distance])
+          }}
+          className="px-3 py-2 text-xs font-medium bg-clay text-white rounded-lg shadow-md hover:bg-clay-dark transition-colors whitespace-nowrap"
+          title="Reset 3D camera to default angle"
+        >
+          Reset View
+        </button>
       </div>
 
       {/* Rotation indicator — visible overlay so users know they can rotate */}

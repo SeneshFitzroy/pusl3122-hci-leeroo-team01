@@ -12,7 +12,7 @@ export default function Login() {
   const location = useLocation()
   const { t } = useTranslation()
 
-  const { user, login, loginWithGoogle, loading, error, clearError } = useAuthStore()
+  const { user, userProfile, login, loginWithGoogle, loading, error, clearError, isAdmin, isDesignerOnly } = useAuthStore()
 
   const [formData, setFormData] = useState({ email: '', password: '' })
   const [showPassword, setShowPassword] = useState(false)
@@ -23,13 +23,18 @@ export default function Login() {
     setValidationErrors({})
   }, [formData, clearError])
 
-  // Redirect when user lands after Google sign-in redirect
+  // Redirect after login: admin → /admin, designer-only → /designer-panel, others → from or /shop
   useEffect(() => {
-    if (user) {
-      const from = location.state?.from?.pathname || '/shop'
-      navigate(from, { replace: true })
+    if (!user || !userProfile) return
+    const from = location.state?.from?.pathname
+    if (isAdmin()) {
+      navigate('/admin', { replace: true })
+    } else if (isDesignerOnly()) {
+      navigate('/designer-panel', { replace: true })
+    } else {
+      navigate(from || '/shop', { replace: true })
     }
-  }, [user, navigate, location.state])
+  }, [user, userProfile, navigate, location.state, isAdmin, isDesignerOnly])
 
   const validateForm = () => {
     const errors = {}
@@ -55,11 +60,11 @@ export default function Login() {
     }
     try {
       await login(formData.email, formData.password)
-      toast.success(t('auth.welcomeBack'), {
-        description: t('auth.signInSuccess'),
-      })
-      const from = location.state?.from?.pathname || '/shop'
-      navigate(from, { replace: true })
+      toast.success(t('auth.welcomeBack'), { description: t('auth.signInSuccess') })
+      const store = useAuthStore.getState()
+      if (store.isAdmin()) navigate('/admin', { replace: true })
+      else if (store.isDesignerOnly()) navigate('/designer-panel', { replace: true })
+      else navigate(location.state?.from?.pathname || '/shop', { replace: true })
     } catch (err) {
       const message = err?.friendlyMessage || t('auth.signInError')
       toast.error(t('auth.signInFailed'), { description: message, duration: 5000 })
@@ -71,8 +76,10 @@ export default function Login() {
       const result = await loginWithGoogle()
       if (!result) return
       toast.success(t('auth.welcomeBack'), { description: t('auth.signInSuccess'), duration: 1800 })
-      const from = location.state?.from?.pathname || '/shop'
-      navigate(from, { replace: true })
+      const store = useAuthStore.getState()
+      if (store.isAdmin()) navigate('/admin', { replace: true })
+      else if (store.isDesignerOnly()) navigate('/designer-panel', { replace: true })
+      else navigate(location.state?.from?.pathname || '/shop', { replace: true })
     } catch (err) {
       const message = err?.friendlyMessage || t('auth.googleError')
       toast.error(t('auth.googleFailed'), { description: message, duration: 5000 })

@@ -36,6 +36,12 @@ const useThemeStore = create((set, get) => ({
   // Accessibility state
   a11y: {
     highContrast: localStorage.getItem('Lee Roo-a11y-highContrast') === 'true',
+    fontSizeScale: (() => {
+      const s = localStorage.getItem('Lee Roo-a11y-fontSizeScale')
+      if (s) return Math.min(200, Math.max(75, Number(s)))
+      if (localStorage.getItem('Lee Roo-a11y-largeText') === 'true') return 118
+      return 100
+    })(),
     largeText: localStorage.getItem('Lee Roo-a11y-largeText') === 'true',
     colorBlindMode: localStorage.getItem('Lee Roo-a11y-colorBlind') || 'none',
   },
@@ -95,7 +101,13 @@ const useThemeStore = create((set, get) => ({
 
   setA11y: (key, value) => {
     const prefix = 'Lee Roo-a11y-'
-    const storageKey = key === 'colorBlindMode' ? `${prefix}colorBlind` : `${prefix}${key}`
+    const storageKey = key === 'colorBlindMode' ? `${prefix}colorBlind` : key === 'fontSizeScale' ? `${prefix}fontSizeScale` : `${prefix}${key}`
+    if (key === 'fontSizeScale') {
+      const v = Math.min(200, Math.max(75, Number(value)))
+      localStorage.setItem(storageKey, String(v))
+      set((state) => ({ a11y: { ...state.a11y, fontSizeScale: v, largeText: v > 100 } }))
+      return
+    }
     localStorage.setItem(storageKey, String(value))
     set((state) => ({
       a11y: { ...state.a11y, [key]: value }
@@ -114,6 +126,10 @@ const useThemeStore = create((set, get) => ({
     } else {
       document.documentElement.classList.remove('dark')
     }
+    const scale = localStorage.getItem('Lee Roo-a11y-fontSizeScale')
+    const fontSizeScale = scale ? Math.min(200, Math.max(75, Number(scale))) : 100
+    document.documentElement.style.setProperty('--a11y-font-scale', `${fontSizeScale}%`)
+    if (fontSizeScale > 100) document.documentElement.classList.add('a11y-large-text')
   },
 }))
 

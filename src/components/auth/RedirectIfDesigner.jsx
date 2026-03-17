@@ -18,6 +18,7 @@ export default function RedirectIfDesigner({ children }) {
     location.pathname.startsWith('/shop/') ||
     location.pathname === '/cart' ||
     location.pathname === '/checkout' ||
+    location.pathname === '/track-delivery' ||
     location.pathname === '/meet-designer'
 
   // Only redirect when auth has finished loading to prevent flash/redirect loops

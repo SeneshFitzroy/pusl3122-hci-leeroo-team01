@@ -33,6 +33,7 @@ const AdminLogin = lazy(() => import('./pages/AdminLogin'))
 const Settings = lazy(() => import('./pages/Settings'))
 const MeetDesigner = lazy(() => import('./pages/MeetDesigner'))
 const DesignerPanel = lazy(() => import('./pages/DesignerPanel'))
+const TrackDelivery = lazy(() => import('./pages/TrackDelivery'))
 
 /** Redirect /dashboard: designers → designer-panel, others → shop */
 function DashboardRedirect() {
@@ -175,6 +176,7 @@ function App() {
             <Route path="/shop" element={<RedirectIfDesigner><Shop /></RedirectIfDesigner>} />
             <Route path="/shop/:productId" element={<RedirectIfDesigner><ProductDetail /></RedirectIfDesigner>} />
             <Route path="/cart" element={<RedirectIfDesigner><Cart /></RedirectIfDesigner>} />
+            <Route path="/track-delivery" element={<RedirectIfDesigner><TrackDelivery /></RedirectIfDesigner>} />
           </Route>
 
           <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>

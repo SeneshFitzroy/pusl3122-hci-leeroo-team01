@@ -438,13 +438,13 @@ export default function Shop() {
                         </span>
                       </div>
 
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-2">
+                      <div className="flex items-center justify-between gap-2 mb-4 min-w-0">
+                        <div className="flex items-center gap-2 min-w-0 flex-shrink-0">
                           <span className="text-xl font-bold text-neutral-900 dark:text-white">
                             {formatPrice(product.price)}
                           </span>
                           {product.originalPrice && (
-                            <span className="text-sm text-neutral-400 line-through">
+                            <span className="text-sm text-neutral-400 dark:text-white/70 line-through whitespace-nowrap shrink-0">
                               {formatPrice(product.originalPrice)}
                             </span>
                           )}

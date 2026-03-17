@@ -313,11 +313,11 @@ export default function Landing() {
       <section className="py-28 sm:py-32 bg-stone-50 dark:bg-dark-bg">
         <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-14">
           <AnimatedSection className="text-center mb-20">
-            <span className="text-charcoal/90 dark:text-white font-semibold text-sm uppercase tracking-widest mb-4 block">{t('landing.shopByCategory')}</span>
-            <h2 className="text-3xl sm:text-4xl font-display font-light text-charcoal dark:text-stone-100 mb-6">
+            <span className="text-charcoal/90 dark:!text-white font-semibold text-sm uppercase tracking-widest mb-4 block">{t('landing.shopByCategory')}</span>
+            <h2 className="text-3xl sm:text-4xl font-display font-light text-charcoal dark:!text-white mb-6">
               {t('landing.categories.title')}
             </h2>
-            <p className="text-charcoal/80 dark:text-white max-w-2xl mx-auto text-lg">
+            <p className="text-charcoal/80 dark:!text-white max-w-2xl mx-auto text-lg">
               {t('landing.categories.subtitle')}
             </p>
           </AnimatedSection>
@@ -333,8 +333,8 @@ export default function Landing() {
                   <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-stone-100 dark:bg-dark-surface mb-6">
                     <img src={cat.img} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" />
                   </div>
-                  <h3 className="font-display font-medium text-xl text-charcoal dark:text-stone-100 group-hover:text-oak transition-colors">{t(cat.titleKey)}</h3>
-                  <p className="text-charcoal/80 dark:text-white mt-1">{t(cat.descKey)}</p>
+                  <h3 className="font-display font-medium text-xl text-charcoal dark:!text-white group-hover:text-oak transition-colors">{t(cat.titleKey)}</h3>
+                  <p className="text-charcoal/80 dark:!text-white mt-1">{t(cat.descKey)}</p>
                 </Link>
               </AnimatedSection>
             ))}

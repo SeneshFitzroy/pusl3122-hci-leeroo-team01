@@ -14,7 +14,9 @@ import {
   Package,
   Check,
   Plus,
-  Minus
+  Minus,
+  ScanLine,
+  X
 } from 'lucide-react'
 import { SHOP_PRODUCTS as shopProducts, FREE_SHIPPING_THRESHOLD } from '@/lib/constants'
 import useCartStore from '@/store/useCartStore'
@@ -23,6 +25,7 @@ import { toast } from 'sonner'
 import Real3DViewer from '@/components/Real3DViewer'
 import { MODEL_TYPE_MAP } from '@/components/FurnitureModel3D'
 import Mini3DPreview from '@/components/Mini3DPreview'
+import ARFurnitureViewer from '@/components/ARFurnitureViewer'
 import { useTranslation } from 'react-i18next'
 
 export default function ProductDetail() {
@@ -38,6 +41,7 @@ export default function ProductDetail() {
   const [activeTab, setActiveTab] = useState('description')
   const [viewMode, setViewMode] = useState('photos')
   const [presetAngle, setPresetAngle] = useState('front')
+  const [showARModal, setShowARModal] = useState(false)
 
   const product = shopProducts.find(p => p.id === productId)
   const previewAngles = ['front', 'side', 'top', 'back']
@@ -340,7 +344,7 @@ export default function ProductDetail() {
                   {formatPrice(product.price)}
                 </span>
                 {product.originalPrice && (
-                  <span className="text-xl text-warm-400 line-through">
+                  <span className="text-xl text-warm-400 dark:text-white/70 line-through whitespace-nowrap">
                     {formatPrice(product.originalPrice)}
                   </span>
                 )}
@@ -368,8 +372,8 @@ export default function ProductDetail() {
                     </span>
                   </span>
                   {selectedColor !== product.colors[0] && (
-                    <span className="text-xs text-clay bg-clay/10 px-2 py-0.5 rounded-full animate-pulse">
-                      {t('product.previewActive')}
+                    <span className="text-xs text-clay dark:text-clay bg-clay/10 dark:bg-clay/20 px-2 py-0.5 rounded-full animate-pulse">
+                      {viewMode === '3d' ? t('product.previewActive') : t('product.switchTo3dForColor') || 'Switch to 3D to preview color'}
                     </span>
                   )}
                 </div>
@@ -397,10 +401,10 @@ export default function ProductDetail() {
                   ))}
                 </div>
                 {product.colorNames && (
-                  <div className="flex space-x-3 mt-1.5">
+                  <div className="flex flex-wrap gap-x-3 gap-y-0 mt-1.5">
                     {product.colorNames.map((name, i) => (
-                      <span key={i} className={`text-[10px] w-12 text-center ${
-                        selectedColor === product.colors[i] ? 'text-clay font-semibold' : 'text-warm-400'
+                      <span key={i} className={`text-[10px] w-12 text-center shrink-0 ${
+                        selectedColor === product.colors[i] ? 'text-clay font-semibold' : 'text-warm-400 dark:text-white/70'
                       }`}>
                         {name}
                       </span>
@@ -469,7 +473,29 @@ export default function ProductDetail() {
                 >
                   <Heart className={`h-5 w-5 ${isInWishlist ? 'fill-current' : ''}`} />
                 </motion.button>
+                <motion.button
+                  onClick={() => setShowARModal(true)}
+                  className="p-3 rounded-lg border-2 border-forest/40 dark:border-forest/50 text-forest dark:text-forest-light hover:bg-forest/10 dark:hover:bg-forest/20 transition-colors"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  title={t('product.viewInSpace') || 'View in your space'}
+                >
+                  <ScanLine className="h-5 w-5" />
+                </motion.button>
               </div>
+
+              {/* AR Viewer — full-screen with model-viewer for "View in your space" */}
+              <AnimatePresence>
+                {showARModal && (
+                  <ARFurnitureViewer
+                    productId={product.id}
+                    modelType={MODEL_TYPE_MAP[product.id] || 'sofa'}
+                    color={selectedColor || product.colors?.[0] || '#8B6F47'}
+                    productName={product.name}
+                    onClose={() => setShowARModal(false)}
+                  />
+                )}
+              </AnimatePresence>
             </div>
 
             {/* Trust Badges */}

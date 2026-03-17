@@ -1,6 +1,6 @@
 {
   "rewrites": [
-    { "source": "/((?!api|_next|static|favicon\\.ico|.*\\..*).*)", "destination": "/index.html" }
+    { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [
     {

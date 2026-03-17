@@ -25,23 +25,27 @@ const useCartStore = create(
 
       setUid: (uid) => set({ _uid: uid }),
 
-      /** Load cart from Firestore when user logs in */
+      /** Load cart from Firestore when user logs in. Preserves guest cart when Firestore is empty. */
       loadFromFirestore: async (uid) => {
         if (!uid) return
+        const prevUid = get()._uid
+        const localItems = [...get().items]
+        const localWishlist = [...get().wishlistItems]
         try {
           const snap = await getDoc(doc(db, 'carts', uid))
-          if (snap.exists()) {
-            const data = snap.data()
-            set({
-              items: data.items || [],
-              wishlistItems: data.wishlistItems || [],
-              _uid: uid,
-            })
+          const remoteItems = snap.exists() ? (snap.data().items || []) : []
+          const remoteWishlist = snap.exists() ? (snap.data().wishlistItems || []) : []
+          const wasGuest = prevUid == null
+          const guestHadItems = wasGuest && (localItems.length > 0 || localWishlist.length > 0)
+          const remoteEmpty = remoteItems.length === 0 && remoteWishlist.length === 0
+          if (guestHadItems && remoteEmpty) {
+            set({ _uid: uid })
+            syncToFirestore(uid, localItems, localWishlist)
+          } else if (remoteItems.length > 0 || remoteWishlist.length > 0) {
+            set({ items: remoteItems, wishlistItems: remoteWishlist, _uid: uid })
           } else {
             set({ _uid: uid })
-            // If local cart has items, push them to Firestore
-            const { items, wishlistItems } = get()
-            if (items.length || wishlistItems.length) syncToFirestore(uid, items, wishlistItems)
+            if (localItems.length || localWishlist.length) syncToFirestore(uid, localItems, localWishlist)
           }
         } catch (e) { console.warn('Cart load failed:', e); set({ _uid: uid }) }
       },

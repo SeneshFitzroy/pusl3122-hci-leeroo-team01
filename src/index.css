@@ -217,13 +217,21 @@ input[type="range"] {
 .a11y-high-contrast * {
   border-color: currentColor !important;
 }
-.a11y-large-text {
-  font-size: 118% !important;
+/* Font size scale: 75%–200% via --a11y-font-scale (set by AccessibilityToggle) */
+html {
+  --a11y-font-scale: 100%;
 }
-.a11y-large-text .text-xs { font-size: 0.85rem !important; }
-.a11y-large-text .text-sm { font-size: 1rem !important; }
-.a11y-large-text .text-base { font-size: 1.15rem !important; }
-.a11y-large-text .text-lg { font-size: 1.3rem !important; }
+.a11y-large-text {
+  font-size: var(--a11y-font-scale, 100%) !important;
+}
+.a11y-large-text .text-xs { font-size: 0.85em !important; }
+.a11y-large-text .text-sm { font-size: 0.95em !important; }
+.a11y-large-text .text-base { font-size: 1em !important; }
+.a11y-large-text .text-lg { font-size: 1.15em !important; }
+.a11y-large-text .text-xl { font-size: 1.2em !important; }
+.a11y-large-text .text-2xl { font-size: 1.35em !important; }
+.a11y-large-text .text-3xl { font-size: 1.5em !important; }
+.a11y-large-text .text-4xl { font-size: 1.7em !important; }
 
 .a11y-protanopia {
   filter: url('#protanopia-filter') contrast(1);
