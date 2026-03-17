@@ -44,144 +44,43 @@ function useInView(ref, threshold = 0.15) {
   return visible
 }
 
-/** Local poster — video screenshot, instant load, preloaded in index.html */
-const HERO_POSTER = '/hero-poster.png'
-const HERO_POSTER_FALLBACK = 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1920&h=1080&fit=crop&q=80'
+const HERO_POSTER = 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1920&h=1080&fit=crop&q=80'
+const HERO_VIDEO = '/hero-bg.mp4'
 
-/** Resume video — call whenever we need video to be playing */
-function ensureVideoPlaying(v) {
-  if (!v) return
-  if (v.paused && v.readyState >= 2) v.play().catch(() => {})
-}
-
-/** Force-unstick: nudge time or full reload if video is frozen */
-function forceUnstick(v, stuckCountRef) {
-  if (!v || v.readyState < 2) return
-  stuckCountRef.current = (stuckCountRef.current || 0) + 1
-  if (stuckCountRef.current >= 2) {
-    stuckCountRef.current = 0
-    try { v.load(); v.play().catch(() => {}) } catch (_) {}
-    return
-  }
-  try {
-    v.currentTime = v.currentTime + 0.001
-    v.play().catch(() => { v.load(); v.play().catch(() => {}) })
-  } catch (_) {
-    v.load()
-    v.play().catch(() => {})
-  }
-}
-
-/** Hero: poster shows INSTANTLY. Video loads, plays, and stays active 24/7. Anti-stuck recovery. */
 function LandingHeroMedia() {
   const [videoReady, setVideoReady] = useState(false)
   const [videoError, setVideoError] = useState(false)
-  const [useFallbackPoster, setUseFallbackPoster] = useState(false)
   const videoRef = useRef(null)
-  const lastTimeRef = useRef(0)
-  const stuckCountRef = useRef(0)
 
-  const posterSrc = useFallbackPoster ? HERO_POSTER_FALLBACK : HERO_POSTER
-
-  useEffect(() => {
-    const img = new Image()
-    img.onerror = () => setUseFallbackPoster(true)
-    img.src = HERO_POSTER
-  }, [])
-
-  const handleReady = () => {
-    setVideoReady(true)
-    ensureVideoPlaying(videoRef.current)
-  }
-
-  // Start play as soon as we have enough data
   useEffect(() => {
     const v = videoRef.current
     if (!v) return
-    if (v.readyState >= 2) handleReady()
-    else v.addEventListener('canplay', handleReady)
-    return () => v.removeEventListener('canplay', handleReady)
+    const onReady = () => { setVideoReady(true); v.play().catch(() => {}) }
+    const onError = () => setVideoError(true)
+    v.addEventListener('canplay', onReady)
+    v.addEventListener('error', onError)
+    const onVisible = () => { if (document.visibilityState === 'visible' && v.paused && v.readyState >= 2) v.play().catch(() => {}) }
+    document.addEventListener('visibilitychange', onVisible)
+    return () => { v.removeEventListener('canplay', onReady); v.removeEventListener('error', onError); document.removeEventListener('visibilitychange', onVisible) }
   }, [])
-
-  // 24/7 active + anti-stuck: resume, detect freeze, force unstick
-  useEffect(() => {
-    const v = videoRef.current
-    if (!v) return
-    const resume = () => ensureVideoPlaying(v)
-    const onVisibilityChange = () => {
-      if (document.visibilityState === 'visible') resume()
-    }
-    const onWaiting = () => {
-      setTimeout(resume, 300)
-      setTimeout(resume, 1000)
-    }
-    document.addEventListener('visibilitychange', onVisibilityChange)
-    v.addEventListener('pause', resume)
-    v.addEventListener('ended', resume)
-    v.addEventListener('stalled', resume)
-    v.addEventListener('suspend', resume)
-    v.addEventListener('waiting', onWaiting)
-    const onTimeUpdate = () => { lastTimeRef.current = v.currentTime; stuckCountRef.current = 0 }
-    v.addEventListener('timeupdate', onTimeUpdate)
-    // Keep-alive every 1s: resume if paused, or detect stuck (no timeupdate) and force unstick
-    const keepAlive = setInterval(() => {
-      if (document.visibilityState !== 'visible') return
-      if (!v || v.readyState < 2) return
-      if (v.paused) {
-        resume()
-        return
-      }
-      const now = v.currentTime
-      if (Math.abs(now - lastTimeRef.current) < 0.01 && now > 0) {
-        forceUnstick(v, stuckCountRef)
-      } else {
-        stuckCountRef.current = 0
-      }
-      lastTimeRef.current = now
-    }, 1000)
-    return () => {
-      document.removeEventListener('visibilitychange', onVisibilityChange)
-      v.removeEventListener('pause', resume)
-      v.removeEventListener('ended', resume)
-      v.removeEventListener('stalled', resume)
-      v.removeEventListener('suspend', resume)
-      v.removeEventListener('waiting', onWaiting)
-      v.removeEventListener('timeupdate', onTimeUpdate)
-      clearInterval(keepAlive)
-    }
-  }, [videoReady])
 
   return (
     <div className="absolute inset-0 w-full h-full">
-      {/* Poster layer — always visible first, instant load */}
       <div
-        className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat transition-opacity duration-500"
-        style={{
-          backgroundImage: `url(${posterSrc})`,
-          opacity: videoReady ? 0 : 1,
-        }}
+        className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat transition-opacity duration-700"
+        style={{ backgroundImage: `url(${HERO_POSTER})`, opacity: videoReady ? 0 : 1 }}
         aria-hidden="true"
       />
-      {/* Video layer — loads in background, fades in when ready */}
       {!videoError && (
         <video
           ref={videoRef}
-          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
+          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700"
           style={{ opacity: videoReady ? 1 : 0 }}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
+          autoPlay muted loop playsInline preload="auto"
           aria-label="Background video of furniture and living spaces"
           onError={() => setVideoError(true)}
-          onCanPlay={handleReady}
-          onLoadedData={handleReady}
-          onLoadedMetadata={handleReady}
-          onPause={() => ensureVideoPlaying(videoRef.current)}
-          onEnded={() => videoRef.current?.play().catch(() => {})}
         >
-          <source src="/hero-bg.mp4" type="video/mp4" />
+          <source src={HERO_VIDEO} type="video/mp4" />
         </video>
       )}
     </div>

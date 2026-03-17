@@ -88,15 +88,23 @@ export default function ARFurnitureViewer({ productId, modelType, color, product
   const [retryKey, setRetryKey] = useState(0)
   const urlRef = useRef(null)
 
-  // model-viewer is loaded from CDN in index.html; wait for custom element if needed
   useEffect(() => {
-    if (typeof customElements !== 'undefined' && customElements.get('model-viewer')) {
+    if (customElements?.get?.('model-viewer')) {
       setModelViewerReady(true)
       return
     }
-    customElements?.whenDefined?.('model-viewer').then(() => setModelViewerReady(true))
-    const fallback = setTimeout(() => setModelViewerReady(true), 500)
-    return () => clearTimeout(fallback)
+    const existing = document.querySelector('script[src*="model-viewer"]')
+    if (!existing) {
+      const s = document.createElement('script')
+      s.type = 'module'
+      s.src = 'https://cdn.jsdelivr.net/npm/@google/model-viewer@3.4.0/dist/model-viewer.min.js'
+      document.head.appendChild(s)
+    }
+    const check = setInterval(() => {
+      if (customElements?.get?.('model-viewer')) { setModelViewerReady(true); clearInterval(check) }
+    }, 200)
+    const timeout = setTimeout(() => { setModelViewerReady(true); clearInterval(check) }, 5000)
+    return () => { clearInterval(check); clearTimeout(timeout) }
   }, [])
 
   const handleGlbReady = useCallback((url, isPlaceholder = false) => {
