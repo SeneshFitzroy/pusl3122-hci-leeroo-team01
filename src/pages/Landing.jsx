@@ -55,33 +55,57 @@ function LandingHeroMedia() {
   useEffect(() => {
     const v = videoRef.current
     if (!v) return
-    const onReady = () => { setVideoReady(true); v.play().catch(() => {}) }
-    const onError = () => setVideoError(true)
-    v.addEventListener('canplay', onReady)
-    v.addEventListener('error', onError)
-    const onVisible = () => { if (document.visibilityState === 'visible' && v.paused && v.readyState >= 2) v.play().catch(() => {}) }
+
+    const tryPlay = () => {
+      if (v.readyState >= 1) {
+        setVideoReady(true)
+        v.play().catch(() => {})
+      }
+    }
+
+    v.addEventListener('loadeddata', tryPlay)
+    v.addEventListener('canplay', tryPlay)
+    v.addEventListener('error', () => setVideoError(true))
+
+    v.load()
+    tryPlay()
+
+    const fallback = setTimeout(() => {
+      if (!videoRef.current) return
+      if (videoRef.current.readyState >= 1) tryPlay()
+      else setVideoError(true)
+    }, 4000)
+
+    const onVisible = () => {
+      if (document.visibilityState === 'visible' && v.paused && v.readyState >= 1) v.play().catch(() => {})
+    }
     document.addEventListener('visibilitychange', onVisible)
-    return () => { v.removeEventListener('canplay', onReady); v.removeEventListener('error', onError); document.removeEventListener('visibilitychange', onVisible) }
+
+    return () => {
+      clearTimeout(fallback)
+      v.removeEventListener('loadeddata', tryPlay)
+      v.removeEventListener('canplay', tryPlay)
+      document.removeEventListener('visibilitychange', onVisible)
+    }
   }, [])
 
   return (
     <div className="absolute inset-0 w-full h-full">
       <div
-        className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat transition-opacity duration-700"
+        className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat transition-opacity duration-500"
         style={{ backgroundImage: `url(${HERO_POSTER})`, opacity: videoReady ? 0 : 1 }}
         aria-hidden="true"
       />
       {!videoError && (
         <video
           ref={videoRef}
-          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700"
+          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
           style={{ opacity: videoReady ? 1 : 0 }}
           autoPlay muted loop playsInline preload="auto"
+          src={HERO_VIDEO}
           aria-label="Background video of furniture and living spaces"
           onError={() => setVideoError(true)}
-        >
-          <source src={HERO_VIDEO} type="video/mp4" />
-        </video>
+        />
       )}
     </div>
   )
