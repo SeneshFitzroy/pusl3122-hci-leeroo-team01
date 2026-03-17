@@ -8,13 +8,20 @@ import {
   Plane,
   Html
 } from '@react-three/drei'
+import * as THREE from 'three'
 import useDesignStore from '@/store/useDesignStore'
 import { useTranslation } from 'react-i18next'
+
+// Floor plane for 3D drag raycasting
+const FLOOR_PLANE = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0)
+const INTERSECTION = new THREE.Vector3()
 
 // Furniture Component
 function FurnitureItem({ item, isSelected, onClick }) {
   const meshRef = useRef()
   const [hovered, setHovered] = useState(false)
+  const setDragging3D = useDesignStore((s) => s.setDragging3D)
+  const readOnlyMode = useDesignStore((s) => s.readOnlyMode)
 
   useFrame((state) => {
     if (meshRef.current && isSelected) {
@@ -195,6 +202,12 @@ function FurnitureItem({ item, isSelected, onClick }) {
         e.stopPropagation()
         onClick?.(item.instanceId)
       }}
+      onPointerDown={(e) => {
+        if (!readOnlyMode && isSelected) {
+          e.stopPropagation()
+          setDragging3D(true)
+        }
+      }}
       onPointerEnter={() => setHovered(true)}
       onPointerLeave={() => setHovered(false)}
     >
@@ -305,7 +318,7 @@ function Room({ roomSettings }) {
         <Plane 
           args={[width * 0.3, wallHeight]} 
           position={[width * 0.85, wallHeight / 2, height]}
-          receiveShadows
+          receiveShadow
         >
           <meshStandardMaterial 
             color={roomSettings?.wallColor || '#F4EFEA'}
@@ -326,21 +339,86 @@ function Room({ roomSettings }) {
   )
 }
 
-// Camera Controller
+// Camera Controller — frame room fully (avoid cut-off)
 function CameraController() {
   const { camera } = useThree()
   const { roomWidth, roomDepth } = useDesignStore()
-  
+
   useEffect(() => {
     const width = roomWidth || 5
     const height = roomDepth || 4
-    const distance = Math.max(width, height) * 1.5
+    const distance = Math.max(width, height) * 0.9
 
-    camera.position.set(distance, distance * 0.8, distance)
+    camera.position.set(distance, distance * 0.7, distance)
     camera.lookAt(width / 2, 0, height / 2)
   }, [camera, roomWidth, roomDepth])
 
   return null
+}
+
+// Reset camera helper (called from Reset View button)
+function useResetCamera() {
+  const { camera } = useThree()
+  const { roomWidth, roomDepth } = useDesignStore()
+  return () => {
+    const width = roomWidth || 5
+    const height = roomDepth || 4
+    const distance = Math.max(width, height) * 0.9
+    camera.position.set(distance, distance * 0.7, distance)
+    camera.lookAt(width / 2, 0, height / 2)
+  }
+}
+
+// Invisible floor mesh for 3D drag — raycast on pointer move
+function FloorDragPlane({ roomSettings, onDrag, onDragEnd }) {
+  const meshRef = useRef()
+  const { gl, camera, raycaster, pointer } = useThree()
+  const dragging = useDesignStore((s) => s.dragging3D)
+  const selectedId = useDesignStore((s) => s.selectedItemId)
+  const setDragging = useDesignStore((s) => s.setDragging3D)
+  const readOnlyMode = useDesignStore((s) => s.readOnlyMode)
+
+  const w = roomSettings?.width || 5
+  const h = roomSettings?.height || 4
+
+  useEffect(() => {
+    if (readOnlyMode || !dragging || !selectedId) return
+    const onMove = (e) => {
+      if (!meshRef.current) return
+      const rect = gl.domElement.getBoundingClientRect()
+      pointer.x = (e.clientX - rect.left) / rect.width * 2 - 1
+      pointer.y = -(e.clientY - rect.top) / rect.height * 2 + 1
+      raycaster.setFromCamera(pointer, camera)
+      const hits = raycaster.intersectObject(meshRef.current)
+      if (hits.length > 0) {
+        const p = hits[0].point
+        const x = Math.max(0, Math.min(w - 0.5, p.x))
+        const z = Math.max(0, Math.min(h - 0.5, p.z))
+        onDrag(selectedId, x, z)
+      }
+    }
+    const onUp = () => {
+      setDragging(false)
+      onDragEnd?.()
+    }
+    window.addEventListener('pointermove', onMove, { passive: true })
+    window.addEventListener('pointerup', onUp)
+    return () => {
+      window.removeEventListener('pointermove', onMove)
+      window.removeEventListener('pointerup', onUp)
+    }
+  }, [readOnlyMode, dragging, selectedId, gl, camera, raycaster, pointer, w, h, onDrag, onDragEnd, setDragging])
+
+  return (
+    <mesh
+      ref={meshRef}
+      position={[w / 2, 0, h / 2]}
+      rotation={[-Math.PI / 2, 0, 0]}
+      visible={false}
+    >
+      <planeGeometry args={[w * 2, h * 2]} />
+    </mesh>
+  )
 }
 
 // Loading Component
@@ -355,6 +433,18 @@ function LoadingSpinner() {
       </div>
     </div>
   )
+}
+
+// Reset camera when Reset View is clicked
+function ResetCameraHandler() {
+  const orbitRef = useRef()
+  const reset3DViewRequest = useDesignStore((s) => s.reset3DViewRequest)
+  useEffect(() => {
+    if (reset3DViewRequest > 0 && orbitRef.current?.reset) orbitRef.current.reset()
+  }, [reset3DViewRequest])
+  return <OrbitControls ref={orbitRef} enablePan enableZoom enableRotate={!useDesignStore.getState().dragging3D}
+    minDistance={2} maxDistance={20} maxPolarAngle={Math.PI / 2.2}
+    target={[(useDesignStore.getState().roomWidth || 5) / 2, 0, (useDesignStore.getState().roomDepth || 4) / 2]} />
 }
 
 // Main Component
@@ -400,44 +490,32 @@ export default function RoomViewer3D() {
 
   return (
     <div className="w-full h-full relative">
-      {/* 3D Scene Info Overlay */}
-      <div className="absolute top-4 left-4 z-10 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm rounded-lg p-3 text-sm">
-        <div className="text-gray-900 dark:text-gray-100 font-medium">
-          3D Room View
+      {/* 3D Scene Info + Controls — merged top-left to avoid overlap with RoomEditor selected-item panel */}
+      <div className="absolute top-4 left-4 z-10 flex flex-col gap-2 pointer-events-auto">
+        <div className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm rounded-xl p-3 text-sm border border-warm-200/50 dark:border-dark-border/50 shadow-sm">
+          <div className="text-gray-900 dark:text-gray-100 font-medium">3D Room View</div>
+          <div className="text-gray-500 dark:text-white text-xs mt-1">Items: {furnitureItems.length} · Selected: {selectedItemId ? 'Yes' : 'None'}</div>
         </div>
-        <div className="text-gray-500 dark:text-white text-xs mt-1">
-          Items: {furnitureItems.length}
+        <div className="flex flex-wrap gap-2">
+          <button
+            onClick={() => setShowWireframe(!showWireframe)}
+            className={`px-3 py-2 text-xs font-medium rounded-lg shadow-md transition-colors whitespace-nowrap ${
+              showWireframe
+                ? 'bg-blue-600 text-white'
+                : 'bg-white/95 dark:bg-dark-card/95 text-darkwood dark:text-white hover:bg-warm-100 dark:hover:bg-dark-surface border border-warm-200 dark:border-dark-border'
+            }`}
+            title="Toggle wireframe mode"
+          >
+            Wireframe
+          </button>
+          <button
+            onClick={() => useDesignStore.getState().requestReset3DView?.()}
+            className="px-3 py-2 text-xs font-medium bg-clay text-white rounded-lg shadow-md hover:bg-clay-dark transition-colors whitespace-nowrap"
+            title="Reset camera to default angle"
+          >
+            Reset View
+          </button>
         </div>
-        <div className="text-gray-500 dark:text-white text-xs">
-          Selected: {selectedItemId ? 'Yes' : 'None'}
-        </div>
-      </div>
-
-      {/* View Controls — positioned to stay visible when sidebar resizes */}
-      <div className="absolute top-4 right-4 z-10 flex flex-col gap-2 pointer-events-auto">
-        <button
-          onClick={() => setShowWireframe(!showWireframe)}
-          className={`px-3 py-2 text-xs font-medium rounded-lg shadow-md transition-colors whitespace-nowrap ${
-            showWireframe
-              ? 'bg-blue-600 text-white'
-              : 'bg-white/95 dark:bg-dark-card/95 text-darkwood dark:text-white hover:bg-warm-100 dark:hover:bg-dark-surface border border-warm-200 dark:border-dark-border'
-          }`}
-          title="Toggle wireframe mode for 3D mesh"
-        >
-          Wireframe
-        </button>
-        <button
-          onClick={() => {
-            const width = roomSettings?.width || 5
-            const height = roomSettings?.height || 4
-            const distance = Math.max(width, height) * 1.5
-            setCameraPosition([distance, distance * 0.8, distance])
-          }}
-          className="px-3 py-2 text-xs font-medium bg-clay text-white rounded-lg shadow-md hover:bg-clay-dark transition-colors whitespace-nowrap"
-          title="Reset 3D camera to default angle"
-        >
-          Reset View
-        </button>
       </div>
 
       {/* Rotation indicator — visible overlay so users know they can rotate */}
@@ -454,8 +532,8 @@ export default function RoomViewer3D() {
       </div>
 
       {/* Instructions */}
-      <div className="absolute bottom-4 left-4 z-10 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm rounded-lg p-3 text-xs text-gray-500 dark:text-white">
-        <div>Mouse: Orbit • Wheel: Zoom • Click: Select furniture</div>
+      <div className="absolute bottom-4 left-4 z-10 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm rounded-xl p-3 text-xs text-gray-500 dark:text-white border border-warm-200/30 dark:border-dark-border/30">
+        <div>Orbit: drag · Zoom: wheel · Select: click · <span className="font-medium text-clay">Move: select item, then drag</span></div>
       </div>
 
       {/* Canvas */}
@@ -500,6 +578,13 @@ export default function RoomViewer3D() {
           {/* Room */}
           <Room roomSettings={roomSettings} />
 
+          {/* Invisible floor plane for 3D drag raycast */}
+          <FloorDragPlane
+            roomSettings={roomSettings}
+            onDrag={(id, x, z) => useDesignStore.getState().updateFurniturePosition(id, x, z)}
+            onDragEnd={() => useDesignStore.getState().commitFurnitureUpdate()}
+          />
+
           {/* Furniture */}
           {furnitureItems.map((item) => (
             <FurnitureItem
@@ -510,20 +595,8 @@ export default function RoomViewer3D() {
             />
           ))}
 
-          {/* Controls */}
-          <OrbitControls
-            enablePan={true}
-            enableZoom={true}
-            enableRotate={true}
-            minDistance={2}
-            maxDistance={20}
-            maxPolarAngle={Math.PI / 2.2}
-            target={[
-              (roomSettings?.width || 5) / 2, 
-              0, 
-              (roomSettings?.height || 4) / 2
-            ]}
-          />
+          {/* OrbitControls + Reset handler */}
+          <ResetCameraHandler roomSettings={roomSettings} />
         </Suspense>
       </Canvas>
     </div>

@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { generateId } from '@/lib/utils'
+import { fetchDesignsByUser } from '@/lib/designService'
 
 /* ── Helper: create a blank room ── */
 const createRoom = (name = 'Room 1', overrides = {}) => ({
@@ -47,10 +48,14 @@ const useDesignStore = create((set, get) => ({
   ambientLight: 0.6,
   sunlightDirection: 'top-left',
   selectedItemId: null,
+  dragging3D: false,
   viewMode: '2d',
   history: [],
   historyIndex: -1,
   savedDesigns: [],
+  readOnlyMode: false,
+
+  setReadOnlyMode: (v) => set({ readOnlyMode: !!v }),
 
   // ── Room management ──
   addRoom: (name) => set((s) => {
@@ -192,6 +197,9 @@ const useDesignStore = create((set, get) => ({
   selectFurniture: (instanceId) => set({ selectedItemId: instanceId }),
   clearSelection: () => set({ selectedItemId: null }),
   setViewMode: (mode) => set({ viewMode: mode }),
+  setDragging3D: (v) => set({ dragging3D: !!v }),
+  reset3DViewRequest: 0,
+  requestReset3DView: () => set((s) => ({ reset3DViewRequest: s.reset3DViewRequest + 1 })),
 
   updateFurniturePosition: (instanceId, x, y) =>
     set((s) => {
@@ -370,7 +378,17 @@ const useDesignStore = create((set, get) => ({
       currentDesign: s.currentDesign?.id === id ? null : s.currentDesign,
     })),
 
-  loadUserDesigns: async () => get().savedDesigns,
+  loadUserDesigns: async (userId) => {
+    if (!userId) return get().savedDesigns
+    try {
+      const designs = await fetchDesignsByUser(userId)
+      set({ savedDesigns: designs })
+      return designs
+    } catch (err) {
+      console.warn('Failed to load designs from Firestore:', err)
+      return get().savedDesigns
+    }
+  },
 
   duplicateDesign: (designId) => {
     const s = get()

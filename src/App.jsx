@@ -34,6 +34,7 @@ const Settings = lazy(() => import('./pages/Settings'))
 const MeetDesigner = lazy(() => import('./pages/MeetDesigner'))
 const DesignerPanel = lazy(() => import('./pages/DesignerPanel'))
 const TrackDelivery = lazy(() => import('./pages/TrackDelivery'))
+const SharedDesignView = lazy(() => import('./pages/SharedDesignView'))
 
 // Preload critical pages so navigation is instant
 const preloadPages = () => { import('./pages/Shop'); import('./pages/ProductDetail'); import('./pages/Cart') }
@@ -185,6 +186,7 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/register" element={<Register />} />
           <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/shared/:designId" element={<SharedDesignView />} />
 
           <Route element={<Layout />}>
             <Route path="/" element={<RedirectIfDesigner><Landing /></RedirectIfDesigner>} />

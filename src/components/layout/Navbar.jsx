@@ -478,7 +478,7 @@ export default function Navbar() {
             )}
 
             {!user && (
-              <div className="flex items-center gap-2 ml-1">
+              <div className="flex items-center gap-4 ml-1">
                 <Link
                   to="/login"
                   className={`flex items-center gap-2 px-4 py-2 text-sm font-medium transition-colors rounded-xl ${

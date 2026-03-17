@@ -3,7 +3,7 @@ import { Stage, Layer, Rect, Group, Text, Circle, Line } from 'react-konva'
 import useDesignStore from '@/store/useDesignStore'
 
 /* ── Furniture Item with live dimension display ── */
-function FurnitureItem({ item, isSelected, onSelect, onDragMove, onDragEnd, onTransform, roomSettings, gridSize, snapToGrid }) {
+function FurnitureItem({ item, isSelected, onSelect, onDragMove, onDragEnd, onTransform, roomSettings, gridSize, snapToGrid, readOnly }) {
   const [isDragging, setIsDragging] = useState(false)
   const [livePos, setLivePos] = useState({ x: item.x, y: item.y })
 
@@ -62,10 +62,10 @@ function FurnitureItem({ item, isSelected, onSelect, onDragMove, onDragEnd, onTr
       scaleX={scaleX}
       scaleY={scaleY}
       rotation={item.rotation || 0}
-      draggable
-      onDragStart={handleDragStart}
-      onDragMove={handleDragMove}
-      onDragEnd={handleDragEnd}
+      draggable={!readOnly}
+      onDragStart={readOnly ? undefined : handleDragStart}
+      onDragMove={readOnly ? undefined : handleDragMove}
+      onDragEnd={readOnly ? undefined : handleDragEnd}
       onClick={() => onSelect(item.instanceId)}
       onTap={() => onSelect(item.instanceId)}
     >
@@ -207,6 +207,7 @@ const RoomCanvas2D = forwardRef(function RoomCanvas2D(_, ref) {
     addFurniture,
     updateFurniturePosition,
     commitFurnitureUpdate,
+    readOnlyMode,
   } = useDesignStore()
 
   const [isDragOver, setIsDragOver] = useState(false)
@@ -293,6 +294,7 @@ const RoomCanvas2D = forwardRef(function RoomCanvas2D(_, ref) {
   }
 
   const handleDragOver = (e) => {
+    if (readOnlyMode) return
     e.preventDefault()
     e.stopPropagation()
     e.dataTransfer.dropEffect = 'copy'
@@ -302,6 +304,7 @@ const RoomCanvas2D = forwardRef(function RoomCanvas2D(_, ref) {
     if (!e.relatedTarget || !e.currentTarget.contains(e.relatedTarget)) setIsDragOver(false)
   }
   const handleDrop = (e) => {
+    if (readOnlyMode) return
     e.preventDefault()
     e.stopPropagation()
     setIsDragOver(false)
@@ -338,7 +341,7 @@ const RoomCanvas2D = forwardRef(function RoomCanvas2D(_, ref) {
       onDrop={handleDrop}
     >
       {/* Drop hint overlay — shows when dragging furniture over canvas */}
-      {isDragOver && (
+      {isDragOver && !readOnlyMode && (
         <div className="absolute inset-0 z-[5] flex items-center justify-center bg-clay/10 dark:bg-clay/20 transition-colors duration-150">
           <div className="rounded-2xl border-2 border-dashed border-clay dark:border-clay/80 bg-white/90 dark:bg-dark-card/90 px-8 py-6 text-center shadow-lg pointer-events-none">
             <p className="text-darkwood dark:text-white font-semibold">Drop here to add furniture</p>
@@ -346,20 +349,17 @@ const RoomCanvas2D = forwardRef(function RoomCanvas2D(_, ref) {
           </div>
         </div>
       )}
-      {/* Canvas Info Overlay */}
-      <div className="absolute top-4 left-4 z-10 bg-white/90 dark:bg-dark-card/90 backdrop-blur-sm rounded-xl p-3 text-sm border border-warm-200/50 dark:border-dark-border/50 shadow-sm">
-        <div className="text-darkwood dark:text-white font-semibold">2D Room Editor</div>
-        <div className="text-darkwood/50 dark:text-white text-xs mt-1">
-          Room: {roomSettings.width}m × {roomSettings.height}m
-        </div>
-        <div className="text-darkwood/50 dark:text-white text-xs">
-          Scale: {(scale * 100).toFixed(0)}% &middot; Items: {furnitureItems.length}
+      {/* Canvas Info Overlay — compact, top-left, does not overlap furniture */}
+      <div className="absolute top-3 left-3 z-10 bg-white/90 dark:bg-dark-card/90 backdrop-blur-sm rounded-lg px-2.5 py-2 text-xs border border-warm-200/50 dark:border-dark-border/50 shadow-sm max-w-[140px]">
+        <div className="text-darkwood dark:text-white font-medium truncate">2D Plan</div>
+        <div className="text-darkwood/50 dark:text-white text-[10px] mt-0.5">
+          {roomSettings.width}×{roomSettings.height}m · {(scale * 100).toFixed(0)}% · {furnitureItems.length} items
         </div>
       </div>
 
-      {/* Scale Controls */}
-      <div className="absolute top-4 right-4 z-10 bg-white/90 dark:bg-dark-card/90 backdrop-blur-sm rounded-xl p-1.5 border border-warm-200/50 dark:border-dark-border/50 shadow-sm">
-        <div className="flex flex-col gap-1">
+      {/* Scale Controls — bottom-right to avoid overlap with RoomEditor selected-item panel (top-right) */}
+      <div className="absolute bottom-4 right-4 z-10 bg-white/90 dark:bg-dark-card/90 backdrop-blur-sm rounded-xl p-2 border border-warm-200/50 dark:border-dark-border/50 shadow-sm flex flex-col gap-2">
+        <div className="flex flex-col gap-1.5">
           <button
             onClick={() => setScale(Math.min(scale * 1.25, 4))}
             className="w-8 h-8 flex items-center justify-center text-sm font-bold bg-clay text-white rounded-lg hover:bg-clay-dark transition-colors"
@@ -383,7 +383,7 @@ const RoomCanvas2D = forwardRef(function RoomCanvas2D(_, ref) {
 
       {/* Instructions */}
       <div className="absolute bottom-4 left-4 z-10 bg-white/80 dark:bg-dark-card/80 backdrop-blur-sm rounded-xl px-3 py-2 text-xs text-darkwood/50 dark:text-white border border-warm-200/30 dark:border-dark-border/30">
-        Drag furniture to move &middot; Click to select &middot; Delete key or trash icon to remove
+        {readOnlyMode ? 'View only — shared by designer' : 'Drag furniture to move · Click to select · Delete key or trash icon to remove'}
       </div>
 
       {/* Konva Stage */}
@@ -454,6 +454,7 @@ const RoomCanvas2D = forwardRef(function RoomCanvas2D(_, ref) {
               roomSettings={roomSettings}
               gridSize={roomSettings.gridSize}
               snapToGrid={roomSettings.snapToGrid}
+              readOnly={readOnlyMode}
             />
           ))}
         </Layer>

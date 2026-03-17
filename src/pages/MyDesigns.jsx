@@ -25,7 +25,7 @@ import { toast } from 'sonner'
 import ConfirmDialog from '@/components/ConfirmDialog'
 
 export default function MyDesigns() {
-  const { userProfile } = useAuthStore()
+  const { user, userProfile } = useAuthStore()
   const { savedDesigns: userDesigns, loadUserDesigns, deleteDesign, duplicateDesign } = useDesignStore()
   const { t } = useTranslation()
   
@@ -47,10 +47,13 @@ export default function MyDesigns() {
       }
     }
 
-    if (userProfile?.uid) {
+    const uid = user?.uid || userProfile?.uid
+    if (uid) {
       fetchDesigns()
+    } else {
+      setLoading(false)
     }
-  }, [userProfile?.uid, loadUserDesigns])
+  }, [user?.uid, userProfile?.uid, loadUserDesigns])
 
   const filteredDesigns = userDesigns
     ?.filter(design =>
@@ -107,7 +110,10 @@ export default function MyDesigns() {
     )
   }
 
-  const totalItems = userDesigns?.reduce((sum, d) => sum + (d.furniture?.length || 0), 0) || 0
+  const totalItems = userDesigns?.reduce((sum, d) => {
+    const count = d.rooms?.reduce((s, r) => s + (r.furnitureItems?.length || 0), 0) ?? d.furniture?.length ?? 0
+    return sum + count
+  }, 0) || 0
   const thisWeekCount = userDesigns?.filter(d => new Date(d.updatedAt) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)).length || 0
   const avgItems = Math.round(totalItems / Math.max(userDesigns?.length || 1, 1))
 
@@ -259,7 +265,7 @@ export default function MyDesigns() {
                   </div>
                   <div className="absolute top-2 right-2">
                     <span className="text-xs bg-white dark:bg-dark-bg px-2 py-1 rounded-full text-darkwood dark:text-white">
-                      {design.furniture?.length || 0} {t('cart.items')}
+                      {design.rooms?.reduce((s, r) => s + (r.furnitureItems?.length || 0), 0) || design.furniture?.length || 0} {t('cart.items')}
                     </span>
                   </div>
                   {/* Preview overlay */}

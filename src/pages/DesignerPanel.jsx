@@ -224,7 +224,7 @@ export default function DesignerPanel() {
   }
 
   const handleCopyShareLink = (design) => {
-    const url = `${window.location.origin}/editor/${design.id}`
+    const url = `${window.location.origin}/shared/${design.id}`
     navigator.clipboard.writeText(url)
       .then(() => toast.success('Share link copied! Send to client for reference.'))
       .catch(() => toast.error('Could not copy. Try selecting and copying manually.'))

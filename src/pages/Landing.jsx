@@ -162,40 +162,40 @@ export default function Landing() {
             style={{
               background: 'linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.55) 100%)',
             }}
-          />
-        </motion.div>
+            />
+          </motion.div>
 
         {/* Hero content — centered, minimal (Floyd style) */}
-        <motion.div
+            <motion.div
           className="relative z-10 px-6 sm:px-8 text-center max-w-4xl mx-auto"
           style={{ opacity: heroOpacity }}
         >
           <motion.p
             className="text-sm sm:text-base uppercase tracking-[0.3em] text-white font-medium mb-6 drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]"
             initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
+              animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-          >
+            >
             {String.fromCharCode(0x0DBD, 0x0DD3)} {String.fromCharCode(0x0DBB, 0x0DD6)} · {t('landing.hero.tagline')}
           </motion.p>
 
-          <motion.h1
+              <motion.h1
             className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-light text-white leading-[1.05] mb-8 tracking-tight drop-shadow-[0_2px_12px_rgba(0,0,0,0.7)]"
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+                animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.35 }}
-          >
+              >
             {t('landing.hero.title')}
-          </motion.h1>
+              </motion.h1>
 
-          <motion.p
+              <motion.p
             className="text-lg sm:text-xl text-white/95 max-w-xl mx-auto mb-12 leading-relaxed font-sans drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]"
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.5 }}
-          >
+              >
             {t('landing.hero.subtitle')}
-          </motion.p>
+              </motion.p>
 
           <motion.div
             initial={{ opacity: 0, y: 15 }}
@@ -261,7 +261,7 @@ export default function Landing() {
                 </Link>
               </AnimatedSection>
             ))}
-          </div>
+              </div>
         </div>
       </section>
 
@@ -287,27 +287,27 @@ export default function Landing() {
                   <div className="relative aspect-[4/3] bg-stone-100 dark:bg-dark-surface overflow-hidden">
                     <img src={product.image} alt={product.name} className="w-full h-full object-cover" loading="lazy" />
                     <button onClick={() => addToWishlist(product)} className="absolute top-4 right-4 p-2.5 rounded-xl bg-stone-50/90 dark:bg-dark-card/90 backdrop-blur-sm text-charcoal/40 dark:text-white/60 hover:text-red-500 transition-colors" aria-label={`Add ${product.name} to wishlist`}>
-                      <Heart className="h-4 w-4" />
-                    </button>
-                  </div>
+                    <Heart className="h-4 w-4" />
+                  </button>
+                </div>
                   <div className="p-8">
                     <p className="text-xs font-medium text-oak dark:text-clay uppercase tracking-wider mb-2">{t(CATEGORY_LABEL_KEYS[product.category] || 'shop.category.livingRoom')}</p>
                     <h3 className="font-display font-medium text-xl text-[#1C1C1C] dark:text-white group-hover:text-oak transition-colors">{product.name}</h3>
                     <div className="flex items-center justify-between mt-4">
                       <span className="text-xl font-medium text-[#1C1C1C] dark:text-white">{formatPrice(product.price)}</span>
                       <div className="flex items-center gap-1" aria-label={`Rating: ${product.rating} out of 5`}>
-                        {[...Array(5)].map((_, i) => (
+                      {[...Array(5)].map((_, i) => (
                           <Star key={i} className={`h-4 w-4 ${i < Math.round(product.rating || 0) ? 'text-amber-500 fill-amber-500' : 'text-stone-200 dark:text-dark-border'}`} />
-                        ))}
-                      </div>
+                      ))}
                     </div>
+                  </div>
                     <div className="flex gap-3 mt-6">
                       <button onClick={() => addToCart(product)} className="flex-1 py-3.5 bg-charcoal hover:bg-charcoal/90 text-stone-50 text-sm font-medium rounded-xl transition-all flex items-center justify-center gap-2">
                         <ShoppingCart className="h-4 w-4" /> {t('shop.addToCart')}
-                      </button>
+                    </button>
                       <Link to={`/shop/${product.id}`} className="p-3.5 border border-stone-300 dark:border-dark-border rounded-xl text-[#1C1C1C]/80 dark:text-white/80 hover:border-oak hover:text-oak transition-colors flex items-center justify-center" aria-label={`View ${product.name}`}>
-                        <Eye className="h-4 w-4" />
-                      </Link>
+                      <Eye className="h-4 w-4" />
+                    </Link>
                     </div>
                   </div>
                 </div>
@@ -337,26 +337,26 @@ export default function Landing() {
                       {t('landing.bestSeller')}
                     </span>
                     <button onClick={() => addToWishlist(product)} className="absolute top-4 right-4 p-2.5 rounded-xl bg-stone-50/90 dark:bg-dark-card/90 backdrop-blur-sm text-charcoal/40 dark:text-white/60 hover:text-red-500 transition-colors" aria-label={`Add ${product.name} to wishlist`}>
-                      <Heart className="h-4 w-4" />
-                    </button>
-                  </div>
+                    <Heart className="h-4 w-4" />
+                  </button>
+                </div>
                   <div className="p-8">
                     <h4 className="font-display font-medium text-lg text-[#1C1C1C] dark:text-white group-hover:text-oak transition-colors">{product.name}</h4>
                     <div className="flex items-center justify-between mt-3">
                       <span className="text-xl font-medium text-[#1C1C1C] dark:text-white">{formatPrice(product.price)}</span>
                       <div className="flex items-center gap-1" aria-label={`Rating: ${product.rating} out of 5`}>
-                        {[...Array(5)].map((_, i) => (
+                      {[...Array(5)].map((_, i) => (
                           <Star key={i} className={`h-4 w-4 ${i < Math.round(product.rating || 0) ? 'text-amber-500 fill-amber-500' : 'text-stone-200 dark:text-dark-border'}`} />
-                        ))}
-                      </div>
+                      ))}
                     </div>
+                  </div>
                     <div className="flex gap-3 mt-5">
                       <button onClick={() => addToCart(product)} className="flex-1 py-3.5 bg-charcoal hover:bg-charcoal/90 text-stone-50 text-sm font-medium rounded-xl transition-all flex items-center justify-center gap-2">
                         <ShoppingCart className="h-4 w-4" /> {t('shop.addToCart')}
-                      </button>
+                    </button>
                       <Link to={`/shop/${product.id}`} className="p-3.5 border border-stone-300 dark:border-dark-border rounded-xl text-[#1C1C1C]/80 dark:text-white/80 hover:border-oak hover:text-oak transition-colors flex items-center justify-center" aria-label={`View ${product.name}`}>
-                        <Eye className="h-4 w-4" />
-                      </Link>
+                      <Eye className="h-4 w-4" />
+                    </Link>
                     </div>
                   </div>
                 </div>
@@ -381,14 +381,14 @@ export default function Landing() {
             </h3>
             <p className="text-stone-100 text-lg sm:text-xl font-medium mb-10 max-w-2xl mx-auto leading-relaxed">
               {t('landing.cta.desc')}
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/shop" className="inline-flex items-center justify-center gap-2 px-10 py-4 bg-white text-gray-900 font-semibold text-sm uppercase tracking-widest hover:bg-stone-100 transition-all duration-300 rounded-xl shadow-lg">
                 {t('footer.shopCollection')} <ArrowRight className="h-4 w-4" />
-              </Link>
+                </Link>
               <Link to="/shop" className="inline-flex items-center justify-center gap-2 px-10 py-4 border-2 border-white text-white font-semibold text-sm uppercase tracking-widest hover:bg-white hover:text-gray-900 transition-all duration-300 rounded-xl">
                 {t('landing.exploreMore')}
-              </Link>
+                </Link>
             </div>
           </AnimatedSection>
         </div>

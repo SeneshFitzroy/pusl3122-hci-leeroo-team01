@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { jsPDF } from 'jspdf'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -44,9 +44,13 @@ import TemplateSelector from '@/components/editor/TemplateSelector'
 import KeyboardShortcutsPanel from '@/components/editor/KeyboardShortcutsPanel'
 import OnboardingTour, { ONBOARDING_TOUR_KEY } from '@/components/editor/OnboardingTour'
 import ConfirmDialog from '@/components/ConfirmDialog'
+import useAuthStore from '@/store/useAuthStore'
+import { fetchDesignById, saveDesignToFirestore } from '@/lib/designService'
 
 export default function RoomEditor() {
   const { designId } = useParams()
+  const navigate = useNavigate()
+  const user = useAuthStore((s) => s.user)
   const { t } = useTranslation()
   const canvasRef = useRef(null)
   const canvas2DRef = useRef(null)
@@ -171,15 +175,43 @@ export default function RoomEditor() {
   }
 
   useEffect(() => {
-    if (designId && savedDesigns.length > 0) {
-      const design = savedDesigns.find(d => d.id === designId)
-      if (design) {
-        loadDesign(design)
-        setShowTemplates(false)
-      }
+    if (!designId) return
+
+    const design = savedDesigns.find(d => d.id === designId)
+    if (design) {
+      loadDesign(design)
+      setShowTemplates(false)
       setIsLoading(false)
+      return
     }
-  }, [designId, savedDesigns, loadDesign])
+
+    const loadFromFirestore = async () => {
+      try {
+        const fetched = await fetchDesignById(designId)
+        if (!fetched) {
+          toast.error('Design not found')
+          navigate('/editor', { replace: true })
+          setIsLoading(false)
+          return
+        }
+        if (fetched.createdBy && user?.uid && fetched.createdBy !== user.uid) {
+          navigate(`/shared/${designId}`, { replace: true })
+          setIsLoading(false)
+          return
+        }
+        loadDesign(fetched)
+        setShowTemplates(false)
+      } catch (err) {
+        console.error('Load design failed:', err)
+        toast.error('Could not load design')
+        navigate('/editor', { replace: true })
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    loadFromFirestore()
+  }, [designId, savedDesigns, loadDesign, user?.uid, navigate])
 
   useEffect(() => {
     if (!currentDesign && furnitureItems.length === 0) return
@@ -195,13 +227,21 @@ export default function RoomEditor() {
     return () => clearInterval(autoSaveInterval)
   }, [currentDesign, furnitureItems, saveDesignLocally])
 
-  const handleSave = () => {
+  const handleSave = async () => {
     try {
       const name = currentDesign?.name || `Room Design ${new Date().toLocaleDateString()}`
       const design = saveDesignLocally(name)
       setSaveStatus('Saved!')
       setTimeout(() => setSaveStatus(''), 2000)
       toast.success(`Design "${design.name}" saved!`)
+      if (user?.uid) {
+        try {
+          await saveDesignToFirestore(design, user.uid)
+        } catch (err) {
+          console.warn('Firestore save failed:', err)
+          toast.warning('Saved locally. Share link may not work until synced.')
+        }
+      }
     } catch (error) {
       toast.error('Failed to save design')
     }
@@ -454,7 +494,7 @@ export default function RoomEditor() {
                 <div className="flex bg-warm-100 dark:bg-dark-surface rounded-xl p-1.5 shadow-inner border border-warm-200/50 dark:border-dark-border/50">
                   <button
                     onClick={() => handleViewSwitch('2d')}
-                    className={`px-4 py-2.5 rounded-lg text-sm font-bold transition-all flex items-center gap-2 ${
+                    className={`px-3 py-2.5 rounded-lg text-sm font-bold transition-all flex items-center gap-1.5 ${
                       viewMode === '2d'
                         ? 'bg-[#3F5E45] text-white shadow-md border-2 border-forest'
                         : 'text-darkwood/70 dark:text-white hover:bg-warm-200/50 dark:hover:bg-dark-border/50 border-2 border-transparent'
@@ -463,11 +503,24 @@ export default function RoomEditor() {
                     title="2D Floor Plan — drag to reposition items"
                   >
                     <Layers className="h-5 w-5" />
-                    <span>2D Plan</span>
+                    <span>2D</span>
+                  </button>
+                  <button
+                    onClick={() => handleViewSwitch('split')}
+                    className={`px-3 py-2.5 rounded-lg text-sm font-bold transition-all flex items-center gap-1.5 ${
+                      viewMode === 'split'
+                        ? 'bg-forest text-white shadow-md border-2 border-forest'
+                        : 'text-darkwood/70 dark:text-white hover:bg-warm-200/50 dark:hover:bg-dark-border/50 border-2 border-transparent'
+                    }`}
+                    aria-label="Split view — 2D and 3D side by side"
+                    title="Split View — 2D and 3D on same page"
+                  >
+                    <span className="text-base">⊞</span>
+                    <span>Split</span>
                   </button>
                   <button
                     onClick={() => handleViewSwitch('3d')}
-                    className={`px-4 py-2.5 rounded-lg text-sm font-bold transition-all flex items-center gap-2 ${
+                    className={`px-3 py-2.5 rounded-lg text-sm font-bold transition-all flex items-center gap-1.5 ${
                       viewMode === '3d'
                         ? 'bg-clay text-white shadow-md border-2 border-clay-dark'
                         : 'text-darkwood/70 dark:text-white hover:bg-warm-200/50 dark:hover:bg-dark-border/50 border-2 border-transparent'
@@ -476,7 +529,7 @@ export default function RoomEditor() {
                     title="3D View — drag to rotate camera"
                   >
                     <Eye className="h-5 w-5" />
-                    <span>3D View</span>
+                    <span>3D</span>
                   </button>
                 </div>
                 <div className="hidden sm:block w-px h-8 bg-warm-200 dark:bg-dark-border" />
@@ -540,11 +593,23 @@ export default function RoomEditor() {
                   </AnimatePresence>
                 </div>
                 <button
-                  onClick={() => {
+                  onClick={async () => {
                     const id = designId || currentDesign?.id
-                    const url = id ? `${window.location.origin}/editor/${id}` : window.location.href
+                    if (!id) {
+                      toast.info('Save your design first to get a shareable link.')
+                      return
+                    }
+                    const design = currentDesign || savedDesigns.find(d => d.id === id)
+                    if (user?.uid && design) {
+                      try {
+                        await saveDesignToFirestore(design, user.uid)
+                      } catch {
+                        // Continue — link may still work if already saved
+                      }
+                    }
+                    const url = `${window.location.origin}/shared/${id}`
                     navigator.clipboard.writeText(url).then(() => {
-                      toast.success(id ? 'Share link copied! Send to clients or collaborators.' : 'Save your design first to get a shareable link.')
+                      toast.success('Share link copied! Clients can view without logging in.')
                     }).catch(() => toast.error('Could not copy link.'))
                   }}
                   className="p-2 rounded-lg hover:bg-warm-100 dark:hover:bg-dark-surface transition-colors"
@@ -619,9 +684,9 @@ export default function RoomEditor() {
           <div
             ref={canvasRef}
             className="flex-1 relative bg-warm-50 dark:bg-dark-bg overflow-hidden"
-            onDragOver={(e) => { if (viewMode === '3d') { e.preventDefault(); e.dataTransfer.dropEffect = 'copy' } }}
+            onDragOver={(e) => { if (viewMode === '3d' || viewMode === 'split') { e.preventDefault(); e.dataTransfer.dropEffect = 'copy' } }}
             onDrop={(e) => {
-              if (viewMode !== '3d') return
+              if (viewMode !== '3d' && viewMode !== 'split') return
               e.preventDefault()
               const raw = e.dataTransfer.getData('furniture')
               if (!raw) return
@@ -634,7 +699,15 @@ export default function RoomEditor() {
               }
             }}
           >
-            {viewMode === '2d' ? <RoomCanvas2D ref={canvas2DRef} /> : <RoomViewer3D />}
+            {viewMode === '2d' && <RoomCanvas2D ref={canvas2DRef} />}
+            {viewMode === '3d' && <RoomViewer3D />}
+            {viewMode === 'split' && (
+              <div className="absolute inset-0 flex">
+                <div className="flex-1 min-w-0"><RoomCanvas2D ref={canvas2DRef} /></div>
+                <div className="w-px bg-warm-200 dark:bg-dark-border" />
+                <div className="flex-1 min-w-0"><RoomViewer3D /></div>
+              </div>
+            )}
 
             {/* Mobile FAB — open sidebar when closed */}
             {!sidebarOpenOnMobile && (
