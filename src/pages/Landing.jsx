@@ -363,7 +363,7 @@ export default function Landing() {
                 <div className="group bg-stone-50 dark:bg-dark-bg rounded-2xl overflow-hidden border border-stone-200/60 dark:border-dark-border hover:shadow-xl hover:shadow-stone-300/10 transition-all duration-300">
                   <div className="relative aspect-[4/3] bg-stone-100 dark:bg-dark-surface overflow-hidden">
                     <img src={product.image} alt={product.name} className="w-full h-full object-cover" loading="lazy" />
-                    <button onClick={() => addToWishlist(product)} className="absolute top-4 right-4 p-2.5 rounded-xl bg-stone-50/90 dark:bg-dark-card/90 backdrop-blur-sm text-charcoal/40 hover:text-red-500 transition-colors" aria-label={`Add ${product.name} to wishlist`}>
+                    <button onClick={() => addToWishlist(product)} className="absolute top-4 right-4 p-2.5 rounded-xl bg-stone-50/90 dark:bg-dark-card/90 backdrop-blur-sm text-charcoal/40 dark:text-white/60 hover:text-red-500 transition-colors" aria-label={`Add ${product.name} to wishlist`}>
                       <Heart className="h-4 w-4" />
                     </button>
                   </div>
@@ -442,7 +442,7 @@ export default function Landing() {
           </div>
 
           <AnimatedSection className="text-center mt-14">
-            <Link to="/shop" className="landing-view-all-products inline-flex items-center justify-center gap-2 px-10 py-4 border-2 border-charcoal text-charcoal bg-transparent dark:bg-dark-card dark:border-white dark:text-white font-medium text-sm uppercase tracking-widest hover:bg-charcoal hover:text-stone-50 dark:hover:bg-white dark:hover:text-gray-900 dark:hover:border-white transition-all duration-300 rounded-xl">
+            <Link to="/shop" className="inline-flex items-center justify-center gap-2 px-10 py-4 border-2 border-charcoal text-charcoal dark:border-white dark:text-white font-medium text-sm uppercase tracking-widest hover:bg-charcoal hover:text-stone-50 dark:hover:bg-white dark:hover:text-gray-900 transition-all duration-300 rounded-xl">
               {t('landing.viewAllProducts')} <ArrowRight className="h-4 w-4" />
             </Link>
           </AnimatedSection>
@@ -476,11 +476,11 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-14">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
             <AnimatedSection>
-              <span className="text-charcoal dark:text-white font-semibold text-sm uppercase tracking-widest mb-4 block">{t('landing.ourStory')}</span>
+              <span className="text-charcoal/90 dark:text-white font-semibold text-sm uppercase tracking-widest mb-4 block">{t('landing.ourStory')}</span>
               <h2 className="text-3xl sm:text-4xl font-display font-light text-charcoal dark:text-white mb-8">
-                {String.fromCharCode(0x0DBD, 0x0DD3)} {String.fromCharCode(0x0DBB, 0x0DD6)} <span className="text-oak dark:text-amber-200">(Lee Roo)</span>
+                {String.fromCharCode(0x0DBD, 0x0DD3)} {String.fromCharCode(0x0DBB, 0x0DD6)} <span className="text-oak dark:text-clay">(Lee Roo)</span>
               </h2>
-              <div className="space-y-6 text-charcoal dark:text-white leading-relaxed text-lg">
+              <div className="space-y-6 text-charcoal/85 dark:text-stone-200 leading-relaxed text-lg">
                 <p>{t('landing.about.para1')}</p>
                 <p>{t('landing.about.para2')}</p>
                 <p>{t('landing.about.para3')}</p>

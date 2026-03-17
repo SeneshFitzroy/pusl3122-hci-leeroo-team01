@@ -265,12 +265,16 @@ html.dark .text-darkwood-light {
   color: #FFFFFF !important;
 }
 
-/* Force charcoal text (all opacity variants) to white in dark mode */
+/* Force charcoal text (plain + all opacity variants) to white in dark mode */
+html.dark .text-charcoal {
+  color: #FFFFFF !important;
+}
 html.dark .text-charcoal\/40,
 html.dark .text-charcoal\/50,
 html.dark .text-charcoal\/60,
 html.dark .text-charcoal\/70,
 html.dark .text-charcoal\/80,
+html.dark .text-charcoal\/85,
 html.dark .text-charcoal\/90 {
   color: rgba(255, 255, 255, 0.85) !important;
 }
@@ -293,17 +297,21 @@ html.dark .cookie-consent-banner span {
   color: #FFFFFF !important;
 }
 
-/* Footer always has dark bg — force white text */
+/* Footer always has dark bg — force white text, but exclude CTA button (white bg) */
 footer.bg-darkwood,
-footer.bg-darkwood *:not(button.bg-clay):not(.bg-clay) {
-  color: #FFFFFF !important;
+footer.bg-darkwood *:not(.bg-white):not(.bg-white *):not(button.bg-clay):not(.bg-clay) {
+  color: #FFFFFF;
 }
-footer.bg-darkwood a,
-footer.bg-darkwood span,
+footer.bg-darkwood a:not(.bg-white),
+footer.bg-darkwood span:not(.bg-white span),
 footer.bg-darkwood p,
 footer.bg-darkwood li,
 footer.bg-darkwood input {
-  color: #FFFFFF !important;
+  color: #FFFFFF;
+}
+footer.bg-darkwood .bg-white,
+footer.bg-darkwood .bg-white * {
+  color: #5C3A2A;
 }
 footer.bg-darkwood input::placeholder {
   color: rgba(255,255,255,0.9) !important;
@@ -325,17 +333,8 @@ html.dark .dark\:bg-dark-surface {
   color: #FFFFFF;
 }
 
-/* VIEW ALL PRODUCTS button in dark mode: force white text & icon */
-html.dark .landing-view-all-products {
-  color: #FFFFFF !important;
-}
-html.dark .landing-view-all-products svg {
-  color: inherit !important;
-}
-
-/* Elements on bg-white/bg-stone in dark mode should keep dark text */
-html.dark .bg-white .text-charcoal,
-html.dark .bg-stone-50 .text-charcoal,
-html.dark [class*="bg-white"] > .text-charcoal {
-  color: #1C1C1C !important;
+/* Elements inside truly-white containers in dark mode keep dark text (buttons, inputs) */
+html.dark .bg-white > .text-charcoal,
+html.dark .bg-white > a.text-charcoal {
+  color: #1C1C1C;
 }

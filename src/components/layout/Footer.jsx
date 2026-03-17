@@ -83,7 +83,8 @@ export default function Footer() {
           </div>
           <Link
             to="/shop"
-            className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white text-[#5C3A2A] font-semibold rounded-xl hover:bg-stone-50 transition-all text-sm shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+            className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white rounded-xl hover:bg-stone-50 transition-all text-sm shadow-lg hover:shadow-xl hover:-translate-y-0.5 font-semibold"
+            style={{ color: '#5C3A2A' }}
           >
             {t('footer.shopCollection')}
             <ArrowRight className="h-4 w-4" />
