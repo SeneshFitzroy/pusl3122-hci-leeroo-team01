@@ -8,7 +8,8 @@ export default function ARLogoIcon({ className = 'h-12 w-12', invert = false }) 
       viewBox="0 0 64 64"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={`${className} ${invert ? 'brightness-0 invert' : ''}`}
+      preserveAspectRatio="xMidYMid meet"
+      className={`block ${className} ${invert ? 'brightness-0 invert' : ''}`}
       aria-hidden
     >
       {/* Corner brackets (viewfinder) */}

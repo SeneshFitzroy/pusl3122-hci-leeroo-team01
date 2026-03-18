@@ -34,7 +34,7 @@ export default function FurniturePanel() {
   }
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col min-h-0">
       {/* Search */}
       <div className="p-4 border-b border-warm-200 dark:border-dark-border">
         <div className="relative mb-4">
@@ -98,22 +98,22 @@ export default function FurniturePanel() {
         </div>
       </div>
 
-      {/* Furniture Items */}
-      <div className="flex-1 overflow-auto p-4">
+      {/* Furniture Items — scrollable with visible scrollbar */}
+      <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden p-4 furniture-scroll overscroll-contain">
         {filteredFurniture.length > 0 ? (
           viewMode === 'grid' ? (
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4">
               {filteredFurniture.map((item) => (
                 <motion.div
                   key={item.id}
-                  className="bg-warm-100 dark:bg-dark-surface rounded-lg p-3 cursor-move hover:bg-warm-200 dark:hover:bg-dark-border transition-colors group"
+                  className="bg-warm-100 dark:bg-dark-surface rounded-lg p-2.5 sm:p-3 cursor-move hover:bg-warm-200 dark:hover:bg-dark-border transition-colors group"
                   draggable
                   onDragStart={(e) => handleDragStart(e, item)}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
                   {/* Item Preview */}
-                  <div className="aspect-square bg-white dark:bg-dark-card rounded-lg mb-3 flex items-center justify-center overflow-hidden">
+                  <div className="aspect-square bg-white dark:bg-dark-card rounded-lg mb-2 sm:mb-3 flex items-center justify-center overflow-hidden">
                     {item.image ? (
                       <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                     ) : (
@@ -122,13 +122,13 @@ export default function FurniturePanel() {
                   </div>
 
                   {/* Item Info */}
-                  <h4 className="font-medium text-darkwood dark:text-white mb-1 text-sm">
+                  <h4 className="font-medium text-darkwood dark:text-white mb-0.5 sm:mb-1 text-xs sm:text-sm truncate" title={item.name}>
                     {item.name}
                   </h4>
-                  <div className="text-xs text-darkwood/50 dark:text-white mb-2">
+                  <div className="text-[10px] sm:text-xs text-darkwood/50 dark:text-white mb-1 sm:mb-2">
                     {item.width}×{item.depth}×{item.height}m
                   </div>
-                  <div className="text-sm font-medium text-clay mb-2">
+                  <div className="text-xs sm:text-sm font-medium text-clay mb-1.5 sm:mb-2">
                     {formatPrice(item.price)}
                   </div>
 
