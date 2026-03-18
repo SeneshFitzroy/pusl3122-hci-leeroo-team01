@@ -9,6 +9,7 @@ import * as THREE from 'three'
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter.js'
 import FurnitureModel3D from './FurnitureModel3D'
 import { X } from 'lucide-react'
+import ARLogoIcon from './ARLogoIcon'
 
 function exportSimpleFurniturePlaceholder(color, onGlbReady) {
   const geo = new THREE.BoxGeometry(1, 0.5, 0.6)
@@ -194,7 +195,7 @@ export default function ARFurnitureViewer({ productId, modelType, color, product
                   slot="ar-button"
                   className="absolute bottom-4 left-1/2 -translate-x-1/2 px-6 py-3 bg-forest text-white font-semibold rounded-xl shadow-lg hover:bg-forest-light transition-colors flex items-center gap-2"
                 >
-                  <img src="/images/ar-icon.png" alt="" className="h-6 w-6 object-contain brightness-0 invert" aria-hidden />
+                  <ARLogoIcon className="h-8 w-8" invert />
                   View in your space
                 </button>
               </model-viewer>

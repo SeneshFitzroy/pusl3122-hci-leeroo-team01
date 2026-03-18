@@ -25,6 +25,7 @@ import Real3DViewer from '@/components/Real3DViewer'
 import { MODEL_TYPE_MAP } from '@/components/FurnitureModel3D'
 import Mini3DPreview from '@/components/Mini3DPreview'
 import ARFurnitureViewer from '@/components/ARFurnitureViewer'
+import ARLogoIcon from '@/components/ARLogoIcon'
 import { useTranslation } from 'react-i18next'
 
 export default function ProductDetail() {
@@ -482,13 +483,13 @@ export default function ProductDetail() {
                 </motion.button>
                 <motion.button
                   onClick={() => setShowARModal(true)}
-                  className="p-4 rounded-xl border-2 border-forest bg-forest/20 dark:bg-forest/30 text-forest dark:text-forest-light hover:bg-forest/30 dark:hover:bg-forest/40 shadow-lg ring-2 ring-forest/20 hover:ring-forest/40 transition-all flex items-center justify-center min-w-[52px] min-h-[52px]"
+                  className="p-3 rounded-xl border-2 border-forest bg-transparent text-forest dark:text-forest-light hover:bg-forest/10 dark:hover:bg-forest/20 transition-all flex items-center justify-center min-w-[56px] min-h-[56px]"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   title={t('product.viewInSpace') || 'View in your space'}
                   aria-label="View in your space (AR)"
                 >
-                  <img src="/images/ar-icon.png" alt="AR" className="h-9 w-9 object-contain drop-shadow-md" />
+                  <ARLogoIcon className="h-12 w-12 text-forest dark:text-forest-light" />
                 </motion.button>
               </div>
 
