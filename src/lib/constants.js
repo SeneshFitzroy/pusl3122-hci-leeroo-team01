@@ -90,9 +90,9 @@ export const SHOP_PRODUCTS = [
     image: '/images/products/sp-1.jpg',
     images: ['/images/products/sp-1.jpg'],
     reviewsList: [
-      { name: 'Sarah Mitchell', rating: 5, text: 'Absolutely stunning. The velvet is luxurious and the build quality is exceptional.' },
-      { name: 'James Chen', rating: 5, text: 'Best sofa we have ever owned. Perfect for our living room.' },
-      { name: 'Emily Rodriguez', rating: 4, text: 'Beautiful design. Delivery was smooth. One cushion had a slight wrinkle but settled after a week.' },
+      { name: 'Zara Okafor', rating: 5, text: 'The tufting depth is exactly what we wanted—holds its shape even after our two kids bounce on it daily. Brass legs have a nice weight to them.' },
+      { name: 'Viktor Kowalczyk', rating: 5, text: 'Replaced a 12-year-old IKEA sofa. Night and day. Frame creaks zero. Velvet hasn’t pilled after 4 months.' },
+      { name: 'Rina Tanaka', rating: 4, text: 'Delivery team left one cushion slightly crooked in the packaging—it flattened out in about a week. Otherwise spot-on.' },
     ],
   },
   {
@@ -106,9 +106,9 @@ export const SHOP_PRODUCTS = [
     image: '/images/products/sp-2.jpg',
     images: ['/images/products/sp-2.jpg'],
     reviewsList: [
-      { name: 'Sarah Chen', rating: 5, text: 'Beautiful craftsmanship. The oak has a lovely grain and the chairs feel incredibly solid.' },
-      { name: 'Michael O\'Brien', rating: 5, text: 'Exactly what we wanted for our dining room. Assembly was straightforward.' },
-      { name: 'Priya Sharma', rating: 4, text: 'Stylish and comfortable. Wish they came in a set of 6 for larger tables.' },
+      { name: 'Lars Eriksen', rating: 5, text: 'Spindle backs line up perfectly—no wobble. Sanded so smooth you can run your hand down the back without catching.' },
+      { name: 'Amara Nkrumah', rating: 5, text: 'Set of four for our farm table. Mortise joints are tight. Dropped one during move—not a scratch.' },
+      { name: 'Yuki Watanabe', rating: 4, text: 'Love the grain. Would buy a 6-pack if they offered it. Cushion covers are removable which is a plus.' },
     ],
   },
   {
@@ -122,9 +122,9 @@ export const SHOP_PRODUCTS = [
     image: '/images/products/sp-3.jpg',
     images: ['/images/products/sp-3.jpg'],
     reviewsList: [
-      { name: 'Emma Wilson', rating: 5, text: 'Perfect mid-century vibe. The walnut top is gorgeous and the shelf is so handy.' },
-      { name: 'David Kim', rating: 5, text: 'Great value for the quality. Sturdy and looks more expensive than it is.' },
-      { name: 'Rachel Foster', rating: 4, text: 'Love the hairpin legs. Table arrived well packaged with no damage.' },
+      { name: 'Dmitri Volkov', rating: 5, text: 'Hairpin legs sit flush—no rocking. Lower shelf holds our art books. Veneer edge is clean, no chipping.' },
+      { name: 'Fatima Al-Hassan', rating: 5, text: 'Paired it with a mustard armchair. The walnut finish picks up the light differently at dusk. Understated.' },
+      { name: 'Connor McBride', rating: 4, text: 'Powder coat on the legs is even. One of the floor pads was slightly off—easy fix with a replacement.' },
     ],
   },
   {
@@ -138,9 +138,9 @@ export const SHOP_PRODUCTS = [
     image: '/images/products/sp-4.jpg',
     images: ['/images/products/sp-4.jpg'],
     reviewsList: [
-      { name: 'Jennifer Martinez', rating: 5, text: 'Our bedroom feels like a hotel now. The headboard is stunning and the bed is rock solid.' },
-      { name: 'Thomas Nguyen', rating: 5, text: 'No box spring needed—saved us money and hassle. Assembly took about 2 hours.' },
-      { name: 'Lisa Anderson', rating: 4, text: 'Beautiful bed. The linen fabric is soft but I wish it came in more colours.' },
+      { name: 'Ingrid Lindqvist', rating: 5, text: 'Channel tufting stays crisp—no puckering. Slat system is quiet. Our 14" mattress sits flush.' },
+      { name: 'Kwame Asante', rating: 5, text: 'Skipped the box spring. Base is engineered wood, not particle. Headboard bolts are concealed. Smart design.' },
+      { name: 'Nadia Petrova', rating: 4, text: 'Linen breathes. Would have liked a fifth fabric option. Delivery crew carried it to the third floor no problem.' },
     ],
   },
   {
@@ -154,9 +154,9 @@ export const SHOP_PRODUCTS = [
     image: '/images/products/sp-5.jpg',
     images: ['/images/products/sp-5.jpg'],
     reviewsList: [
-      { name: 'Alex Thompson', rating: 5, text: 'Love the industrial look. Each shelf has unique character. Held my books and decor perfectly.' },
-      { name: 'Maria Santos', rating: 4, text: 'Solid construction. Took a while to assemble but worth it. Very sturdy.' },
-      { name: 'James O\'Connor', rating: 5, text: 'Perfect for my home office. The reclaimed wood has such nice grain variation.' },
+      { name: 'Rafael Mendoza', rating: 5, text: 'Iron frame has zero flex. Each pine plank is book-matched differently—one shelf has a knot that looks intentional.' },
+      { name: 'Svetlana Kozlov', rating: 4, text: 'Wall anchor is non-negotiable with a toddler. Took 90 min to assemble. Shelves hold 25 lbs each no problem.' },
+      { name: 'Arjun Patel', rating: 5, text: 'Replaced a wire Metro rack. This has presence. Matte black on the frame doesn’t show fingerprints.' },
     ],
   },
   {
@@ -186,9 +186,9 @@ export const SHOP_PRODUCTS = [
     image: '/images/products/sp-8.jpg',
     images: ['/images/products/sp-8.jpg'],
     reviewsList: [
-      { name: 'Nicole Bennett', rating: 5, text: 'Gorgeous statement piece. The mustard velvet pops beautifully against our grey walls.' },
-      { name: 'Daniel Lee', rating: 5, text: 'Super comfortable for reading. The wings give great support. Walnut legs are elegant.' },
-      { name: 'Sofia Garcia', rating: 4, text: 'Love it! Wish they sold a matching ottoman. Quality is excellent.' },
+      { name: 'Hassan Ibrahim', rating: 5, text: 'Mustard in Forest Green—went bold. Wings block the AC draft. Dowel legs are chunky, not spindly.' },
+      { name: 'Freya Nielsen', rating: 5, text: 'Foam density is right. Back doesn’t collapse after an hour of reading. Walnut matches our credenza.' },
+      { name: 'Tariq Mahmoud', rating: 4, text: 'Cushion zips off for dry clean. No ottoman in the line—using a pouf for now. Legs need felt pads.' },
     ],
   },
   {
@@ -202,9 +202,9 @@ export const SHOP_PRODUCTS = [
     image: '/images/products/sp-9.jpg',
     images: ['/images/products/sp-9.jpg'],
     reviewsList: [
-      { name: 'Catherine Moore', rating: 5, text: 'Stunning table. The walnut grain is unique and beautiful. Seats our family of eight comfortably.' },
-      { name: 'Patrick Sullivan', rating: 5, text: 'Heirloom quality. Heavy, solid, exactly as described. Worth every penny.' },
-      { name: 'Laura Evans', rating: 4, text: 'Beautiful craftsmanship. Delivery crew was careful. Minor finish touch-up needed on one leg.' },
+      { name: 'Klaus Bauer', rating: 5, text: 'Breadboard ends are mortised—no screws. Table weighs 92 lbs. Seats eight with elbows. Grain runs long.' },
+      { name: 'Aisha Okonkwo', rating: 5, text: 'Turned legs are substantial. Polyurethane is matte, not plasticky. Had to reinforce the floor underneath.' },
+      { name: 'Björn Lindström', rating: 4, text: 'One leg had a small finish drip. Sanded and touched up. Otherwise flawless. Delivery crew knew their stuff.' },
     ],
   },
   {
@@ -218,9 +218,9 @@ export const SHOP_PRODUCTS = [
     image: '/images/products/sp-10.jpg',
     images: ['/images/products/sp-10.jpg'],
     reviewsList: [
-      { name: 'Helen Brooks', rating: 5, text: 'Perfect size for our bedroom. The drawer glides smoothly and the birch finish is lovely.' },
-      { name: 'Mark Taylor', rating: 5, text: 'Clean Scandinavian design. Arrived pre-assembled as stated. Very happy with the purchase.' },
-      { name: 'Anna Kowalski', rating: 4, text: 'Light and airy. Matches our bedroom decor perfectly. Minor scuff on delivery but barely noticeable.' },
+      { name: 'Astrid Johansson', rating: 5, text: 'Drawer has soft-close—no slam. Cubby fits a charging station. Tapered legs give it lift without looking fragile.' },
+      { name: 'Jasper van der Berg', rating: 5, text: 'Pre-assembled, no tools. Birch is pale, not yellow. Splayed legs are stable on uneven floors.' },
+      { name: 'Mira Kowalczyk', rating: 4, text: 'One corner had a shipping scuff. Rubbed with Restor-a-Finish—gone. Otherwise perfect proportions.' },
     ],
   },
   {
@@ -234,9 +234,9 @@ export const SHOP_PRODUCTS = [
     image: '/images/products/sp-11.jpg',
     images: ['/images/products/sp-11.jpg'],
     reviewsList: [
-      { name: 'Chris Anderson', rating: 5, text: 'Stunning pendant. The glass catches light beautifully. Easy to install and dimmable.' },
-      { name: 'Michelle Torres', rating: 4, text: 'Love the antique brass finish. Creates such warm ambient lighting in our dining room.' },
-      { name: 'Ryan Mitchell', rating: 5, text: 'Quality is obvious. The mouth-blown glass has subtle variations that make it feel handcrafted.' },
+      { name: 'Anton Weber', rating: 5, text: 'Mouth-blown glass has a slight thickness variance—you can see it when lit. Cord is braided, adjustable. Brass patina is even.' },
+      { name: 'Layla Hassan', rating: 4, text: 'Warm light, not harsh. Canopy is smaller than expected but mounts flush. Works with a standard junction box.' },
+      { name: 'Henrik Sørensen', rating: 5, text: 'Replaced a builder-grade boob light. This has weight. LED bulb included—3000K, dimmable. Install was 20 min.' },
     ],
   },
   {
@@ -250,9 +250,9 @@ export const SHOP_PRODUCTS = [
     image: '/images/products/sp-12.jpg',
     images: ['/images/products/sp-12.jpg'],
     reviewsList: [
-      { name: 'George Harrison', rating: 5, text: 'A true Chesterfield. The leather is thick and will age beautifully. Worth every cent.' },
-      { name: 'Olivia Clarke', rating: 5, text: 'Stunning piece. The diamond tufting is immaculate. Our living room centrepiece.' },
-      { name: 'Nathan Bell', rating: 4, text: 'Incredible build quality. Heavy and substantial. Delivery took 3 weeks but worth the wait.' },
+      { name: 'Aldo Rossi', rating: 5, text: 'Leather is full-grain—you can feel the pores. Diamond tufting is hand-tied. Bun feet are solid, not plastic caps.' },
+      { name: 'Yara Nassar', rating: 5, text: 'Distressed Cognac shows variation. Cushions have eight-way springs. Arrived in two crates, white-glove.' },
+      { name: 'Marcus Webb', rating: 4, text: '3-week lead time as stated. One arm is slightly firmer than the other—breaking in. Worth it.' },
     ],
   },
   {
@@ -266,9 +266,9 @@ export const SHOP_PRODUCTS = [
     image: '/images/products/sp-13.jpg',
     images: ['/images/products/sp-13.jpg'],
     reviewsList: [
-      { name: 'Emma Foster', rating: 5, text: 'Beautiful mirror. The brass frame adds such elegance. Perfect above our console.' },
-      { name: 'Jake Morrison', rating: 5, text: 'Large and impactful. The bevelled edge catches light beautifully. Easy to mount.' },
-      { name: 'Rebecca Chen', rating: 4, text: 'Stunning quality. Makes our entryway feel much larger. Brass is substantial, not flimsy.' },
+      { name: 'Greta Zimmermann', rating: 5, text: 'Bevelled edge throws light at an angle—catches the morning sun. Frame is forged, not cast. Mounting hardware included.' },
+      { name: 'Raj Mehta', rating: 5, text: '31" diameter. Above a 48" console. Proportion is right. Brass has a warm cast, not yellow.' },
+      { name: 'Chiara Romano', rating: 4, text: 'Entryway feels doubled. Backing is shatter-resistant. One corner of the frame had a tiny casting mark—barely visible.' },
     ],
   },
   {
@@ -282,9 +282,9 @@ export const SHOP_PRODUCTS = [
     image: '/images/products/sp-14.jpg',
     images: ['/images/products/sp-14.jpg'],
     reviewsList: [
-      { name: 'Diana Roberts', rating: 5, text: 'Holds all our clothes with room to spare. Soft-close doors are a nice touch. Solid construction.' },
-      { name: 'Brian Cooper', rating: 4, text: 'Classic Shaker design. Assembly took a few hours but straightforward. Shelves are very adjustable.' },
-      { name: 'Julia Adams', rating: 5, text: 'Transformed our bedroom storage. The oak finish is rich and consistent. Highly recommend.' },
+      { name: 'Fionn O\'Connor', rating: 5, text: 'Full-width hanging rail fits 40 hangers. Shelves use pins—adjust every 2". Soft-close is hydraulic, not spring.' },
+      { name: 'Zeynep Yilmaz', rating: 4, text: 'Assembly 3 hrs with two people. Doors align. One shelf had a chip on the edge—they sent a replacement.' },
+      { name: 'Santiago Reyes', rating: 5, text: 'Oak panels are veneer over MDF—solid where it matters. Anti-tip bracket is mandatory. Fits a king bedroom.' },
     ],
   },
   {
@@ -298,9 +298,9 @@ export const SHOP_PRODUCTS = [
     image: '/images/products/sp-15.jpg',
     images: ['/images/products/sp-15.jpg'],
     reviewsList: [
-      { name: 'Steven Phillips', rating: 5, text: 'Best home office chair I have owned. Lumbar support is adjustable and makes long days comfortable.' },
-      { name: 'Carolyn White', rating: 5, text: 'Synchro-tilt works smoothly. Leather is soft and durable. Chrome base looks professional.' },
-      { name: 'Peter Jenkins', rating: 4, text: 'Comfortable for 8-hour days. Assembly was a bit fiddly but doable. Great value.' },
+      { name: 'Theo van Essen', rating: 5, text: 'Lumbar dial actually works—no more cushion hack. Synchro-tilt has a firm stop. Base is polished chrome, five-star.' },
+      { name: 'Ananya Reddy', rating: 5, text: 'Top-grain on seat and back. Arms are padded. 8 hrs a day, 4 months in—no sag. Mesh would have given out.' },
+      { name: 'Felix Kowalski', rating: 4, text: 'Assembly took 40 min—armrest bolts are tight. Seat height goes low enough for my 5-foot-4 wife. Good value.' },
     ],
   },
   {
@@ -314,9 +314,9 @@ export const SHOP_PRODUCTS = [
     image: '/images/products/sp-16.jpg',
     images: ['/images/products/sp-16.jpg'],
     reviewsList: [
-      { name: 'Victoria Lane', rating: 5, text: 'Stunning piece. The live edge has so much character. Every slab truly is unique.' },
-      { name: 'Andrew Scott', rating: 4, text: 'Love the organic shape. Iron base is sturdy. Perfect behind our sofa.' },
-      { name: 'Grace Murphy', rating: 5, text: 'Showstopper in our entryway. The acacia grain is breathtaking. Well finished.' },
+      { name: 'Isadora Costa', rating: 5, text: 'Live edge has bark inclusion on one side—kept it. Lacquer seal is thin, grain texture shows through. Iron base is geometric.' },
+      { name: 'Kai Nakamura', rating: 4, text: 'Slab is 1.5" thick. Behind our sofa it works. One corner had a small fill—disclosed in listing. Acceptable.' },
+      { name: 'Anouk Visser', rating: 5, text: 'Every slab is one-off. Ours has a sap line that catches the light. Base bolts from below—invisible.' },
     ],
   },
   {
@@ -330,9 +330,9 @@ export const SHOP_PRODUCTS = [
     image: '/images/products/sp-17.jpg',
     images: ['/images/products/sp-17.jpg'],
     reviewsList: [
-      { name: 'Elizabeth Hughes', rating: 5, text: 'Dream sectional! The linen is soft and the chaise is perfect for movie nights. Slipcovers washed beautifully.' },
-      { name: 'William Clark', rating: 5, text: 'Fits our space perfectly. Feather-down cushions are incredibly comfortable. Worth the investment.' },
-      { name: 'Susan Wright', rating: 4, text: 'Stunning L-shape. Delivery was smooth. One cushion had a slight odour that faded after a week.' },
+      { name: 'Cormac Byrne', rating: 5, text: 'L-shape fits our 14x18 room. Feather-down cushions need fluffing weekly—part of the deal. Slipcovers washed at 30° with no shrink.' },
+      { name: 'Selma Öztürk', rating: 5, text: 'Modular—chaise detaches. We flipped the L for a different layout. Linen is pre-washed, no stiffness.' },
+      { name: 'Dmitri Sokolov', rating: 4, text: 'One cushion had a faint factory smell. Air out 48 hrs. Now fine. Sectional anchors the room. Delivery was 4 boxes.' },
     ],
   },
   {
@@ -346,9 +346,9 @@ export const SHOP_PRODUCTS = [
     image: '/images/products/sp-18.jpg',
     images: ['/images/products/sp-18.jpg'],
     reviewsList: [
-      { name: 'Margaret Turner', rating: 5, text: 'Perfect for our sunroom. Lightweight, breathable, and the teak frame is solid. Cushion is comfortable.' },
-      { name: 'Richard Baker', rating: 5, text: 'Hand-woven rattan has such nice texture. Use it indoors and on our covered patio. Holding up well.' },
-      { name: 'Patricia Green', rating: 4, text: 'Beautiful lounge chair. Barrel back is supportive. Wish it came in a loveseat version too.' },
+      { name: 'Priyanka Sharma', rating: 5, text: 'Teak frame stays out year-round under the pergola. Rattan weave is tight—no snags. Cushion is removable, quick-dry.' },
+      { name: 'Nils Eriksen', rating: 5, text: 'Barrel back supports lumbar. Open weave breathes. Moved it from sunroom to bedroom—works in both. Lightweight.' },
+      { name: 'Adaeze Okafor', rating: 4, text: 'No loveseat in the line. Bought two. Rattan has slight colour variation between them—natural. Solid build.' },
     ],
   },
 ]

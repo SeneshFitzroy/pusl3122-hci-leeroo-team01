@@ -241,14 +241,14 @@ export default function ProductDetail() {
                       ? { filter: getHueRotateFilter(selectedColor) }
                       : undefined}
                   />
-                  {/* Color overlay: mix-blend-mode: color preserves shadows/highlights, replaces hue/saturation */}
+                  {/* Color overlay: color blend preserves luminance; low opacity for industrial accuracy */}
                   {product.colors?.length > 1 && selectedColor && product.colors[0] !== selectedColor && (
                     <div
                       className="absolute inset-0 pointer-events-none transition-opacity duration-300"
                       style={{
                         backgroundColor: selectedColor,
                         mixBlendMode: 'color',
-                        opacity: 0.55,
+                        opacity: 0.42,
                       }}
                       aria-hidden
                     />

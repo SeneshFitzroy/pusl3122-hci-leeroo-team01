@@ -1,6 +1,6 @@
 /**
- * Color utilities for realistic furniture image color change.
- * Uses hex-to-HSL conversion for hue-rotate and blend-mode overlays.
+ * Color utilities for realistic, industrial furniture image color change.
+ * Uses sepia→hue-rotate→saturate pipeline for precise, material-accurate previews.
  */
 
 /**
@@ -29,23 +29,20 @@ export function hexToHSL(hex) {
   return { h: h * 360, s, l }
 }
 
+/** Base hue of typical furniture upholstery (tan/brown) for hue-rotate reference */
+const BASE_UPHOLSTERY_HUE = 35
+
 /**
- * Get CSS filter string for hue-rotate to shift image toward target color.
- * Base furniture images are typically tan/brown (hue ~30). We rotate to target hue.
+ * Returns CSS filter for realistic fabric/leather color shift.
+ * Pipeline: light sepia unifies tones → dampened hue-rotate → saturate match.
+ * Industrial-grade: conservative shifts to avoid artificial look.
  */
-export function getHueRotateFilter(hex, baseHue = 30) {
-  const { h } = hexToHSL(hex)
+export function getHueRotateFilter(hex, baseHue = BASE_UPHOLSTERY_HUE) {
+  const { h, s } = hexToHSL(hex)
   let delta = h - baseHue
   if (delta > 180) delta -= 360
   if (delta < -180) delta += 360
-  return `hue-rotate(${Math.round(delta)}deg)`
-}
-
-/**
- * Get CSS filter for saturate to match target color intensity
- */
-export function getSaturateFilter(hex, baseSaturate = 0.4) {
-  const { s } = hexToHSL(hex)
-  const factor = Math.max(0.6, Math.min(1.8, 0.5 + s * 1.2))
-  return `saturate(${factor.toFixed(2)})`
+  const dampened = Math.round(delta * 0.75)
+  const sat = Math.max(0.92, Math.min(1.12, 0.95 + s * 0.25))
+  return `sepia(0.12) hue-rotate(${dampened}deg) saturate(${sat.toFixed(2)})`
 }
