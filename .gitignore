@@ -4,6 +4,14 @@ node_modules/
 # Build output
 dist/
 
+# Test coverage
+coverage/
+
+# Old/compressed project versions (coursework: do not commit)
+*.zip
+*.rar
+*.7z
+
 # Environment variables
 .env
 .env.local

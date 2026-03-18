@@ -2,6 +2,7 @@
   "name": "lee-roo-wood-designs",
   "private": true,
   "version": "1.0.0",
+  "description": "Web-based furniture visualization and interior design platform — PUSL3122 HCI Coursework",
   "type": "module",
   "engines": {
     "node": ">=18.0.0"
@@ -9,7 +10,11 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@react-three/drei": "^9.105.0",
@@ -34,11 +39,21 @@
     "zustand": "^4.5.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.15.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.0.1",
     "@types/react": "^18.2.0",
     "@vitejs/plugin-react": "^4.2.0",
     "autoprefixer": "^10.4.0",
+    "eslint": "^9.15.0",
+    "eslint-plugin-react": "^7.37.2",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-react-refresh": "^0.4.14",
+    "globals": "^15.12.0",
+    "jsdom": "^25.0.1",
     "postcss": "^8.4.0",
     "tailwindcss": "^3.4.0",
-    "vite": "^5.1.0"
+    "vite": "^5.1.0",
+    "vitest": "^2.1.6"
   }
 }
