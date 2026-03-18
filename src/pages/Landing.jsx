@@ -12,7 +12,7 @@ import {
   CreditCard,
   Shield,
 } from 'lucide-react'
-import { SHOP_PRODUCTS, FREE_SHIPPING_DISPLAY } from '@/lib/constants'
+import { SHOP_PRODUCTS, FREE_SHIPPING_THRESHOLD } from '@/lib/constants'
 import useProductsStore from '@/store/useProductsStore'
 import useAuthStore from '@/store/useAuthStore'
 import useCartStore from '@/store/useCartStore'

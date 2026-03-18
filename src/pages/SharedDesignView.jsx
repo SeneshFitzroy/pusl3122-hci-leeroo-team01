@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Eye, LayoutGrid, Layers, ArrowRight, Loader2, AlertCircle } from 'lucide-react'
+import { LogoIcon } from '@/components/Logo'
 import useDesignStore from '@/store/useDesignStore'
 import { fetchDesignById } from '@/lib/designService'
 import RoomCanvas2D from '@/components/editor/RoomCanvas2D'
@@ -87,8 +88,18 @@ export default function SharedDesignView() {
       {/* Header — minimal, brand + design name + view toggle */}
       <header className="flex-shrink-0 border-b border-warm-200 dark:border-dark-border bg-white/80 dark:bg-dark-card/80 backdrop-blur-sm">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 py-3 sm:py-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-          <Link to="/" className="flex items-center gap-2 text-darkwood dark:text-white font-display font-bold text-lg sm:text-xl hover:opacity-80 shrink-0">
-            Lee Roo Wood Designs
+          <Link to="/" className="flex items-center gap-2.5 group shrink-0 hover:opacity-90 transition-opacity">
+            <div className="group-hover:scale-110 transition-transform duration-200">
+              <LogoIcon size={40} className="flex-shrink-0" />
+            </div>
+            <div className="flex flex-col leading-tight">
+              <span className="text-xl font-bold tracking-tight font-display bg-gradient-to-r from-darkwood to-clay dark:from-warm-100 dark:to-clay bg-clip-text text-transparent">
+                Lee Roo
+              </span>
+              <span className="text-[10px] -mt-0.5 text-darkwood/50 dark:text-white">
+                {String.fromCharCode(0x0DBD, 0x0DD3)} {String.fromCharCode(0x0DBB, 0x0DD6)} · Wood Designs
+              </span>
+            </div>
           </Link>
           <div className="flex flex-wrap items-center justify-between sm:justify-end gap-2 sm:gap-3">
             <h2 className="text-base sm:text-lg font-semibold text-darkwood dark:text-white truncate max-w-[180px] sm:max-w-none">
@@ -151,9 +162,12 @@ export default function SharedDesignView() {
       {/* Footer CTA */}
       <footer className="flex-shrink-0 border-t border-warm-200 dark:border-dark-border bg-white/80 dark:bg-dark-card/80 py-4 px-4">
         <div className="max-w-[1600px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-sm text-darkwood/60 dark:text-white">
-            Shared by your designer — view only. Create your own design?
-          </p>
+          <div className="flex items-center gap-3">
+            <LogoIcon size={28} className="flex-shrink-0" />
+            <p className="text-sm text-darkwood/60 dark:text-white">
+              Shared by your designer — view only. Create your own design?
+            </p>
+          </div>
           <Link
             to="/editor"
             className="inline-flex items-center gap-2 px-5 py-2.5 bg-clay hover:bg-clay-dark text-white font-semibold rounded-xl text-sm transition-colors"
