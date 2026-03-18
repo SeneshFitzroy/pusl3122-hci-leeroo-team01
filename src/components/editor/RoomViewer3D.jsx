@@ -189,10 +189,20 @@ function FurnitureItem({ item, isSelected, onClick }) {
     }
   }
 
+  // Lift furniture so base rests on floor (y=0). Box geometry has center at origin (bottom at -h/2).
+  const itemHeight = item.height || 0.8
+  const usesCenteredBox = ['storage', 'decor'].includes(item.category) ||
+    !['seating', 'tables', 'storage', 'beds', 'lighting', 'decor'].includes(item.category)
+  const isDecorPlant = item.category === 'decor' && item.name?.toLowerCase().includes('plant')
+  // Beds: frame bottom is at 0.4*h - 0.15 in local space → offset so it sits on floor
+  const bedFrameBottom = item.category === 'beds' ? 0.4 * itemHeight - 0.15 : 0
+  const floorOffset = item.category === 'beds'
+    ? (0.15 - 0.4 * itemHeight)
+    : (usesCenteredBox && !isDecorPlant) ? itemHeight / 2 : 0
   return (
     <group
       ref={meshRef}
-      position={[item.x || 0, 0, item.y || 0]}
+      position={[item.x || 0, floorOffset, item.y || 0]}
       rotation={[0, (item.rotation || 0) * Math.PI / 180, 0]}
       onClick={(e) => {
         e.stopPropagation()
@@ -243,7 +253,7 @@ function FurnitureItem({ item, isSelected, onClick }) {
 function Room({ roomSettings }) {
   const width = roomSettings?.width || 5
   const height = roomSettings?.height || 4
-  const wallHeight = 2.5
+  const wallHeight = roomSettings?.wallHeight || 2.8
 
   return (
     <group>
@@ -467,6 +477,7 @@ export default function RoomViewer3D() {
     selectedItemId, 
     roomWidth: storeRoomWidth,
     roomDepth: storeRoomDepth,
+    roomHeight: storeRoomHeight,
     wallColor,
     floorColor,
     ambientLight,
@@ -474,10 +485,11 @@ export default function RoomViewer3D() {
     selectFurniture
   } = useDesignStore()
 
-  // Build roomSettings for sub-components
+  // Build roomSettings for sub-components (height = floor depth, wallHeight = ceiling)
   const roomSettings = {
     width: storeRoomWidth || 5,
     height: storeRoomDepth || 4,
+    wallHeight: storeRoomHeight || 2.8,
     wallColor: wallColor || '#F4EFEA',
     floorColor: floorColor || '#D9C7B8',
     ambientLight: ambientLight || 0.6,
