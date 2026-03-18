@@ -405,8 +405,9 @@ export default function Shop() {
                     </div>
 
                     <button
-                      onClick={(e) => { e.preventDefault(); handleAddToWishlist(product) }}
-                      className={`absolute top-3 right-3 p-2.5 rounded-full transition-all duration-300 shadow-sm ${
+                      type="button"
+                      onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleAddToWishlist(product) }}
+                      className={`absolute top-3 right-3 z-10 p-2.5 rounded-full transition-all duration-300 shadow-sm ${
                         isInWishlist(product.id)
                           ? 'bg-red-500 text-white scale-110'
                           : 'bg-white/90 dark:bg-dark-card/90 text-darkwood/50 dark:text-white hover:bg-red-500 hover:text-white hover:scale-110'
@@ -465,17 +466,15 @@ export default function Shop() {
                         </span>
                       </div>
 
-                      <div className="flex items-center justify-between gap-2 mb-4 min-w-0">
-                        <div className="flex items-center gap-2 min-w-0 flex-shrink-0">
-                          <span className="text-xl font-bold text-neutral-900 dark:text-white">
-                            {formatPrice(product.price)}
+                      <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 mb-4">
+                        <span className="text-xl font-bold text-neutral-900 dark:text-white">
+                          {formatPrice(product.price)}
+                        </span>
+                        {product.originalPrice && (
+                          <span className="text-sm text-neutral-400 dark:text-white/70 line-through">
+                            {formatPrice(product.originalPrice)}
                           </span>
-                          {product.originalPrice && (
-                            <span className="text-sm text-neutral-400 dark:text-white/70 line-through whitespace-nowrap shrink-0">
-                              {formatPrice(product.originalPrice)}
-                            </span>
-                          )}
-                        </div>
+                        )}
                       </div>
 
                       {/* Available colors */}
