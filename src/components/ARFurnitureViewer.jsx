@@ -194,7 +194,7 @@ export default function ARFurnitureViewer({ productId, modelType, color, product
                   slot="ar-button"
                   className="absolute bottom-4 left-1/2 -translate-x-1/2 px-6 py-3 bg-forest text-white font-semibold rounded-xl shadow-lg hover:bg-forest-light transition-colors flex items-center gap-2"
                 >
-                  <span className="inline-block w-5 h-5 border-2 border-white rounded" />
+                  <img src="/images/ar-icon.png" alt="" className="h-6 w-6 object-contain brightness-0 invert" aria-hidden />
                   View in your space
                 </button>
               </model-viewer>

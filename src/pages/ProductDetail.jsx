@@ -482,13 +482,13 @@ export default function ProductDetail() {
                 </motion.button>
                 <motion.button
                   onClick={() => setShowARModal(true)}
-                  className="p-3 rounded-lg border-2 border-forest/40 dark:border-forest/50 text-forest dark:text-forest-light hover:bg-forest/10 dark:hover:bg-forest/20 transition-colors"
+                  className="p-3.5 rounded-xl border-2 border-forest bg-forest/15 dark:bg-forest/25 text-forest dark:text-forest-light hover:bg-forest/25 dark:hover:bg-forest/35 shadow-md hover:shadow-lg transition-all"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   title={t('product.viewInSpace') || 'View in your space'}
                   aria-label="View in your space (AR)"
                 >
-                  <img src="/images/ar-icon.png" alt="AR" className="h-5 w-5 object-contain" />
+                  <img src="/images/ar-icon.png" alt="AR" className="h-7 w-7 object-contain drop-shadow-sm" />
                 </motion.button>
               </div>
 

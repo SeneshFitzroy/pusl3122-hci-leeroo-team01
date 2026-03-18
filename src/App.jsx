@@ -5,6 +5,7 @@ import useThemeStore from './store/useThemeStore'
 import useCartStore from './store/useCartStore'
 import { useEffect, useState, useRef, lazy, Suspense } from 'react'
 import { seedProductsToFirestore } from './lib/seedProducts'
+import { seedDemoDesignsToFirestore } from './lib/designService'
 import { ensureDefaultAccounts } from './lib/setupAdmin'
 import SplashScreen from './components/SplashScreen'
 import Layout from './components/layout/Layout'
@@ -71,7 +72,7 @@ function App() {
   const loadFromFirestore = useCartStore((s) => s.loadFromFirestore)
   const setUid = useCartStore((s) => s.setUid)
   const pathname = (location.pathname || '/').replace(/\/$/, '') || '/'
-  const skipSplash = AUTH_PAGES.includes(pathname)
+  const skipSplash = AUTH_PAGES.includes(pathname) || pathname.startsWith('/shared/')
   const [showSplash, setShowSplash] = useState(!skipSplash)
   const splashJustCompleted = useRef(false)
 
@@ -128,14 +129,15 @@ function App() {
   }, [])
 
   useEffect(() => {
-    const syncProducts = async () => {
+    const sync = async () => {
       try {
         await seedProductsToFirestore()
+        await seedDemoDesignsToFirestore()
       } catch (err) {
-        console.error('[App] Product sync failed:', err)
+        console.error('[App] Seed failed:', err)
       }
     }
-    syncProducts()
+    sync()
   }, [])
 
   useEffect(() => {
@@ -149,8 +151,11 @@ function App() {
           onComplete={() => {
             splashJustCompleted.current = true
             setShowSplash(false)
-            // Always force navigate to dashboard — overrides any redirect-to-login race
-            setTimeout(() => navigate('/', { replace: true }), 0)
+            // Don't redirect away from shared design links — stay on /shared/:id
+            const path = location.pathname || '/'
+            if (!path.startsWith('/shared/')) {
+              setTimeout(() => navigate('/', { replace: true }), 0)
+            }
           }}
         />
       )}
