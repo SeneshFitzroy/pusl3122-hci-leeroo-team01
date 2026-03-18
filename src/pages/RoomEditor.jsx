@@ -174,8 +174,14 @@ export default function RoomEditor() {
     setTimeout(() => setViewTransitionMsg(''), 3000)
   }
 
+  // When navigating to /editor (no designId), reset to fresh blank design so "New Design" works correctly
   useEffect(() => {
-    if (!designId) return
+    if (!designId) {
+      resetDesign()
+      setShowTemplates(true)
+      setIsLoading(false)
+      return
+    }
 
     const design = savedDesigns.find(d => d.id === designId)
     if (design) {
@@ -211,7 +217,7 @@ export default function RoomEditor() {
     }
 
     loadFromFirestore()
-  }, [designId, savedDesigns, loadDesign, user?.uid, navigate])
+  }, [designId, savedDesigns, loadDesign, user?.uid, navigate, resetDesign])
 
   useEffect(() => {
     if (!currentDesign && furnitureItems.length === 0) return

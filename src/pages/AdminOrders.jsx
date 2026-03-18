@@ -67,7 +67,10 @@ export default function AdminOrders() {
           animate={{ opacity: 1, y: 0 }}
         >
           <div className="divide-y divide-warm-100 dark:divide-dark-border">
-            {recentOrders.map((order) => (
+            {orders.length === 0 ? (
+              <div className="p-12 text-center text-darkwood/50 dark:text-white">No orders yet</div>
+            ) : (
+            orders.map((order) => (
               <div key={order.id} className="p-6 hover:bg-warm-50 dark:hover:bg-dark-surface/50 transition-colors flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 bg-clay/10 rounded-lg flex items-center justify-center">
@@ -88,7 +91,7 @@ export default function AdminOrders() {
                 </div>
               </div>
             ))
-            }
+            )}
           </div>
         </motion.div>
       </div>

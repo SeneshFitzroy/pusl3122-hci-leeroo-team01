@@ -357,33 +357,50 @@ const RoomCanvas2D = forwardRef(function RoomCanvas2D(_, ref) {
         </div>
       </div>
 
-      {/* Scale Controls — bottom-right to avoid overlap with RoomEditor selected-item panel (top-right) */}
-      <div className="absolute bottom-4 right-4 z-10 bg-white/90 dark:bg-dark-card/90 backdrop-blur-sm rounded-xl p-2 border border-warm-200/50 dark:border-dark-border/50 shadow-sm flex flex-col gap-2">
-        <div className="flex flex-col gap-1.5">
+      {/* Zoom & Pan Controls — bottom-right, high z-index so always visible; pan avoids drag conflict with furniture */}
+      <div className="absolute bottom-4 right-4 z-[25] flex gap-3 items-end">
+        <div className="bg-white/95 dark:bg-dark-card/95 backdrop-blur-sm rounded-xl p-2 border border-warm-200/50 dark:border-dark-border/50 shadow-lg flex flex-col gap-1.5">
+          <span className="text-[10px] font-semibold text-darkwood/70 dark:text-white/70 px-1">Zoom</span>
           <button
-            onClick={() => setScale(Math.min(scale * 1.25, 4))}
-            className="w-8 h-8 flex items-center justify-center text-sm font-bold bg-clay text-white rounded-lg hover:bg-clay-dark transition-colors"
+            onClick={() => setScale((s) => Math.min(s * 1.25, 4))}
+            className="w-10 h-10 flex items-center justify-center text-lg font-bold bg-clay text-white rounded-lg hover:bg-clay-dark transition-colors shadow-md"
+            title="Zoom In"
+            aria-label="Zoom in"
           >
             +
           </button>
           <button
-            onClick={() => setScale(Math.max(scale / 1.25, 0.4))}
-            className="w-8 h-8 flex items-center justify-center text-sm font-bold bg-clay text-white rounded-lg hover:bg-clay-dark transition-colors"
+            onClick={() => setScale((s) => Math.max(s / 1.25, 0.4))}
+            className="w-10 h-10 flex items-center justify-center text-lg font-bold bg-clay text-white rounded-lg hover:bg-clay-dark transition-colors shadow-md"
+            title="Zoom Out"
+            aria-label="Zoom out"
           >
             −
           </button>
           <button
             onClick={fitView}
-            className="w-8 h-8 flex items-center justify-center text-[10px] font-bold bg-forest text-white rounded-lg hover:bg-forest-light transition-colors"
+            className="w-10 h-10 flex items-center justify-center text-[10px] font-bold bg-forest text-white rounded-lg hover:bg-forest-light transition-colors"
+            title="Fit to view"
           >
             Fit
           </button>
+        </div>
+        <div className="bg-white/95 dark:bg-dark-card/95 backdrop-blur-sm rounded-xl p-1.5 border border-warm-200/50 dark:border-dark-border/50 shadow-lg grid grid-cols-3 gap-0.5">
+          <div className="col-span-3 flex justify-center">
+            <button onClick={() => setStagePos((p) => ({ ...p, y: p.y + 40 }))} className="w-8 h-7 flex items-center justify-center text-darkwood dark:text-white hover:bg-warm-100 dark:hover:bg-dark-surface rounded" aria-label="Pan up">↑</button>
+          </div>
+          <button onClick={() => setStagePos((p) => ({ ...p, x: p.x + 40 }))} className="w-8 h-7 flex items-center justify-center text-darkwood dark:text-white hover:bg-warm-100 dark:hover:bg-dark-surface rounded" aria-label="Pan left">←</button>
+          <div className="w-8 h-7 flex items-center justify-center text-[10px] text-darkwood/50 dark:text-white/50">·</div>
+          <button onClick={() => setStagePos((p) => ({ ...p, x: p.x - 40 }))} className="w-8 h-7 flex items-center justify-center text-darkwood dark:text-white hover:bg-warm-100 dark:hover:bg-dark-surface rounded" aria-label="Pan right">→</button>
+          <div className="col-span-3 flex justify-center">
+            <button onClick={() => setStagePos((p) => ({ ...p, y: p.y - 40 }))} className="w-8 h-7 flex items-center justify-center text-darkwood dark:text-white hover:bg-warm-100 dark:hover:bg-dark-surface rounded" aria-label="Pan down">↓</button>
+          </div>
         </div>
       </div>
 
       {/* Instructions */}
       <div className="absolute bottom-4 left-4 z-10 bg-white/80 dark:bg-dark-card/80 backdrop-blur-sm rounded-xl px-3 py-2 text-xs text-darkwood/50 dark:text-white border border-warm-200/30 dark:border-dark-border/30">
-        {readOnlyMode ? 'View only — shared by designer' : 'Drag furniture to move · Click to select · Delete key or trash icon to remove'}
+        {readOnlyMode ? 'View only — shared by designer' : 'Drag furniture to move · Use +/- to zoom · Arrows to pan · Click to select'}
       </div>
 
       {/* Konva Stage */}
@@ -398,9 +415,7 @@ const RoomCanvas2D = forwardRef(function RoomCanvas2D(_, ref) {
         onWheel={handleWheel}
         onClick={handleStageClick}
         onTap={handleStageClick}
-        draggable
-        onDragMove={(e) => setStagePos({ x: e.target.x(), y: e.target.y() })}
-        onDragEnd={(e) => setStagePos({ x: e.target.x(), y: e.target.y() })}
+        draggable={false}
       >
         <Layer>
           {/* Room Floor */}
