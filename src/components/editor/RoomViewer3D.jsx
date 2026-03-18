@@ -443,9 +443,25 @@ function ResetCameraHandler() {
     target={[(useDesignStore.getState().roomWidth || 5) / 2, 0, (useDesignStore.getState().roomDepth || 4) / 2]} />
 }
 
+// Listens for WebGL context loss and notifies parent to remount (fixes blank canvas after mobile resize/tab switch)
+function ContextLossHandler({ onContextLost }) {
+  const { gl } = useThree()
+  useEffect(() => {
+    const canvas = gl.domElement
+    const handleLost = (e) => {
+      e.preventDefault()
+      onContextLost?.()
+    }
+    canvas.addEventListener('webglcontextlost', handleLost)
+    return () => canvas.removeEventListener('webglcontextlost', handleLost)
+  }, [gl, onContextLost])
+  return null
+}
+
 // Main Component
 export default function RoomViewer3D() {
   const { t } = useTranslation()
+  const [canvasKey, setCanvasKey] = useState(0)
   const { 
     furnitureItems, 
     selectedItemId, 
@@ -532,8 +548,9 @@ export default function RoomViewer3D() {
         <div>Orbit: drag · Zoom: wheel · Select: click · <span className="font-medium text-clay">Move: select item, then drag</span></div>
       </div>
 
-      {/* Canvas */}
+      {/* Canvas — key forces remount when WebGL context is lost (e.g. mobile resize, tab switch) */}
       <Canvas
+        key={canvasKey}
         shadows
         className="w-full h-full"
         gl={{ 
@@ -541,10 +558,12 @@ export default function RoomViewer3D() {
           alpha: false,
           preserveDrawingBuffer: true,
           powerPreference: "high-performance",
-          pixelRatio: Math.min(window.devicePixelRatio, 2)
+          pixelRatio: Math.min(window.devicePixelRatio, 2),
+          failIfMajorPerformanceCaveat: false
         }}
         dpr={Math.min(window.devicePixelRatio, 2)}
       >
+        <ContextLossHandler onContextLost={() => setCanvasKey(k => k + 1)} />
         <CameraController />
         
         {/* Lighting */}

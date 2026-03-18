@@ -399,6 +399,8 @@ const RoomCanvas2D = forwardRef(function RoomCanvas2D(_, ref) {
         onClick={handleStageClick}
         onTap={handleStageClick}
         draggable
+        onDragMove={(e) => setStagePos({ x: e.target.x(), y: e.target.y() })}
+        onDragEnd={(e) => setStagePos({ x: e.target.x(), y: e.target.y() })}
       >
         <Layer>
           {/* Room Floor */}
