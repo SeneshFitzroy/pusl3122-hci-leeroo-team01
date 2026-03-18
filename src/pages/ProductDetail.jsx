@@ -32,7 +32,7 @@ export default function ProductDetail() {
   const { productId } = useParams()
   const navigate = useNavigate()
   const { formatPrice } = useThemeStore()
-  const { addToCart, addToWishlist, isInWishlist: checkWishlist, items: cartItems, updateQuantity } = useCartStore()
+  const { addToCart, addToWishlist, removeFromWishlist, isInWishlist: checkWishlist, items: cartItems, updateQuantity } = useCartStore()
   const { t } = useTranslation()
 
   const [selectedColor, setSelectedColor] = useState('')
@@ -95,8 +95,13 @@ export default function ProductDetail() {
   }
 
   const handleAddToWishlist = () => {
-    addToWishlist(product)
-    toast.success(`${product.name} ${t('wishlist.removedFromWishlist')}`)
+    if (isInWishlist) {
+      removeFromWishlist(product.id)
+      toast.success(`${product.name} ${t('wishlist.removedFromWishlist')}`, { description: t('wishlist.addBackAnytime') })
+    } else {
+      addToWishlist(product)
+      toast.success(`${product.name} ${t('wishlist.addedToWishlist')}`)
+    }
   }
 
   const handleShare = () => {
@@ -447,7 +452,7 @@ export default function ProductDetail() {
                 </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-3">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <motion.button
                   onClick={handleBuyNow}
                   className="flex-1 bg-forest hover:bg-forest-light text-white font-semibold flex items-center justify-center space-x-2 py-3 rounded-xl shadow-lg shadow-forest/20 transition-all"
@@ -471,7 +476,7 @@ export default function ProductDetail() {
 
                 <motion.button
                   onClick={handleAddToWishlist}
-                  className={`p-3 rounded-lg border-2 transition-colors ${
+                  className={`p-3 rounded-lg border-2 transition-colors shrink-0 ${
                     isInWishlist
                       ? 'border-red-500 bg-red-500 text-white'
                       : 'border-warm-200 dark:border-dark-border text-darkwood dark:text-white hover:border-red-500 hover:bg-red-50 dark:hover:bg-red-900/20'
@@ -483,7 +488,7 @@ export default function ProductDetail() {
                 </motion.button>
                 <motion.button
                   onClick={() => setShowARModal(true)}
-                  className="w-14 h-14 rounded-xl bg-forest/15 dark:bg-forest/25 text-[#1a2f1f] dark:text-forest-light hover:bg-forest/25 dark:hover:bg-forest/35 transition-all flex items-center justify-center p-1 shrink-0 shadow-sm"
+                  className="w-14 h-14 rounded-xl bg-forest/15 dark:bg-forest/25 text-[#1a2f1f] dark:text-forest-light hover:bg-forest/25 dark:hover:bg-forest/35 transition-all flex items-center justify-center p-1 shrink-0 shadow-sm ml-1"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   title={t('product.viewInSpace') || 'View in your space'}

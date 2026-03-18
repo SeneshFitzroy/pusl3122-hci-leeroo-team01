@@ -697,6 +697,7 @@ const resources = {
 
       /* ─── Missing Wishlist Keys ─── */
       'wishlist.addedToCart': 'added to cart!',
+      'wishlist.addedToWishlist': 'Added to your wishlist',
       'wishlist.movedToCart': 'Item moved to cart',
       'wishlist.removedFromWishlist': 'removed from wishlist',
       'wishlist.addBackAnytime': 'You can add it back anytime from the shop',

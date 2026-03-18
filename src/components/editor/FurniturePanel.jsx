@@ -102,7 +102,7 @@ export default function FurniturePanel() {
       <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden p-4 furniture-scroll overscroll-contain">
         {filteredFurniture.length > 0 ? (
           viewMode === 'grid' ? (
-            <div className="grid grid-cols-2 gap-3 sm:gap-4">
+            <div className="grid grid-cols-2 gap-4 sm:gap-5">
               {filteredFurniture.map((item) => (
                 <motion.div
                   key={item.id}

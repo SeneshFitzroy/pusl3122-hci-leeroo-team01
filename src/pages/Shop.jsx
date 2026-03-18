@@ -27,6 +27,7 @@ import {
   Frame,
   Award
 } from 'lucide-react'
+import { toast } from 'sonner'
 import { SHOP_PRODUCTS as shopProducts, FREE_SHIPPING_THRESHOLD } from '@/lib/constants'
 import useCartStore from '@/store/useCartStore'
 import useThemeStore from '@/store/useThemeStore'
@@ -44,7 +45,7 @@ const stagger = {
 }
 
 export default function Shop() {
-  const { addToCart, addToWishlist, items: cart, wishlistItems: wishlist } = useCartStore()
+  const { addToCart, addToWishlist, removeFromWishlist, items: cart, wishlistItems: wishlist } = useCartStore()
   const { formatPrice } = useThemeStore()
   const { t } = useTranslation()
   
@@ -122,7 +123,15 @@ export default function Shop() {
   const isInWishlist = (productId) => wishlist.some(item => item.id === productId)
 
   const handleAddToCart = (product) => addToCart(product)
-  const handleAddToWishlist = (product) => addToWishlist(product)
+  const handleAddToWishlist = (product) => {
+    if (isInWishlist(product.id)) {
+      removeFromWishlist(product.id)
+      toast.success(`${product.name} ${t('wishlist.removedFromWishlist')}`, { description: t('wishlist.addBackAnytime') })
+    } else {
+      addToWishlist(product)
+      toast.success(`${product.name} ${t('wishlist.addedToWishlist')}`)
+    }
+  }
 
   const trustShort = [
     t('shop.trustFreeDelivery') || 'Free delivery',
