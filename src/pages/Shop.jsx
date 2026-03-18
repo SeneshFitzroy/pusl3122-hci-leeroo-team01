@@ -126,10 +126,10 @@ export default function Shop() {
   const handleAddToWishlist = (product) => {
     if (isInWishlist(product.id)) {
       removeFromWishlist(product.id)
-      toast.success(`${product.name} ${t('wishlist.removedFromWishlist')}`, { description: t('wishlist.addBackAnytime') })
+      toast.success(`${product.name} ${t('wishlist.removedFromWishlist')}`, { id: 'wishlist', description: t('wishlist.addBackAnytime') })
     } else {
       addToWishlist(product)
-      toast.success(`${product.name} ${t('wishlist.addedToWishlist')}`)
+      toast.success(`${product.name} ${t('wishlist.addedToWishlist')}`, { id: 'wishlist' })
     }
   }
 

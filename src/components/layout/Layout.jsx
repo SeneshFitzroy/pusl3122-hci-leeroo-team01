@@ -1,5 +1,4 @@
 import { Outlet, useLocation } from 'react-router-dom'
-import { Toaster } from 'sonner'
 import Navbar from './Navbar'
 import Footer from './Footer'
 
@@ -22,15 +21,6 @@ export default function Layout() {
         <Outlet />
       </main>
       {!isEditor && <Footer />}
-      <Toaster
-        position="bottom-right"
-        richColors
-        toastOptions={{
-          style: {
-            fontFamily: 'Inter, sans-serif',
-          },
-        }}
-      />
     </div>
   )
 }
