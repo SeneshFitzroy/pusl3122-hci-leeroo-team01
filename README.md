@@ -194,40 +194,51 @@ Pipeline definitions: `.github/workflows/`
 
 ---
 
-## Project Structure
+## Project Structure (Institutional Standard)
 
 ```
-├── .github/
-│   └── workflows/           # CI/CD (ci.yml, cd.yml)
-├── docs/
-│   └── PRODUCT_IMAGES_GUIDE.md
-├── public/                  # Static assets
+HCI/
+├── .github/workflows/       # CI (lint, test, build, E2E) | CD (Vercel deploy)
+├── docs/                    # Product images guide | User testing guide
+├── e2e/                     # Playwright system tests
+├── public/                  # Static assets (favicon, hero, images, audio)
 ├── src/
-│   ├── components/
-│   │   ├── auth/            # ProtectedRoute, RedirectIfDesigner
-│   │   ├── editor/          # RoomCanvas2D, RoomViewer3D, panels
+│   ├── components/         # UI components
+│   │   ├── auth/           # ProtectedRoute, RedirectIfDesigner
+│   │   ├── editor/         # RoomCanvas2D, RoomViewer3D, panels
 │   │   └── layout/         # Layout, Navbar, Footer
-│   ├── hooks/               # useInView, etc.
-│   ├── lib/                 # Firebase, designService, constants, utils
-│   ├── pages/               # Route pages
-│   ├── store/               # Zustand stores
+│   ├── hooks/              # Custom hooks (useInView)
+│   ├── lib/                # Services, constants, utils, Firebase
+│   ├── pages/              # Route pages
+│   ├── store/              # Zustand stores
 │   ├── App.jsx
 │   ├── main.jsx
+│   ├── i18n.js
 │   └── index.css
-├── e2e/                     # Playwright E2E (system) tests
 ├── tests/
-│   ├── a11y/                # Accessibility (axe-core)
+│   ├── a11y/               # Accessibility tests (axe-core)
 │   ├── components/         # Component tests
 │   ├── hooks/              # Hook tests
 │   ├── integration/        # Integration tests
-│   ├── lib/                # Unit tests (lib)
-│   ├── store/              # Unit tests (store)
+│   ├── lib/                # Unit tests
+│   ├── store/              # Store tests
 │   └── setup.js
+├── .editorconfig
+├── .gitignore
+├── .nvmrc
+├── eslint.config.js
+├── index.html
 ├── jsconfig.json
+├── package.json
+├── playwright.config.js
+├── postcss.config.js
+├── tailwind.config.js
+├── vercel.json
 ├── vite.config.js
-├── vitest.config.js
-└── package.json
+└── vitest.config.js
 ```
+
+**Path alias:** `@/` → `src/`. Build artifacts (`dist/`, `coverage/`, `test-results/`) are gitignored.
 
 **Path alias:** `@/` maps to `src/` (e.g. `import X from '@/components/X'`).
 
