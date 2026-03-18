@@ -22,6 +22,8 @@ import {
   DollarSign,
   Layout,
   Users,
+  ClipboardList,
+  BarChart3,
 } from 'lucide-react'
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -71,6 +73,7 @@ export default function Navbar() {
 
   const { user, userProfile, logout, isAdmin, isDesigner, isDesignerOnly } = useAuthStore()
   const designerOnly = isDesignerOnly()
+  const adminUser = isAdmin()
   const { darkMode, toggleDarkMode, currency, setCurrency, currencies, language, setLanguage } = useThemeStore()
   const { getCartCount, getWishlistCount } = useCartStore()
 
@@ -101,11 +104,13 @@ export default function Navbar() {
     return () => document.removeEventListener('mousedown', handler)
   }, [isProfileOpen])
 
-  // Admins see admin nav; regular users see Home + Shop.
+  // Admins see only admin nav (no Home, Shop, Designer Panel).
   const adminNavLinks = [
     { to: '/admin', label: t('admin.dashboard') || 'Dashboard', icon: Shield },
     { to: '/admin/products', label: t('admin.products') || 'Products', icon: Package },
-    { to: '/designer-panel', label: 'Designer Panel', icon: Palette },
+    { to: '/admin/orders', label: t('admin.orders') || 'Orders', icon: ClipboardList },
+    { to: '/admin/analytics', label: t('admin.analytics') || 'Analytics', icon: BarChart3 },
+    { to: '/admin/team', label: t('admin.addDesigner') || 'Add Designer', icon: Users },
   ]
   const navLinks = [
     { to: '/', label: t('nav.home') || 'Home', icon: Home, public: true },
@@ -159,7 +164,7 @@ export default function Navbar() {
         <div className="flex justify-between items-center h-16">
 
           {/* Logo */}
-          <Link to={user ? (designerOnly ? '/designer-panel' : '/shop') : '/'} className="flex items-center gap-2.5 group shrink-0">
+          <Link to={user ? (adminUser ? '/admin' : designerOnly ? '/designer-panel' : '/shop') : '/'} className="flex items-center gap-2.5 group shrink-0">
             <div className="group-hover:scale-110 transition-transform duration-200">
               <LogoIcon size={36} light={isLandingPage && !isScrolled} />
             </div>
@@ -300,8 +305,8 @@ export default function Navbar() {
               </AnimatePresence>
             </button>
 
-            {/* Cart — hidden for designer-only users */}
-            {!designerOnly && (
+            {/* Cart — hidden for designer-only and admin users */}
+            {!designerOnly && !adminUser && (
               <Link
                 to="/cart"
                 className={`relative p-2 rounded-xl transition-colors ${
@@ -327,8 +332,8 @@ export default function Navbar() {
 
             {user && (
               <>
-                {/* Wishlist — hidden for designer-only users */}
-                {!designerOnly && (
+                {/* Wishlist — hidden for designer-only and admin users */}
+                {!designerOnly && !adminUser && (
                   <Link
                     to="/wishlist"
                     className={`relative p-2 rounded-xl transition-colors ${
@@ -387,33 +392,46 @@ export default function Navbar() {
                         </div>
 
                         <div className="py-1">
-                          <Link
-                            to="/settings"
-                            className="flex items-center gap-3 px-4 py-2.5 text-sm text-darkwood dark:text-white hover:bg-warm-100 dark:hover:bg-dark-surface hover:text-clay dark:hover:text-clay transition-colors"
-                            role="menuitem"
-                          >
-                            <Settings className="h-4 w-4" />
-                            {t('nav.settings')}
-                          </Link>
-                          {isAdmin() && (
-                            <>
-                              <Link
-                                to="/designer-panel"
-                                className="flex items-center gap-3 px-4 py-2.5 text-sm text-darkwood dark:text-white hover:bg-warm-100 dark:hover:bg-dark-surface hover:text-clay dark:hover:text-clay transition-colors"
-                                role="menuitem"
-                              >
-                                <Palette className="h-4 w-4" />
-                                Designer Panel
-                              </Link>
-                              <Link
-                                to="/admin"
-                                className="flex items-center gap-3 px-4 py-2.5 text-sm text-darkwood dark:text-white hover:bg-warm-100 dark:hover:bg-dark-surface hover:text-clay dark:hover:text-clay transition-colors"
-                                role="menuitem"
-                              >
-                                <Shield className="h-4 w-4" />
-                                {t('nav.admin') || 'Admin Panel'}
-                              </Link>
-                            </>
+                          {!adminUser && (
+                            <Link
+                              to="/settings"
+                              className="flex items-center gap-3 px-4 py-2.5 text-sm text-darkwood dark:text-white hover:bg-warm-100 dark:hover:bg-dark-surface hover:text-clay dark:hover:text-clay transition-colors"
+                              role="menuitem"
+                            >
+                              <Settings className="h-4 w-4" />
+                              {t('nav.settings')}
+                            </Link>
+                          )}
+                          {adminUser ? (
+                            <Link
+                              to="/admin"
+                              className="flex items-center gap-3 px-4 py-2.5 text-sm text-darkwood dark:text-white hover:bg-warm-100 dark:hover:bg-dark-surface hover:text-clay dark:hover:text-clay transition-colors"
+                              role="menuitem"
+                            >
+                              <Shield className="h-4 w-4" />
+                              {t('nav.admin') || 'Admin Panel'}
+                            </Link>
+                          ) : (
+                            isAdmin() && (
+                              <>
+                                <Link
+                                  to="/designer-panel"
+                                  className="flex items-center gap-3 px-4 py-2.5 text-sm text-darkwood dark:text-white hover:bg-warm-100 dark:hover:bg-dark-surface hover:text-clay dark:hover:text-clay transition-colors"
+                                  role="menuitem"
+                                >
+                                  <Palette className="h-4 w-4" />
+                                  Designer Panel
+                                </Link>
+                                <Link
+                                  to="/admin"
+                                  className="flex items-center gap-3 px-4 py-2.5 text-sm text-darkwood dark:text-white hover:bg-warm-100 dark:hover:bg-dark-surface hover:text-clay dark:hover:text-clay transition-colors"
+                                  role="menuitem"
+                                >
+                                  <Shield className="h-4 w-4" />
+                                  {t('nav.admin') || 'Admin Panel'}
+                                </Link>
+                              </>
+                            )
                           )}
                         </div>
 
@@ -532,28 +550,36 @@ export default function Navbar() {
               {user && (
                 <>
                   <hr className="my-2 border-warm-200 dark:border-dark-border" />
-                  {!isAdmin() && (
-                    <Link to="/my-designs" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-darkwood dark:text-white hover:bg-warm-100 dark:hover:bg-dark-surface transition-colors">
-                      <FolderOpen className="h-5 w-5" /> {t('nav.myRoomDesigns') || 'Furniture Customization & Designs'}
+                  {adminUser ? (
+                    <Link to="/admin" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-forest dark:text-forest-light hover:bg-forest/5 dark:hover:bg-forest/10 transition-colors">
+                      <Shield className="h-5 w-5" /> {t('nav.admin') || 'Admin Panel'}
                     </Link>
-                  )}
-                  {isAdmin() && (
+                  ) : (
                     <>
-                      <Link to="/designer-panel" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-darkwood dark:text-white hover:bg-warm-100 dark:hover:bg-dark-surface transition-colors">
-                        <Palette className="h-5 w-5" /> Designer Panel
-                      </Link>
-                      <Link to="/admin" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-forest dark:text-forest-light hover:bg-forest/5 dark:hover:bg-forest/10 transition-colors">
-                        <Shield className="h-5 w-5" /> {t('nav.admin') || 'Admin Panel'}
+                      {!isAdmin() && (
+                        <Link to="/my-designs" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-darkwood dark:text-white hover:bg-warm-100 dark:hover:bg-dark-surface transition-colors">
+                          <FolderOpen className="h-5 w-5" /> {t('nav.myRoomDesigns') || 'Furniture Customization & Designs'}
+                        </Link>
+                      )}
+                      {isAdmin() && (
+                        <>
+                          <Link to="/designer-panel" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-darkwood dark:text-white hover:bg-warm-100 dark:hover:bg-dark-surface transition-colors">
+                            <Palette className="h-5 w-5" /> Designer Panel
+                          </Link>
+                          <Link to="/admin" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-forest dark:text-forest-light hover:bg-forest/5 dark:hover:bg-forest/10 transition-colors">
+                            <Shield className="h-5 w-5" /> {t('nav.admin') || 'Admin Panel'}
+                          </Link>
+                        </>
+                      )}
+                      <Link
+                        to="/settings"
+                        className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-darkwood dark:text-white hover:bg-warm-100 dark:hover:bg-dark-surface transition-colors"
+                      >
+                        <Settings className="h-5 w-5" />
+                        {t('nav.settings')}
                       </Link>
                     </>
                   )}
-                  <Link
-                    to="/settings"
-                    className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-darkwood dark:text-white hover:bg-warm-100 dark:hover:bg-dark-surface transition-colors"
-                  >
-                    <Settings className="h-5 w-5" />
-                    {t('nav.settings')}
-                  </Link>
                   <button
                     onClick={handleLogout}
                     className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"

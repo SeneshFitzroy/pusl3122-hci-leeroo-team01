@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Package, ShoppingCart, Plus, Download, Shield, UserPlus, Award } from 'lucide-react'
+import { Package, ShoppingCart, Plus, Download, Shield, UserPlus, Award, FileText } from 'lucide-react'
 import useAuthStore from '@/store/useAuthStore'
 import useProductsStore from '@/store/useProductsStore'
 import { Link, useNavigate } from 'react-router-dom'
@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { collection, getDocs } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 import { toast } from 'sonner'
+import { exportAdminReportPDF } from '@/lib/pdfExport'
 
 export default function AdminDashboard() {
   const { userProfile } = useAuthStore()
@@ -16,13 +17,19 @@ export default function AdminDashboard() {
   const [isLoading, setIsLoading] = useState(true)
   const [stats, setStats] = useState({ products: 0, orders: 0 })
   const [recentOrders, setRecentOrders] = useState([])
+  const [allOrders, setAllOrders] = useState([])
+  const [designers, setDesigners] = useState([])
+  const [users, setUsers] = useState([])
   const products = useProductsStore((s) => s.products)
   const loaded = useProductsStore((s) => s.loaded)
 
   useEffect(() => {
     const load = async () => {
       try {
-        const ordersSnap = await getDocs(collection(db, 'orders'))
+        const [ordersSnap, usersSnap] = await Promise.all([
+          getDocs(collection(db, 'orders')),
+          getDocs(collection(db, 'users')),
+        ])
         const orders = ordersSnap.docs.map((d) => {
           const data = d.data()
           const ts = data?.createdAt?.toDate?.()
@@ -35,10 +42,15 @@ export default function AdminDashboard() {
             date: ts ? ts.toLocaleDateString() : '',
           }
         })
+        const allUsers = usersSnap.docs.map((d) => ({ id: d.id, ...d.data() }))
+        setDesigners(allUsers.filter((u) => u.role === 'designer'))
+        setUsers(allUsers.filter((u) => u.role === 'user' || !u.role))
         setRecentOrders(orders.slice(0, 5))
         setStats({
           products: products?.length ?? 0,
           orders: ordersSnap.size ?? 0,
+          designers: allUsers.filter((u) => u.role === 'designer').length,
+          users: allUsers.filter((u) => u.role === 'user' || !u.role).length,
         })
       } catch (_) {
         setStats({ products: products?.length ?? 0, orders: 0 })
@@ -66,6 +78,17 @@ export default function AdminDashboard() {
     a.click()
     URL.revokeObjectURL(url)
     toast.success(t('admin.exportSuccess') || 'Data exported')
+  }
+
+  const handleExportPDF = () => {
+    exportAdminReportPDF({
+      products: products || [],
+      orders: allOrders,
+      designers,
+      users,
+      stats,
+    })
+    toast.success(t('admin.exportSuccess') || 'PDF exported')
   }
 
   const handleQuickAdd = () => navigate('/admin/products')
@@ -108,7 +131,14 @@ export default function AdminDashboard() {
                 className="text-xs text-darkwood/60 dark:text-white hover:text-clay dark:hover:text-clay px-2 py-1.5 rounded-lg hover:bg-warm-100 dark:hover:bg-dark-surface transition-colors inline-flex items-center gap-1.5"
               >
                 <Download className="h-3.5 w-3.5" />
-                {t('admin.exportData')}
+                CSV
+              </button>
+              <button
+                onClick={handleExportPDF}
+                className="text-xs text-darkwood/60 dark:text-white hover:text-clay dark:hover:text-clay px-2 py-1.5 rounded-lg hover:bg-warm-100 dark:hover:bg-dark-surface transition-colors inline-flex items-center gap-1.5"
+              >
+                <FileText className="h-3.5 w-3.5" />
+                PDF
               </button>
               <button
                 onClick={handleQuickAdd}

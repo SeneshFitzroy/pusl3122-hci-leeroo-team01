@@ -1,10 +1,15 @@
 import { Outlet, useLocation } from 'react-router-dom'
 import Navbar from './Navbar'
 import Footer from './Footer'
+import RedirectIfAdmin from '@/components/auth/RedirectIfAdmin'
+import AdminAiBot from '@/components/admin/AdminAiBot'
+import useAuthStore from '@/store/useAuthStore'
 
 export default function Layout() {
   const { pathname } = useLocation()
   const isEditor = pathname?.startsWith('/editor')
+  const isAdminRoute = pathname?.startsWith('/admin')
+  const isAdmin = useAuthStore((s) => s.isAdmin)()
 
   return (
     <div className={`bg-warm-50 dark:bg-dark-bg flex flex-col overflow-x-hidden ${isEditor ? 'h-screen overflow-hidden' : 'min-h-screen'}`}>
@@ -18,9 +23,12 @@ export default function Layout() {
       )}
       <Navbar />
       <main id="main-content" className={`flex-1 min-w-0 ${isEditor ? 'min-h-0 overflow-hidden' : 'overflow-x-hidden'}`} role="main" aria-label="Main content">
-        <Outlet />
+        <RedirectIfAdmin>
+          <Outlet />
+        </RedirectIfAdmin>
       </main>
       {!isEditor && <Footer />}
+      {isAdminRoute && isAdmin && <AdminAiBot />}
     </div>
   )
 }

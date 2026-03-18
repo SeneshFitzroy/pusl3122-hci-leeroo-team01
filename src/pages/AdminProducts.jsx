@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Package,
@@ -16,11 +16,14 @@ import {
   AlertTriangle,
   CheckCircle,
   Loader2,
+  ImagePlus,
+  Upload,
 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { FURNITURE_CATEGORIES } from '@/lib/constants'
 import useProductsStore from '@/store/useProductsStore'
 import { useTranslation } from 'react-i18next'
+import { uploadProductImage, productImagePath } from '@/lib/storageService'
 
 export default function AdminProducts() {
   const { products, loaded, loadProducts, addProduct, updateProduct, deleteProduct } = useProductsStore()
@@ -31,6 +34,8 @@ export default function AdminProducts() {
   const [editingProduct, setEditingProduct] = useState(null)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(null)
   const [successMsg, setSuccessMsg] = useState('')
+  const [uploadingImages, setUploadingImages] = useState(false)
+  const imageInputRef = useRef(null)
   const { t } = useTranslation()
 
   const categories = FURNITURE_CATEGORIES
@@ -45,7 +50,54 @@ export default function AdminProducts() {
   const openForEdit = (product) => {
     if (product.id?.startsWith('new-')) return product
     const dims = product.width != null ? { width: product.width, depth: product.depth || 0.8, height: product.height || 0.8 } : parseDims(product.dimensions)
-    setEditingProduct({ ...product, ...dims, color: product.color || product.colors?.[0] || '#8B6F47' })
+    setEditingProduct({
+      ...product,
+      ...dims,
+      color: product.color || product.colors?.[0] || '#8B6F47',
+      image: product.image || '',
+      images: Array.isArray(product.images) ? [...product.images] : (product.image ? [product.image] : []),
+    })
+  }
+
+  const handleImageUpload = async (e, asGallery = false) => {
+    const files = e?.target?.files
+    if (!files?.length || !editingProduct) return
+    setUploadingImages(true)
+    try {
+      const productId = editingProduct.id?.replace(/^new-/, '') || `sp-${Date.now()}`
+      const urls = []
+      for (let i = 0; i < Math.min(files.length, 5); i++) {
+        const file = files[i]
+        const ext = file.name?.split('.').pop() || 'jpg'
+        const path = productImagePath(productId, asGallery ? editingProduct.images?.length + i : 0, ext)
+        const url = await uploadProductImage(file, path)
+        if (url) urls.push(url)
+      }
+      if (urls.length) {
+        if (asGallery) {
+          setEditingProduct((p) => ({ ...p, images: [...(p.images || []), ...urls], image: p.image || urls[0] }))
+        } else {
+          const first = urls[0]
+          setEditingProduct((p) => ({
+            ...p,
+            image: first,
+            images: [first, ...(p.images || []).filter((u) => u !== p.image)],
+          }))
+        }
+      }
+    } catch (_) {}
+    setUploadingImages(false)
+    if (imageInputRef.current) imageInputRef.current.value = ''
+  }
+
+  const removeImage = (url, isPrimary) => {
+    if (!editingProduct) return
+    if (isPrimary) {
+      const rest = (editingProduct.images || []).filter((u) => u !== url)
+      setEditingProduct((p) => ({ ...p, image: rest[0] || '', images: rest }))
+    } else {
+      setEditingProduct((p) => ({ ...p, images: (p.images || []).filter((u) => u !== url) }))
+    }
   }
 
   const filteredProducts = products.filter(p => {
@@ -69,6 +121,8 @@ export default function AdminProducts() {
 
   const handleSaveEdit = async (updatedProduct) => {
     const isNew = updatedProduct.id.startsWith('new-') || !products.some(p => p.id === updatedProduct.id)
+    const image = updatedProduct.image || (Array.isArray(updatedProduct.images) && updatedProduct.images[0]) || ''
+    const images = Array.isArray(updatedProduct.images) && updatedProduct.images.length ? updatedProduct.images : (image ? [image] : [])
     if (isNew) {
       const shopProduct = {
         id: `sp-${Date.now()}`,
@@ -87,8 +141,8 @@ export default function AdminProducts() {
         colorNames: ['Default'],
         material: '',
         dimensions: `${((updatedProduct.width || 1) * 100).toFixed(0)} x ${((updatedProduct.depth || 0.8) * 100).toFixed(0)} x ${((updatedProduct.height || 0.8) * 100).toFixed(0)} cm`,
-        image: '',
-        images: [],
+        image,
+        images,
         sku: `ADM-${Date.now()}`,
       }
       const saved = await addProduct(shopProduct)
@@ -105,6 +159,8 @@ export default function AdminProducts() {
         description: updatedProduct.description || '',
         category: updatedProduct.category,
         price: Number(updatedProduct.price),
+        image,
+        images,
         ...(updatedProduct.color && { colors: [updatedProduct.color, ...(existing?.colors || []).filter(c => c !== updatedProduct.color)].filter(Boolean) }),
       }
       const saved = await updateProduct(merged)
@@ -145,7 +201,7 @@ export default function AdminProducts() {
               </div>
             </div>
             <button
-              onClick={() => setEditingProduct({ id: `new-${Date.now()}`, name: '', category: 'Living Room', width: 1, depth: 0.8, height: 0.8, color: '#8B6F47', price: 0, icon: 'Box', description: '' })}
+              onClick={() => setEditingProduct({ id: `new-${Date.now()}`, name: '', category: 'Living Room', width: 1, depth: 0.8, height: 0.8, color: '#8B6F47', price: 0, icon: 'Box', description: '', image: '', images: [] })}
               className="inline-flex items-center gap-2 bg-clay text-white px-5 py-2.5 rounded-xl font-semibold hover:bg-clay-dark hover:shadow-lg hover:shadow-clay/25 transition-all text-sm"
             >
               <Plus className="h-4 w-4" />
@@ -171,7 +227,7 @@ export default function AdminProducts() {
           {[
             { label: t('admin.products.totalProducts'), value: products.length, icon: Package, color: 'bg-clay' },
             { label: t('admin.categories'), value: categories.length - 1, icon: Tag, color: 'bg-forest' },
-            { label: t('admin.products.avgPrice'), value: `$${Math.round(getTotalValue() / products.length)}`, icon: DollarSign, color: 'bg-darkwood' },
+            { label: t('admin.products.avgPrice'), value: `$${products.length ? Math.round(getTotalValue() / products.length) : 0}`, icon: DollarSign, color: 'bg-darkwood' },
             { label: t('admin.products.totalValue'), value: `$${getTotalValue().toLocaleString()}`, icon: DollarSign, color: 'bg-clay-dark' },
           ].map((stat, i) => (
             <div key={i} className="bg-white dark:bg-dark-card rounded-xl border border-warm-100 dark:border-dark-border p-4 flex items-center gap-3">
@@ -350,6 +406,34 @@ export default function AdminProducts() {
                   <div className="flex items-center gap-3">
                     <input type="color" value={editingProduct.color} onChange={(e) => setEditingProduct(prev => ({ ...prev, color: e.target.value }))} className="w-10 h-10 rounded-lg cursor-pointer border border-warm-200 dark:border-dark-border" />
                     <input type="text" value={editingProduct.color} onChange={(e) => setEditingProduct(prev => ({ ...prev, color: e.target.value }))} className="input-field text-sm flex-1" />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-darkwood dark:text-white mb-1.5">{t('admin.products.productImage') || 'Product Images'}</label>
+                  <div className="space-y-2">
+                    <div className="flex flex-wrap gap-2">
+                      {((editingProduct.images && editingProduct.images.length) ? editingProduct.images : (editingProduct.image ? [editingProduct.image] : [])).filter(Boolean).map((url) => (
+                        <div key={url} className="relative group">
+                          <img src={url} alt="" className="w-16 h-16 rounded-lg object-cover border border-warm-200 dark:border-dark-border" />
+                          <button type="button" onClick={() => removeImage(url, url === (editingProduct.image || editingProduct.images?.[0]))} className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-xs">×</button>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="flex gap-2">
+                      <input ref={imageInputRef} type="file" accept="image/*" multiple onChange={(e) => handleImageUpload(e, false)} className="hidden" />
+                      <button type="button" onClick={() => imageInputRef.current?.click()} disabled={uploadingImages} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-warm-200 dark:border-dark-border text-darkwood dark:text-white hover:bg-warm-100 dark:hover:bg-dark-surface text-sm transition-colors disabled:opacity-50">
+                        {uploadingImages ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                        {uploadingImages ? 'Uploading...' : 'Upload'}
+                      </button>
+                      <input id="gallery-upload" type="file" accept="image/*" multiple className="hidden" onChange={(e) => handleImageUpload(e, true)} />
+                      <label htmlFor="gallery-upload" className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-forest/40 text-forest dark:text-forest-light hover:bg-forest/10 text-sm transition-colors cursor-pointer">
+                        <ImagePlus className="h-4 w-4" /> Add Gallery
+                      </label>
+                    </div>
+                    <div className="flex gap-2">
+                      <input type="url" placeholder="Or paste image URL" value={editingProduct.imageUrlInput || ''} onChange={(e) => setEditingProduct(prev => ({ ...prev, imageUrlInput: e.target.value }))} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); const v = editingProduct.imageUrlInput?.trim(); if (v) { setEditingProduct(prev => ({ ...prev, image: v, images: [v, ...(prev.images || []).filter(u => u !== v)], imageUrlInput: '' })) } } }} className="input-field text-sm flex-1" />
+                      <button type="button" onClick={() => { const v = editingProduct.imageUrlInput?.trim(); if (v) setEditingProduct(prev => ({ ...prev, image: v, images: [v, ...(prev.images || []).filter(u => u !== v)], imageUrlInput: '' })) }} className="px-3 py-2 rounded-lg bg-forest/20 text-forest dark:text-forest-light text-sm font-medium hover:bg-forest/30 transition-colors">Add URL</button>
+                    </div>
                   </div>
                 </div>
               </div>

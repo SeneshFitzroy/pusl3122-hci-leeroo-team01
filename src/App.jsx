@@ -33,6 +33,7 @@ const AdminDashboard = lazy(() => import('./pages/AdminDashboard'))
 const AdminProducts = lazy(() => import('./pages/AdminProducts'))
 const AdminOrders = lazy(() => import('./pages/AdminOrders'))
 const AdminUsers = lazy(() => import('./pages/AdminUsers'))
+const AdminAnalytics = lazy(() => import('./pages/AdminAnalytics'))
 const AdminLogin = lazy(() => import('./pages/AdminLogin'))
 const Settings = lazy(() => import('./pages/Settings'))
 const MeetDesigner = lazy(() => import('./pages/MeetDesigner'))
@@ -224,6 +225,7 @@ function App() {
             <Route path="/admin/products" element={<AdminProducts />} />
             <Route path="/admin/orders" element={<AdminOrders />} />
             <Route path="/admin/team" element={<AdminUsers />} />
+            <Route path="/admin/analytics" element={<AdminAnalytics />} />
           </Route>
 
           <Route path="/dashboard" element={<DashboardRedirect />} />

@@ -10,7 +10,7 @@ import {
   updateProfile,
   onAuthStateChanged,
 } from 'firebase/auth'
-import { doc, setDoc, getDoc } from 'firebase/firestore'
+import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore'
 
 // Professional, user-friendly error messages for Firebase Auth codes
 const getAuthErrorMessage = (error) => {
@@ -83,6 +83,11 @@ const useAuthStore = create((set, get) => ({
           const docSnap = await getDoc(doc(db, 'users', user.uid))
           if (docSnap.exists()) {
             userProfile = docSnap.data()
+            if (userProfile.blocked) {
+              await signOut(auth)
+              set({ user: null, userProfile: null, loading: false, error: 'This account has been blocked by an administrator.' })
+              return
+            }
           }
         } catch (e) {
           console.warn('Could not fetch user profile:', e)
@@ -130,6 +135,11 @@ const useAuthStore = create((set, get) => ({
       const result = await signInWithEmailAndPassword(auth, email, password)
       const docSnap = await getDoc(doc(db, 'users', result.user.uid))
       const userProfile = docSnap.exists() ? docSnap.data() : null
+      if (userProfile?.blocked) {
+        await signOut(auth)
+        set({ loading: false, error: 'This account has been blocked.' })
+        throw new Error('Account blocked')
+      }
       set({ user: result.user, userProfile, loading: false })
       return result.user
     } catch (error) {

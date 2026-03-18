@@ -1,15 +1,53 @@
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { ArrowLeft, ShoppingCart, Package } from 'lucide-react'
+import { ArrowLeft, ShoppingCart, Loader2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { collection, getDocs } from 'firebase/firestore'
+import { db } from '@/lib/firebase'
 
 export default function AdminOrders() {
   const { t } = useTranslation()
-  const recentOrders = [
-    { id: '#ORD-001', customer: 'Sarah Johnson', amount: '$1,234', status: 'completed', date: '2024-02-27' },
-    { id: '#ORD-002', customer: 'Michael Chen', amount: '$856', status: 'pending', date: '2024-02-27' },
-    { id: '#ORD-003', customer: 'Emma Davis', amount: '$2,341', status: 'processing', date: '2024-02-26' },
-  ]
+  const [orders, setOrders] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const snap = await getDocs(collection(db, 'orders'))
+        const list = snap.docs.map((d) => {
+          const data = d.data()
+          const ts = data?.createdAt?.toDate?.()
+          return {
+            id: d.id,
+            ...data,
+            customer: data?.shipping?.fullName || data?.userEmail || 'Customer',
+            amount: data?.total != null ? `$${Number(data.total).toFixed(2)}` : '$0',
+            status: data?.status || 'pending',
+            date: ts ? ts.toLocaleDateString() : '',
+          }
+        })
+        list.sort((a, b) => {
+          const ta = a.createdAt?.toDate?.()?.getTime?.() ?? new Date(a.date || 0).getTime()
+          const tb = b.createdAt?.toDate?.()?.getTime?.() ?? new Date(b.date || 0).getTime()
+          return tb - ta
+        })
+        setOrders(list)
+      } catch (_) {
+        setOrders([])
+      }
+      setLoading(false)
+    }
+    load()
+  }, [])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-warm-50 dark:bg-dark-bg flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-clay" />
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-warm-50 dark:bg-dark-bg">
@@ -20,7 +58,7 @@ export default function AdminOrders() {
           </Link>
           <div>
             <h1 className="text-2xl font-bold text-darkwood dark:text-white font-display">{t('admin.recentOrders') || 'Order Management'}</h1>
-            <p className="text-darkwood/50 dark:text-white text-sm">{recentOrders.length} orders</p>
+            <p className="text-darkwood/50 dark:text-white text-sm">{orders.length} orders</p>
           </div>
         </div>
         <motion.div
@@ -49,7 +87,8 @@ export default function AdminOrders() {
                   }`}>{order.status}</span>
                 </div>
               </div>
-            ))}
+            ))
+            }
           </div>
         </motion.div>
       </div>
