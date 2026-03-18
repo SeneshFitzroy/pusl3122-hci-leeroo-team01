@@ -573,6 +573,8 @@ const resources = {
       'admin.customers': 'Customers',
       'admin.analytics': 'Analytics',
       'admin.addProduct': 'Add Product',
+      'admin.addDesigner': 'Add Designer',
+      'admin.exportSuccess': 'Data exported successfully',
       'admin.totalRevenue': 'Total Revenue',
       'admin.totalOrders': 'Total Orders',
       'admin.totalCustomers': 'Total Customers',
