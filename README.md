@@ -2,7 +2,7 @@
 
 **Module:** PUSL3122 HCI, Computer Graphics, and Visualisation  
 **Institution:** University of Plymouth  
-**Team:** 01
+**Team:** 01 | 
 **Repository:** [pusl3122-hci-leeroo-team01](https://github.com/SeneshFitzroy/pusl3122-hci-leeroo-team01)
 
 ---
