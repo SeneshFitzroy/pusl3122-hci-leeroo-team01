@@ -483,13 +483,13 @@ export default function ProductDetail() {
                 </motion.button>
                 <motion.button
                   onClick={() => setShowARModal(true)}
-                  className="w-14 h-14 rounded-xl border-2 border-forest bg-forest/10 dark:bg-forest/20 text-forest dark:text-forest-light hover:bg-forest/20 dark:hover:bg-forest/30 transition-all flex items-center justify-center p-1.5 shrink-0"
+                  className="w-14 h-14 rounded-xl bg-forest/15 dark:bg-forest/25 text-darkwood dark:text-white hover:bg-forest/25 dark:hover:bg-forest/35 transition-all flex items-center justify-center p-1 shrink-0 shadow-sm"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   title={t('product.viewInSpace') || 'View in your space'}
                   aria-label="View in your space (AR)"
                 >
-                  <ARLogoIcon className="w-full h-full text-forest dark:text-forest-light" />
+                  <ARLogoIcon className="w-full h-full text-[#2d4a32] dark:text-forest-light" />
                 </motion.button>
               </div>
 

@@ -5,7 +5,7 @@
 export default function ARLogoIcon({ className = 'h-12 w-12', invert = false }) {
   return (
     <svg
-      viewBox="0 0 64 64"
+      viewBox="4 4 56 56"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       preserveAspectRatio="xMidYMid meet"
