@@ -98,8 +98,8 @@ export default function FurniturePanel() {
         </div>
       </div>
 
-      {/* Furniture Items — scrollable with visible scrollbar */}
-      <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden p-4 furniture-scroll overscroll-contain">
+      {/* Furniture Items — scrollable with visible scrollbar; pb-8 ensures bottom cards fully visible */}
+      <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden p-4 pb-8 furniture-scroll overscroll-contain">
         {filteredFurniture.length > 0 ? (
           viewMode === 'grid' ? (
             <div className="grid grid-cols-2 gap-4 sm:gap-5">

@@ -680,10 +680,10 @@ export default function RoomEditor() {
             </div>
           </div>
 
-          {/* Canvas (drop zone for 3D mode; 2D handled by RoomCanvas2D) */}
+          {/* Canvas (drop zone for 3D mode; 2D handled by RoomCanvas2D; 2D: drag stage to pan, scroll to zoom) */}
           <div
             ref={canvasRef}
-            className="flex-1 relative bg-warm-50 dark:bg-dark-bg overflow-hidden"
+            className="flex-1 relative bg-warm-50 dark:bg-dark-bg overflow-hidden min-h-0"
             onDragOver={(e) => { if (viewMode === '3d' || viewMode === 'split') { e.preventDefault(); e.dataTransfer.dropEffect = 'copy' } }}
             onDrop={(e) => {
               if (viewMode !== '3d' && viewMode !== 'split') return

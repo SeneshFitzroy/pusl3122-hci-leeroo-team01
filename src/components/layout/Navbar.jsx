@@ -110,6 +110,7 @@ export default function Navbar() {
   const navLinks = [
     { to: '/', label: t('nav.home') || 'Home', icon: Home, public: true },
     { to: '/shop', label: t('nav.shop') || 'Shop', icon: ShoppingBag, public: true },
+    ...(user ? [{ to: '/my-designs', label: t('nav.myDesigns') || 'My Designs', icon: FolderOpen }] : []),
   ]
   const designerNavLinks = [
     { to: '/designer-panel', label: t('nav.designerPanel') || 'Designer Panel', icon: Palette },
@@ -388,7 +389,7 @@ export default function Navbar() {
                         <div className="py-1">
                           <Link
                             to="/settings"
-                            className="flex items-center gap-3 px-4 py-2.5 text-sm text-darkwood dark:text-white hover:bg-warm-50 dark:hover:bg-dark-surface transition-colors"
+                            className="flex items-center gap-3 px-4 py-2.5 text-sm text-darkwood dark:text-white hover:bg-warm-100 dark:hover:bg-dark-surface hover:text-clay dark:hover:text-clay transition-colors"
                             role="menuitem"
                           >
                             <Settings className="h-4 w-4" />
@@ -397,7 +398,7 @@ export default function Navbar() {
                           {!isAdmin() && (
                             <Link
                               to="/my-designs"
-                              className="flex items-center gap-3 px-4 py-2.5 text-sm text-darkwood dark:text-white hover:bg-warm-50 dark:hover:bg-dark-surface transition-colors"
+                              className="flex items-center gap-3 px-4 py-2.5 text-sm text-darkwood dark:text-white hover:bg-warm-100 dark:hover:bg-dark-surface hover:text-clay dark:hover:text-clay transition-colors"
                               role="menuitem"
                             >
                               <FolderOpen className="h-4 w-4" />
@@ -408,7 +409,7 @@ export default function Navbar() {
                             <>
                               <Link
                                 to="/designer-panel"
-                                className="flex items-center gap-3 px-4 py-2.5 text-sm text-darkwood dark:text-white hover:bg-warm-50 dark:hover:bg-dark-surface transition-colors"
+                                className="flex items-center gap-3 px-4 py-2.5 text-sm text-darkwood dark:text-white hover:bg-warm-100 dark:hover:bg-dark-surface hover:text-clay dark:hover:text-clay transition-colors"
                                 role="menuitem"
                               >
                                 <Palette className="h-4 w-4" />
@@ -416,7 +417,7 @@ export default function Navbar() {
                               </Link>
                               <Link
                                 to="/admin"
-                                className="flex items-center gap-3 px-4 py-2.5 text-sm text-forest dark:text-forest-light hover:bg-forest/5 dark:hover:bg-forest/10 transition-colors"
+                                className="flex items-center gap-3 px-4 py-2.5 text-sm text-darkwood dark:text-white hover:bg-warm-100 dark:hover:bg-dark-surface hover:text-clay dark:hover:text-clay transition-colors"
                                 role="menuitem"
                               >
                                 <Shield className="h-4 w-4" />

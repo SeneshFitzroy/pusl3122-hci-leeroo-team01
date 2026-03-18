@@ -13,6 +13,7 @@ import {
   Shield,
 } from 'lucide-react'
 import { SHOP_PRODUCTS, FREE_SHIPPING_DISPLAY } from '@/lib/constants'
+import useProductsStore from '@/store/useProductsStore'
 import useAuthStore from '@/store/useAuthStore'
 import useCartStore from '@/store/useCartStore'
 import useThemeStore from '@/store/useThemeStore'
@@ -125,8 +126,10 @@ export default function Landing() {
   const heroY = useTransform(scrollYProgress, [0, 1], [0, 120])
   const heroOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0])
 
-  const bestSellingProducts = SHOP_PRODUCTS.filter((p) => p.rating >= 4.7).slice(0, 6)
-  const latestProducts = SHOP_PRODUCTS.slice(0, 3)
+  const storeProducts = useProductsStore((s) => s.products)
+  const displayProducts = storeProducts?.length > 0 ? storeProducts : SHOP_PRODUCTS
+  const bestSellingProducts = displayProducts.filter((p) => (p.rating || 0) >= 4.7).slice(0, 6)
+  const latestProducts = displayProducts.slice(0, 3)
 
   return (
     <div className="bg-stone-50 dark:bg-dark-bg min-h-screen">

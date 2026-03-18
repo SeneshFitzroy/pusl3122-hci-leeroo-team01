@@ -3,6 +3,7 @@ import { Toaster } from 'sonner'
 import useAuthStore from './store/useAuthStore'
 import useThemeStore from './store/useThemeStore'
 import useCartStore from './store/useCartStore'
+import useProductsStore from './store/useProductsStore'
 import { useEffect, useState, useRef, lazy, Suspense } from 'react'
 import { seedProductsToFirestore } from './lib/seedProducts'
 import { seedDemoDesignsToFirestore } from './lib/designService'
@@ -30,6 +31,7 @@ const Wishlist = lazy(() => import('./pages/Wishlist'))
 const Checkout = lazy(() => import('./pages/Checkout'))
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'))
 const AdminProducts = lazy(() => import('./pages/AdminProducts'))
+const AdminOrders = lazy(() => import('./pages/AdminOrders'))
 const AdminLogin = lazy(() => import('./pages/AdminLogin'))
 const Settings = lazy(() => import('./pages/Settings'))
 const MeetDesigner = lazy(() => import('./pages/MeetDesigner'))
@@ -129,17 +131,19 @@ function App() {
     return () => clearTimeout(t)
   }, [])
 
+  const loadProducts = useProductsStore((s) => s.loadProducts)
   useEffect(() => {
     const sync = async () => {
       try {
         await seedProductsToFirestore()
         await seedDemoDesignsToFirestore()
+        await loadProducts()
       } catch (err) {
         console.error('[App] Seed failed:', err)
       }
     }
     sync()
-  }, [])
+  }, [loadProducts])
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', darkMode)
@@ -217,6 +221,7 @@ function App() {
           <Route element={<ProtectedRoute requireAdmin><Layout /></ProtectedRoute>}>
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/products" element={<AdminProducts />} />
+            <Route path="/admin/orders" element={<AdminOrders />} />
           </Route>
 
           <Route path="/dashboard" element={<DashboardRedirect />} />

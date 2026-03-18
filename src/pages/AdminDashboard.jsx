@@ -521,28 +521,29 @@ export default function AdminDashboard() {
           
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
             {[
-              { label: t('admin.addProduct'), icon: Plus, color: 'from-blue-500 to-cyan-500', action: '/admin/products/new' },
-              { label: t('admin.viewOrders'), icon: ShoppingCart, color: 'from-green-500 to-teal-500', action: '/admin/orders' },
-              { label: t('admin.customers'), icon: Users, color: 'from-purple-500 to-pink-500', action: '/admin/customers' },
-              { label: t('admin.analyticsLabel'), icon: BarChart3, color: 'from-orange-500 to-red-500', action: '/admin/analytics' },
-              { label: t('admin.categories'), icon: Layers, color: 'from-indigo-500 to-purple-500', action: '/admin/categories' },
-              { label: t('admin.settings'), icon: Settings, color: 'from-gray-500 to-gray-600', action: '/admin/settings' },
-              { label: t('admin.reports'), icon: FileText, color: 'from-teal-500 to-green-500', action: '/admin/reports' },
-              { label: t('admin.backup'), icon: Database, color: 'from-yellow-500 to-orange-500', action: '/admin/backup' }
+              { label: t('admin.addProduct'), icon: Plus, color: 'from-blue-500 to-cyan-500', to: '/admin/products' },
+              { label: t('admin.viewOrders'), icon: ShoppingCart, color: 'from-green-500 to-teal-500', to: '/admin/orders' },
+              { label: t('admin.customers'), icon: Users, color: 'from-purple-500 to-pink-500', to: '/admin/customers' },
+              { label: t('admin.analyticsLabel'), icon: BarChart3, color: 'from-orange-500 to-red-500', to: '/admin/analytics' },
+              { label: t('admin.categories'), icon: Layers, color: 'from-indigo-500 to-purple-500', to: '/admin/categories' },
+              { label: t('admin.settings'), icon: Settings, color: 'from-gray-500 to-gray-600', to: '/settings' },
+              { label: t('admin.reports'), icon: FileText, color: 'from-teal-500 to-green-500', to: '/admin/reports' },
+              { label: t('admin.backup'), icon: Database, color: 'from-yellow-500 to-orange-500', to: '/admin/backup' }
             ].map((action, index) => (
-              <motion.button
-                key={index}
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                className="flex flex-col items-center p-4 rounded-xl bg-warm-50 dark:bg-dark-surface hover:bg-warm-100 dark:hover:bg-dark-border transition-all duration-300 group"
-              >
-                <div className={`w-10 h-10 bg-gradient-to-r ${action.color} rounded-lg flex items-center justify-center mb-2 group-hover:scale-110 transition-transform`}>
-                  <action.icon className="h-5 w-5 text-white" />
-                </div>
-                <span className="text-xs font-medium text-darkwood/70 dark:text-white text-center">
-                  {action.label}
-                </span>
-              </motion.button>
+              <Link key={index} to={action.to || '#'}>
+                <motion.div
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="flex flex-col items-center p-4 rounded-xl bg-warm-50 dark:bg-dark-surface hover:bg-warm-100 dark:hover:bg-dark-border hover:shadow-md transition-all duration-300 group"
+                >
+                  <div className={`w-10 h-10 bg-gradient-to-r ${action.color} rounded-lg flex items-center justify-center mb-2 group-hover:scale-110 transition-transform`}>
+                    <action.icon className="h-5 w-5 text-white" />
+                  </div>
+                  <span className="text-xs font-medium text-darkwood/70 dark:text-white text-center">
+                    {action.label}
+                  </span>
+                </motion.div>
+              </Link>
             ))}
           </div>
         </motion.div>

@@ -23,11 +23,7 @@ function FurnitureItem({ item, isSelected, onClick }) {
   const setDragging3D = useDesignStore((s) => s.setDragging3D)
   const readOnlyMode = useDesignStore((s) => s.readOnlyMode)
 
-  useFrame((state) => {
-    if (meshRef.current && isSelected) {
-      meshRef.current.rotation.y += 0.01
-    }
-  })
+  // No auto-rotate on select — user can orbit camera to view; rotation made it hard to inspect
 
   // Generate simple geometry based on furniture type
   const getFurnitureGeometry = () => {

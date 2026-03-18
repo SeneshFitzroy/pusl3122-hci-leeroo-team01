@@ -7,10 +7,40 @@
  */
 
 import { db } from './firebase'
-import { collection, doc, setDoc, getDocs, serverTimestamp } from 'firebase/firestore'
+import { collection, doc, setDoc, getDocs, deleteDoc, serverTimestamp } from 'firebase/firestore'
 import { SHOP_PRODUCTS } from './constants'
 
 const PRODUCTS_COLLECTION = 'products'
+
+/** Save a single product to Firestore (add or update) */
+export async function saveProductToFirestore(product) {
+  if (!product?.id) return false
+  try {
+    const docRef = doc(db, PRODUCTS_COLLECTION, product.id)
+    const { createdAt, updatedAt, ...rest } = product
+    await setDoc(docRef, {
+      ...rest,
+      image: product.image || '',
+      images: product.images || [],
+      updatedAt: serverTimestamp(),
+    }, { merge: true })
+    return true
+  } catch (err) {
+    console.error('[Firestore] Save product failed:', err)
+    return false
+  }
+}
+
+/** Delete a product from Firestore */
+export async function deleteProductFromFirestore(productId) {
+  try {
+    await deleteDoc(doc(db, PRODUCTS_COLLECTION, productId))
+    return true
+  } catch (err) {
+    console.error('[Firestore] Delete product failed:', err)
+    return false
+  }
+}
 
 /**
  * Seeds all shop products to Firestore.

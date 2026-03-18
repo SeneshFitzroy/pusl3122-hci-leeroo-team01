@@ -904,6 +904,7 @@ const resources = {
 
       /* ─── Missing Admin Products Keys ─── */
       'admin.products.deleted': 'Product deleted successfully',
+      'admin.products.added': 'Product added successfully',
       'admin.products.updated': 'Product updated successfully',
       'admin.products.totalProducts': 'Total Products',
       'admin.products.avgPrice': 'Avg Price',

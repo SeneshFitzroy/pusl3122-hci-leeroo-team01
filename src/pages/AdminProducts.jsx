@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Package,
@@ -15,13 +15,16 @@ import {
   Save,
   AlertTriangle,
   CheckCircle,
+  Loader2,
 } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { FURNITURE_ITEMS, FURNITURE_CATEGORIES } from '@/lib/constants'
+import { FURNITURE_CATEGORIES } from '@/lib/constants'
+import useProductsStore from '@/store/useProductsStore'
 import { useTranslation } from 'react-i18next'
 
 export default function AdminProducts() {
-  const [products, setProducts] = useState(FURNITURE_ITEMS)
+  const { products, loaded, loadProducts, addProduct, updateProduct, deleteProduct } = useProductsStore()
+  useEffect(() => { if (!loaded) loadProducts() }, [loaded, loadProducts])
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [viewMode, setViewMode] = useState('grid')
@@ -32,29 +35,99 @@ export default function AdminProducts() {
 
   const categories = FURNITURE_CATEGORIES
 
+  const parseDims = (str) => {
+    if (!str || typeof str !== 'string') return { width: 1, depth: 0.8, height: 0.8 }
+    const nums = str.match(/\d+(?:\.\d+)?/g)
+    if (!nums || nums.length < 3) return { width: 1, depth: 0.8, height: 0.8 }
+    return { width: Math.min(8, Math.max(0.3, parseFloat(nums[0]) / 100)), depth: Math.min(8, Math.max(0.2, parseFloat(nums[1]) / 100)), height: Math.min(3, Math.max(0.2, parseFloat(nums[2]) / 100)) }
+  }
+
+  const openForEdit = (product) => {
+    if (product.id?.startsWith('new-')) return product
+    const dims = product.width != null ? { width: product.width, depth: product.depth || 0.8, height: product.height || 0.8 } : parseDims(product.dimensions)
+    setEditingProduct({ ...product, ...dims, color: product.color || product.colors?.[0] || '#8B6F47' })
+  }
+
   const filteredProducts = products.filter(p => {
-    const matchSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    const matchSearch = p.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       p.description?.toLowerCase().includes(searchTerm.toLowerCase())
     const matchCategory = selectedCategory === 'all' || p.category === selectedCategory
     return matchSearch && matchCategory
   })
 
-  const handleDelete = (productId) => {
-    setProducts(prev => prev.filter(p => p.id !== productId))
-    setShowDeleteConfirm(null)
-    setSuccessMsg(t('admin.products.deleted'))
-    setTimeout(() => setSuccessMsg(''), 3000)
+  const handleDelete = async (productId) => {
+    const ok = await deleteProduct(productId)
+    if (ok) {
+      setShowDeleteConfirm(null)
+      setSuccessMsg(t('admin.products.deleted'))
+      setTimeout(() => setSuccessMsg(''), 3000)
+    } else {
+      setSuccessMsg(t('common.error') || 'Failed to delete')
+      setTimeout(() => setSuccessMsg(''), 3000)
+    }
   }
 
-  const handleSaveEdit = (updatedProduct) => {
-    setProducts(prev => prev.map(p => p.id === updatedProduct.id ? updatedProduct : p))
+  const handleSaveEdit = async (updatedProduct) => {
+    const isNew = updatedProduct.id.startsWith('new-') || !products.some(p => p.id === updatedProduct.id)
+    if (isNew) {
+      const shopProduct = {
+        id: `sp-${Date.now()}`,
+        name: updatedProduct.name,
+        description: updatedProduct.description || '',
+        category: updatedProduct.category || 'Living Room',
+        price: Number(updatedProduct.price) || 0,
+        originalPrice: Number(updatedProduct.price) || 0,
+        discountPercent: 0,
+        rating: 4.5,
+        reviews: 0,
+        inStock: true,
+        featured: false,
+        onSale: false,
+        colors: [updatedProduct.color || '#8B6F47'],
+        colorNames: ['Default'],
+        material: '',
+        dimensions: `${((updatedProduct.width || 1) * 100).toFixed(0)} x ${((updatedProduct.depth || 0.8) * 100).toFixed(0)} x ${((updatedProduct.height || 0.8) * 100).toFixed(0)} cm`,
+        image: '',
+        images: [],
+        sku: `ADM-${Date.now()}`,
+      }
+      const saved = await addProduct(shopProduct)
+      if (saved) {
+        setSuccessMsg(t('admin.products.added') || 'Product added')
+      } else {
+        setSuccessMsg(t('common.error') || 'Failed to add')
+      }
+    } else {
+      const existing = products.find(p => p.id === updatedProduct.id)
+      const merged = {
+        ...existing,
+        name: updatedProduct.name,
+        description: updatedProduct.description || '',
+        category: updatedProduct.category,
+        price: Number(updatedProduct.price),
+        ...(updatedProduct.color && { colors: [updatedProduct.color, ...(existing?.colors || []).filter(c => c !== updatedProduct.color)].filter(Boolean) }),
+      }
+      const saved = await updateProduct(merged)
+      if (saved) {
+        setSuccessMsg(t('admin.products.updated'))
+      } else {
+        setSuccessMsg(t('common.error') || 'Failed to update')
+      }
+    }
     setEditingProduct(null)
-    setSuccessMsg(t('admin.products.updated'))
     setTimeout(() => setSuccessMsg(''), 3000)
   }
 
   const getTotalValue = () => products.reduce((sum, p) => sum + (p.price || 0), 0)
   const getCategoryCount = (cat) => cat === 'all' ? products.length : products.filter(p => p.category === cat).length
+
+  if (!loaded) {
+    return (
+      <div className="min-h-screen bg-warm-50 dark:bg-dark-bg flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-clay" />
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-warm-50 dark:bg-dark-bg">
@@ -71,7 +144,10 @@ export default function AdminProducts() {
                 <p className="text-darkwood/50 dark:text-white text-sm mt-0.5">{products.length} products &middot; Total value ${getTotalValue().toLocaleString()}</p>
               </div>
             </div>
-            <button className="inline-flex items-center gap-2 bg-clay text-white px-5 py-2.5 rounded-xl font-semibold hover:bg-clay-dark hover:shadow-lg hover:shadow-clay/25 transition-all text-sm">
+            <button
+              onClick={() => setEditingProduct({ id: `new-${Date.now()}`, name: '', category: 'Living Room', width: 1, depth: 0.8, height: 0.8, color: '#8B6F47', price: 0, icon: 'Box', description: '' })}
+              className="inline-flex items-center gap-2 bg-clay text-white px-5 py-2.5 rounded-xl font-semibold hover:bg-clay-dark hover:shadow-lg hover:shadow-clay/25 transition-all text-sm"
+            >
               <Plus className="h-4 w-4" />
               {t('admin.addProduct')}
             </button>
@@ -146,10 +222,10 @@ export default function AdminProducts() {
           <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             {filteredProducts.map((product, i) => (
               <motion.div key={product.id} className="bg-white dark:bg-dark-card rounded-xl border border-warm-100 dark:border-dark-border overflow-hidden group hover:shadow-lg hover:border-clay/20 transition-all duration-200" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}>
-                <div className="aspect-square bg-gradient-to-br from-warm-100 to-warm-50 dark:from-dark-surface dark:to-dark-card relative flex items-center justify-center">
-                  <div className="w-16 h-16 rounded-xl" style={{ backgroundColor: product.color }} />
+                <div className="aspect-square bg-gradient-to-br from-warm-100 to-warm-50 dark:from-dark-surface dark:to-dark-card relative flex items-center justify-center overflow-hidden">
+                  {product.image ? <img src={product.image} alt={product.name} className="w-full h-full object-cover" /> : <div className="w-16 h-16 rounded-xl" style={{ backgroundColor: product.color || product.colors?.[0] || '#8B6F47' }} />}
                   <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button onClick={() => setEditingProduct({ ...product })} className="p-1.5 bg-white/90 dark:bg-dark-card/90 rounded-lg shadow-md hover:scale-110 transition-transform">
+                    <button onClick={() => openForEdit(product)} className="p-1.5 bg-white/90 dark:bg-dark-card/90 rounded-lg shadow-md hover:scale-110 transition-transform">
                       <Edit2 className="h-3.5 w-3.5 text-clay" />
                     </button>
                     <button onClick={() => setShowDeleteConfirm(product.id)} className="p-1.5 bg-white/90 dark:bg-dark-card/90 rounded-lg shadow-md hover:scale-110 transition-transform">
@@ -165,7 +241,7 @@ export default function AdminProducts() {
                   <p className="text-xs text-darkwood/50 dark:text-white mb-3 line-clamp-2">{product.description}</p>
                   <div className="flex items-center justify-between">
                     <span className="text-clay font-bold text-lg">${product.price}</span>
-                    <span className="text-[10px] text-darkwood/40 dark:text-white">{product.width}m x {product.depth}m x {product.height}m</span>
+                    <span className="text-[10px] text-darkwood/40 dark:text-white">{product.dimensions || (product.width != null ? `${product.width}m × ${product.depth}m × ${product.height}m` : '—')}</span>
                   </div>
                 </div>
               </motion.div>
@@ -210,7 +286,7 @@ export default function AdminProducts() {
                       </td>
                       <td className="px-4 py-3 text-right">
                         <div className="flex items-center justify-end gap-1">
-                          <button onClick={() => setEditingProduct({ ...product })} className="p-1.5 rounded-lg text-clay hover:bg-clay/10 transition-colors"><Edit2 className="h-4 w-4" /></button>
+                          <button onClick={() => openForEdit(product)} className="p-1.5 rounded-lg text-clay hover:bg-clay/10 transition-colors"><Edit2 className="h-4 w-4" /></button>
                           <button onClick={() => setShowDeleteConfirm(product.id)} className="p-1.5 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"><Trash2 className="h-4 w-4" /></button>
                         </div>
                       </td>
@@ -229,7 +305,7 @@ export default function AdminProducts() {
           <motion.div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setEditingProduct(null)}>
             <motion.div className="bg-white dark:bg-dark-card rounded-2xl border border-warm-100 dark:border-dark-border shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} onClick={(e) => e.stopPropagation()}>
               <div className="p-6 border-b border-warm-100 dark:border-dark-border flex items-center justify-between">
-                <h2 className="text-lg font-bold text-darkwood dark:text-white font-display">{t('admin.products.editProduct')}</h2>
+                <h2 className="text-lg font-bold text-darkwood dark:text-white font-display">{editingProduct?.id?.startsWith('new-') ? t('admin.addProduct') : t('admin.products.editProduct')}</h2>
                 <button onClick={() => setEditingProduct(null)} className="p-2 rounded-lg text-darkwood/50 hover:bg-warm-100 dark:hover:bg-dark-surface transition-colors"><X className="h-5 w-5" /></button>
               </div>
               <div className="p-6 space-y-4">

@@ -17,7 +17,8 @@ import {
   Minus,
   X
 } from 'lucide-react'
-import { SHOP_PRODUCTS as shopProducts, FREE_SHIPPING_DISPLAY } from '@/lib/constants'
+import { SHOP_PRODUCTS, FREE_SHIPPING_DISPLAY } from '@/lib/constants'
+import useProductsStore from '@/store/useProductsStore'
 import { getHueRotateFilter } from '@/lib/colorUtils'
 import useCartStore from '@/store/useCartStore'
 import useThemeStore from '@/store/useThemeStore'
@@ -44,6 +45,8 @@ export default function ProductDetail() {
   const [presetAngle, setPresetAngle] = useState('front')
   const [showARModal, setShowARModal] = useState(false)
 
+  const storeProducts = useProductsStore((s) => s.products)
+  const shopProducts = storeProducts?.length > 0 ? storeProducts : SHOP_PRODUCTS
   const product = shopProducts.find(p => p.id === productId)
   const previewAngles = ['front', 'side', 'top', 'back']
   const hasProductImages = product?.image && (product.image.startsWith('/') || product.image.startsWith('http'))
@@ -70,15 +73,15 @@ export default function ProductDetail() {
     )
   }
 
-  const isInCart = cartItems.some(item => item.id === product.id)
+  const cartItem = cartItems.find(item => item.id === product.id && item.selectedColor === selectedColor) || cartItems.find(item => item.id === product.id)
+  const isInCart = !!cartItem
   const isInWishlist = checkWishlist(product.id)
-  const cartItem = cartItems.find(item => item.id === product.id)
 
   const handleAddToCart = () => {
-    if (isInCart) {
-      updateQuantity(product.id, (cartItem?.quantity || 0) + quantity)
+    if (isInCart && cartItem) {
+      updateQuantity(product.id, selectedColor, (cartItem.quantity || 0) + quantity)
     } else {
-      addToCart({ ...product, selectedColor, quantity })
+      addToCart(product, quantity, selectedColor)
     }
     toast.success(`${product.name} ${t('wishlist.addedToCart')}`, {
       description: `${t('product.quantity')}: ${quantity}, ${t('product.color')}: ${selectedColor}`,
@@ -86,10 +89,10 @@ export default function ProductDetail() {
   }
 
   const handleBuyNow = () => {
-    if (isInCart) {
-      updateQuantity(product.id, (cartItem?.quantity || 0) + quantity)
+    if (isInCart && cartItem) {
+      updateQuantity(product.id, selectedColor, (cartItem.quantity || 0) + quantity)
     } else {
-      addToCart({ ...product, selectedColor, quantity })
+      addToCart(product, quantity, selectedColor)
     }
     toast.success(`${product.name} ${t('wishlist.addedToCart')}`)
     navigate('/checkout')

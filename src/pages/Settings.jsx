@@ -7,7 +7,7 @@ import {
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import { updateProfile, updatePassword, reauthenticateWithCredential, EmailAuthProvider, deleteUser } from 'firebase/auth'
+import { updateProfile, updatePassword, updateEmail, reauthenticateWithCredential, EmailAuthProvider, deleteUser } from 'firebase/auth'
 import { doc, updateDoc } from 'firebase/firestore'
 import { db, auth } from '@/lib/firebase'
 import useAuthStore from '@/store/useAuthStore'
@@ -29,6 +29,23 @@ const LANGUAGES = [
   { code: 'zh', name: '中文', flag: '🇨🇳' },
 ]
 
+// Outside component — prevents re-creation on each render (fixes password input focus loss)
+function PwdInput({ label, name, value, onChange, show, onToggle }) {
+  return (
+    <div>
+      <label className="block text-sm font-semibold text-darkwood dark:text-white mb-1.5">{label}</label>
+      <div className="relative">
+        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-warm-400" />
+        <input type={show ? 'text' : 'password'} name={name} value={value} onChange={onChange}
+          className="w-full pl-10 pr-10 py-3 rounded-xl border border-warm-200 dark:border-dark-border bg-white dark:bg-dark-surface text-darkwood dark:text-white placeholder:text-warm-400 focus:ring-2 focus:ring-clay/40 focus:border-clay text-sm transition-all" />
+        <button type="button" onClick={onToggle} className="absolute right-3 top-1/2 -translate-y-1/2 text-warm-400 hover:text-darkwood dark:hover:text-warm-200">
+          {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+        </button>
+      </div>
+    </div>
+  )
+}
+
 export default function Settings() {
   const { t, i18n } = useTranslation()
   const { user, userProfile, refreshProfile } = useAuthStore()
@@ -39,6 +56,7 @@ export default function Settings() {
 
   const [profile, setProfile] = useState({
     displayName: userProfile?.displayName || user?.displayName || '',
+    email: user?.email || userProfile?.email || '',
     phone: userProfile?.phone || '',
     address: userProfile?.address || '',
     bio: userProfile?.bio || '',
@@ -51,13 +69,15 @@ export default function Settings() {
   })
 
   useEffect(() => {
-    if (userProfile) {
-      setProfile({
-        displayName: userProfile.displayName || user?.displayName || '',
-        phone: userProfile.phone || '',
-        address: userProfile.address || '',
-        bio: userProfile.bio || '',
-      })
+    if (userProfile || user) {
+      setProfile(prev => ({
+        ...prev,
+        displayName: userProfile?.displayName || user?.displayName || prev.displayName,
+        email: user?.email || userProfile?.email || prev.email,
+        phone: userProfile?.phone || prev.phone,
+        address: userProfile?.address || prev.address,
+        bio: userProfile?.bio || prev.bio,
+      }))
     }
   }, [userProfile, user])
 
@@ -65,7 +85,15 @@ export default function Settings() {
     setSaving(true)
     try {
       if (auth.currentUser) await updateProfile(auth.currentUser, { displayName: profile.displayName })
-      if (user?.uid) await updateDoc(doc(db, 'users', user.uid), { displayName: profile.displayName, phone: profile.phone, address: profile.address, bio: profile.bio })
+      if (profile.email && profile.email !== user?.email) {
+        try {
+          await updateEmail(auth.currentUser, profile.email)
+        } catch (e) {
+          if (e.code === 'auth/requires-recent-login') toast.error(t('settings.reauthRequired') || 'Please log out and log back in to change email.')
+          else throw e
+        }
+      }
+      if (user?.uid) await updateDoc(doc(db, 'users', user.uid), { displayName: profile.displayName, email: profile.email, phone: profile.phone, address: profile.address, bio: profile.bio })
       await refreshProfile()
       toast.success(t('settings.profileSaved'))
     } catch (err) { console.error(err); toast.error(t('settings.saveFailed')) }
@@ -103,20 +131,6 @@ export default function Settings() {
     </motion.div>
   )
 
-  const PwdInput = ({ label, name, value, onChange, show, onToggle }) => (
-    <div>
-      <label className="block text-sm font-semibold text-darkwood dark:text-white mb-1.5">{label}</label>
-      <div className="relative">
-        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-warm-400" />
-        <input type={show ? 'text' : 'password'} name={name} value={value} onChange={onChange}
-          className="w-full pl-10 pr-10 py-3 rounded-xl border border-warm-200 dark:border-dark-border bg-white dark:bg-dark-surface text-darkwood dark:text-white placeholder:text-warm-400 focus:ring-2 focus:ring-clay/40 focus:border-clay text-sm transition-all" />
-        <button type="button" onClick={onToggle} className="absolute right-3 top-1/2 -translate-y-1/2 text-warm-400 hover:text-darkwood dark:hover:text-warm-200">
-          {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-        </button>
-      </div>
-    </div>
-  )
-
   return (
     <div className="min-h-screen bg-warm-50 dark:bg-dark-bg">
       <div className="bg-white dark:bg-dark-card border-b border-warm-100 dark:border-dark-border">
@@ -140,7 +154,7 @@ export default function Settings() {
             <div className="bg-white dark:bg-dark-card rounded-2xl border border-warm-100 dark:border-dark-border p-2 flex lg:flex-col gap-1 overflow-x-auto lg:overflow-visible">
               {tabs.map(tab => (
                 <button key={tab.id} onClick={() => setActive(tab.id)}
-                  className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-semibold transition-all whitespace-nowrap ${active === tab.id ? 'bg-clay text-white shadow-md shadow-clay/20' : 'text-darkwood/60 dark:text-white hover:bg-warm-50 dark:hover:bg-dark-surface'}`}>
+                  className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-semibold transition-all whitespace-nowrap ${active === tab.id ? 'bg-clay text-white shadow-md shadow-clay/20' : 'text-darkwood/60 dark:text-white hover:bg-warm-100 dark:hover:bg-dark-surface hover:text-clay dark:hover:text-clay'}`}>
                   <tab.icon className="h-4 w-4 flex-shrink-0" />
                   <span className="hidden sm:inline">{t(`settings.${tab.id}`)}</span>
                 </button>
@@ -179,9 +193,11 @@ export default function Settings() {
                     <div>
                       <label className="block text-sm font-semibold text-darkwood dark:text-white mb-1.5">{t('auth.email')}</label>
                       <div className="relative"><Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-warm-400" />
-                        <input value={user?.email || ''} disabled
-                          className="w-full pl-10 py-3 rounded-xl border border-warm-200 dark:border-dark-border bg-warm-50 dark:bg-dark-surface text-darkwood/50 dark:text-white text-sm cursor-not-allowed" />
+                        <input value={profile.email ?? user?.email ?? ''} onChange={e => setProfile({ ...profile, email: e.target.value })}
+                          placeholder="your@email.com"
+                          className="w-full pl-10 py-3 rounded-xl border border-warm-200 dark:border-dark-border bg-white dark:bg-dark-surface text-darkwood dark:text-white placeholder:text-warm-400 focus:ring-2 focus:ring-clay/40 focus:border-clay text-sm transition-all" />
                       </div>
+                      <p className="text-xs text-darkwood/40 dark:text-white mt-1">{t('settings.emailChangeNote') || 'Save to update. Re-login may be required.'}</p>
                     </div>
                     <div>
                       <label className="block text-sm font-semibold text-darkwood dark:text-white mb-1.5">{t('checkout.phone')}</label>

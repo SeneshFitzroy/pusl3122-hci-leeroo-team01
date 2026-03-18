@@ -26,7 +26,8 @@ import {
   Award
 } from 'lucide-react'
 import { toast } from 'sonner'
-import { SHOP_PRODUCTS as shopProducts, FREE_SHIPPING_THRESHOLD } from '@/lib/constants'
+import { SHOP_PRODUCTS, FREE_SHIPPING_THRESHOLD } from '@/lib/constants'
+import useProductsStore from '@/store/useProductsStore'
 import useCartStore from '@/store/useCartStore'
 import useThemeStore from '@/store/useThemeStore'
 import Mini3DPreview from '@/components/Mini3DPreview'
@@ -46,6 +47,8 @@ export default function Shop() {
   const { addToCart, addToWishlist, removeFromWishlist, items: cart, wishlistItems: wishlist } = useCartStore()
   const { formatPrice } = useThemeStore()
   const { t } = useTranslation()
+  const storeProducts = useProductsStore((s) => s.products)
+  const shopProducts = storeProducts?.length > 0 ? storeProducts : SHOP_PRODUCTS
   
   const [searchParams, setSearchParams] = useSearchParams()
   const searchFromUrl = searchParams.get('q') || ''

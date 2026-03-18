@@ -174,7 +174,14 @@ export default function Cart() {
                           <Heart className="h-4 w-4" />
                         </button>
                         <button
-                          onClick={() => removeFromCart(item.id, item.selectedColor)}
+                          onClick={() => {
+                            const qty = item.quantity || 1
+                            if (qty > 1) {
+                              updateQuantity(item.id, item.selectedColor, qty - 1)
+                            } else {
+                              removeFromCart(item.id, item.selectedColor)
+                            }
+                          }}
                           className="p-2 text-warm-300 dark:text-dark-border hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all"
                         >
                           <X className="h-4 w-4" />
