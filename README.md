@@ -1,68 +1,45 @@
 # Lee Roo — Furniture Visualization & Interior Design Platform
 
-[![CI](https://github.com/SeneshFitzroy/testing1/actions/workflows/ci.yml/badge.svg)](https://github.com/SeneshFitzroy/testing1/actions/workflows/ci.yml)
-[![License](https://img.shields.io/badge/license-Coursework-blue.svg)](https://www.plymouth.ac.uk)
-
 **Module:** PUSL3122 HCI, Computer Graphics, and Visualisation  
 **Institution:** University of Plymouth  
-**Team:** 01 | **Term:** 2 2025–26 | **Submission:** 19 March 2026
+**Team:** 01 | **Term:** 2 2025–26 | **Submission:** 19 March 2026  
+**Repository:** [pusl3122-hci-leeroo-team01](https://github.com/SeneshFitzroy/pusl3122-hci-leeroo-team01)
 
 ---
 
-## Abstract
+## 1. Introduction
 
-Lee Roo is a web-based furniture visualization and interior design platform for the furniture retail use case. Designers and retail staff can collaborate with customers to visualize how selected furniture fits within room specifications—dimensions, shape, and colour scheme. The system provides **2D spatial layout** creation (Konva canvas) and **3D real-time rendering** (Three.js) to support HCI and usability requirements.
-
----
-
-## Table of Contents
-
-- [Overview](#overview)
-- [Functional Requirements](#functional-requirements)
-- [Non-Functional Requirements](#non-functional-requirements)
-- [Technical Architecture](#technical-architecture)
-- [Quick Start](#quick-start)
-- [Testing](#testing)
-- [CI/CD Pipeline](#cicd-pipeline)
-- [Project Structure](#project-structure)
-- [HCI Principles](#hci-principles)
-- [Accessibility](#accessibility)
-- [Deployment](#deployment)
-- [Assets & Credits](#assets--credits)
-- [License](#license)
+This document describes the Lee Roo web application, developed as group coursework for PUSL3122. The system fulfils the furniture retail scenario (Appendix A): designers collaborate with customers to visualize furniture within room specifications using 2D layout design and 3D real-time rendering. Links to the source code and video demonstration are provided in the submitted PDF report.
 
 ---
 
-## Overview
+## 2. Scenario & Context
 
-The application supports:
+A furniture retailer requires a web-based application to improve the in-store customer experience. Designers must:
 
-- Room specifications: size, shape, colour scheme
-- 2D design creation: drag-and-drop furniture placement
-- 3D visualization: WebGL rendering for realistic preview
-- Dynamic scaling, colour and shading for furniture
-- Save, edit, duplicate, and delete designs
-- Multi-room support within a single project
-- Export to PNG, JPG, and PDF
-- E-commerce: product catalog, cart, checkout, wishlist
-- Designer booking, admin dashboard, designer panel
-- Dark mode, internationalization (EN, SI, TA, JA, ZH), multi-currency
+- Capture room specifications (size, shape, colour scheme)
+- Create virtual room layouts with drag-and-drop furniture placement
+- Render 3D visualizations for realistic presentation
+- Scale furniture to room dimensions and apply colour/shading
+- Save, edit, and export designs for client review
+
+The application is designed for professional designers, retail staff, and end customers, with usability, accessibility, and HCI principles applied throughout.
 
 ---
 
-## Functional Requirements
+## 3. Functional Requirements
 
 ### Designer / Administration
 
 | Requirement | Implementation |
 |-------------|----------------|
-| Room specifications | Enter and persist room size, shape, colour scheme |
-| 2D design creation | Drag-and-drop on Konva canvas (RoomCanvas2D) |
-| 3D visualization | Real-time WebGL via Three.js (RoomViewer3D) |
-| Dynamic scaling | Proportionally scale furniture to room dimensions |
-| Colour & shading | Apply colours to design or selected items |
-| Persistence | Save, edit, duplicate, delete designs (Firestore) |
-| Multi-room support | Design multiple rooms per project |
+| Room specifications | RoomSettingsPanel: size, shape, wall/floor colours |
+| 2D design creation | RoomCanvas2D (Konva): drag-and-drop, resize, rotate |
+| 3D visualization | RoomViewer3D (Three.js): real-time WebGL rendering |
+| Dynamic scaling | Furniture scaled proportionally to room dimensions |
+| Colour & shading | PropertiesPanel: apply to design or selected items |
+| Persistence | Firestore: save, edit, duplicate, delete designs |
+| Multi-room support | Multiple rooms per project |
 | Export | PNG, JPG, PDF via jsPDF |
 
 ### E-Commerce & Extensions
@@ -71,27 +48,27 @@ The application supports:
 - Designer consultation booking (MeetDesigner)
 - Designer panel for customer design review
 - Admin dashboard: products, analytics, orders
-- Dark mode, i18n, multi-currency (USD, EUR, GBP, LKR, JPY, AUD, INR, CNY)
+- Dark mode, internationalization (EN, SI, TA, JA, ZH), multi-currency
 
 ---
 
-## Non-Functional Requirements
+## 4. Non-Functional Requirements (HCI/UX)
 
-| Category | Specification |
-|----------|----------------|
-| **Usability** | Nielsen's heuristics, intuitive interface |
+| Category | Implementation |
+|----------|-----------------|
+| **Usability** | Nielsen's heuristics, consistent interface, minimal training |
 | **Performance** | Lazy loading, code splitting, efficient 3D rendering |
-| **Accessibility** | WCAG 2.1 AA — skip links, keyboard nav, focus indicators |
-| **Feedback** | Toast notifications (Sonner), auto-save, boundary alerts |
+| **Accessibility** | WCAG 2.1 AA — skip links, keyboard nav, focus indicators, screen reader support |
+| **Feedback** | Toast notifications (Sonner), auto-save indicators, boundary alerts |
 | **Error Prevention** | Confirmation dialogs, form validation |
 | **Efficiency** | Keyboard shortcuts, room templates, drag-and-drop |
-| **Engagement** | WebGL, Framer Motion animations |
+| **Engagement** | WebGL 3D, Framer Motion animations |
 | **Internationalization** | English, Sinhala, Tamil, Japanese, Chinese |
 | **Multi-Currency** | USD, EUR, GBP, LKR, JPY, AUD, INR, CNY |
 
 ---
 
-## Technical Architecture
+## 5. Technical Architecture
 
 | Layer | Technology |
 |-------|------------|
@@ -110,84 +87,46 @@ The application supports:
 
 ---
 
-## Quick Start
+## 6. Quick Start
 
-### Prerequisites
-
-- Node.js ≥18.0.0
-- npm ≥9
-
-### Installation
+**Prerequisites:** Node.js ≥18.0.0, npm ≥9
 
 ```bash
-git clone <repository-url>
-cd <project-directory>
+git clone https://github.com/SeneshFitzroy/pusl3122-hci-leeroo-team01.git
+cd pusl3122-hci-leeroo-team01
 npm install
-```
-
-### Development
-
-```bash
 npm run dev
 ```
 
 Open `http://localhost:5173`.
 
-### Production Build
-
-```bash
-npm run build
-npm run preview
-```
+**Production build:** `npm run build` then `npm run preview`
 
 ---
 
-## Testing
+## 7. Testing
 
-| Type | Scope | Command |
-|------|-------|---------|
-| Unit | lib, store, hooks | `npm run test:unit` |
-| Component | UI components | `npm run test:run` |
-| Integration | Routing, flows | `npm run test:integration` |
-| Accessibility | WCAG (axe-core) | `npm run test:a11y` |
-| E2E | Full application | `npm run test:e2e` |
-
-### Commands
-
-```bash
-npm run test          # Watch mode
-npm run test:run      # All Vitest tests
-npm run test:unit     # Unit tests only
-npm run test:integration
-npm run test:a11y
-npm run test:coverage # Coverage report
-npm run test:e2e      # Playwright E2E
-npm run test:all      # Vitest + E2E
-```
+| Type | Command | Scope |
+|------|---------|-------|
+| Unit | `npm run test:unit` | lib, store, hooks |
+| Component | `npm run test:run` | UI components |
+| Integration | `npm run test:integration` | Routing, flows |
+| Accessibility | `npm run test:a11y` | WCAG (axe-core) |
+| E2E | `npm run test:e2e` | Playwright system tests |
+| Coverage | `npm run test:coverage` | v8 coverage report |
 
 ---
 
-## CI/CD Pipeline
-
-GitHub Actions workflows in `.github/workflows/`:
-
-| Workflow | Trigger | Actions |
-|----------|---------|---------|
-| **CI** | Push/PR to `main` or `master` | Lint, test, coverage, build |
-| **CD** | Push to `main` or `master` | Deploy to Vercel (requires `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`) |
-
----
-
-## Project Structure
+## 8. Project Structure
 
 ```
-├── .github/workflows/    # ci.yml, cd.yml
-├── e2e/                  # Playwright E2E (smoke.spec.js)
+├── .github/workflows/    # CI (lint, test, build), CD (Vercel)
+├── e2e/                  # Playwright E2E tests
 ├── public/               # Static assets (favicon, images, audio)
 ├── src/
 │   ├── components/
 │   │   ├── auth/         # ProtectedRoute, RedirectIfDesigner
-│   │   ├── editor/       # RoomCanvas2D, RoomViewer3D, FurniturePanel, PropertiesPanel, etc.
+│   │   ├── editor/       # RoomCanvas2D, RoomViewer3D, FurniturePanel, PropertiesPanel
 │   │   └── layout/       # Layout, Navbar, Footer
 │   ├── hooks/            # useInView
 │   ├── lib/              # firebase, constants, utils, designService, colorUtils
@@ -199,78 +138,76 @@ GitHub Actions workflows in `.github/workflows/`:
 │   └── index.css
 ├── tests/
 │   ├── a11y/             # axe-core accessibility tests
-│   ├── components/       # Component tests
+│   ├── components/
 │   ├── hooks/
-│   ├── integration/     # routing.test.jsx
-│   ├── lib/              # Unit tests (constants, utils, colorUtils, geolocation)
+│   ├── integration/
+│   ├── lib/
 │   ├── store/
 │   └── setup.js
-├── eslint.config.js
-├── playwright.config.js
 ├── vercel.json           # SPA rewrites
 ├── vite.config.js
-└── vitest.config.js
+├── vitest.config.js
+└── playwright.config.js
 ```
 
-Path alias: `@/` → `src/`.
+Path alias: `@/` → `src/`
 
 ---
 
-## HCI Principles (Nielsen's 10 Heuristics)
+## 9. HCI Principles (Nielsen's 10 Heuristics)
 
-1. Visibility of system status
-2. Match between system and real world
-3. User control and freedom
-4. Consistency and standards
-5. Error prevention
-6. Recognition rather than recall
-7. Flexibility and efficiency of use
-8. Aesthetic and minimalist design
-9. Help users recognize, diagnose, and recover from errors
-10. Help and documentation
-
----
-
-## Accessibility
-
-- Skip-to-main-content link
-- ARIA labels and roles
-- Keyboard navigation
-- Focus-visible indicators (WCAG 2.1 AA)
-- `prefers-reduced-motion` support
-- `forced-colors` media query
-- Semantic HTML, screen reader support
+1. Visibility of system status  
+2. Match between system and real world  
+3. User control and freedom  
+4. Consistency and standards  
+5. Error prevention  
+6. Recognition rather than recall  
+7. Flexibility and efficiency of use  
+8. Aesthetic and minimalist design  
+9. Help users recognize, diagnose, and recover from errors  
+10. Help and documentation  
 
 ---
 
-## Deployment
+## 10. Accessibility (WCAG 2.1 AA)
 
-### Vercel
-
-- SPA routing via `vercel.json`
-- Connect repo for automatic deployments, or use CD workflow with Vercel secrets
-
-### Firebase
-
-1. **Authorized domains** — Add deployment URLs in Firebase Console → Authentication → Settings → Authorized domains
-2. **Google Sign-In** — Configure HTTP referrers in Google Cloud Console for custom domains
+- Skip-to-main-content link  
+- ARIA labels and roles on interactive elements  
+- Full keyboard navigation  
+- Focus-visible indicators  
+- `prefers-reduced-motion` support  
+- `forced-colors` media query for high contrast  
+- Semantic HTML and screen reader compatibility  
 
 ---
 
-## Assets & Credits
+## 11. Deployment
+
+**Vercel:** SPA routing via `vercel.json`. Connect repository for automatic deployments.
+
+**Firebase:** Add deployment domains in Firebase Console → Authentication → Authorized domains. Configure Google Cloud HTTP referrers for Google Sign-In on custom domains.
+
+---
+
+## 12. Assets & Credits
+
+All additional resources are fully credited. No compressed project versions (e.g. .zip) are stored in the repository.
 
 | Resource | License / Source |
 |----------|------------------|
 | Unsplash | Product and interior photography |
 | Lucide | Icons (MIT) |
 | Three.js | 3D rendering (MIT) |
-| Firebase | Auth, Firestore, Storage |
+| Firebase | Authentication, Firestore, Storage |
 | Framer Motion | Animation (MIT) |
 | Tailwind CSS | Styling (MIT) |
 | Konva | 2D canvas (MIT) |
+| jsPDF | PDF export (MIT) |
+| Sonner | Toast notifications (MIT) |
+| react-colorful | Colour picker (MIT) |
 
 ---
 
-## License
+## 13. License
 
 Developed as coursework for PUSL3122 HCI, Computer Graphics, and Visualisation at the University of Plymouth.
