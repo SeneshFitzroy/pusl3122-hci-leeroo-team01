@@ -63,7 +63,8 @@ export const WALL_COLOR_PRESETS = [
 ]
 
 // Site-wide policy constants (USD base — formatPrice converts to selected currency)
-export const FREE_SHIPPING_THRESHOLD = 50  // Rs16,250 at LKR rate 325
+export const FREE_SHIPPING_THRESHOLD = 46
+export const STANDARD_SHIPPING_COST = 9.99
 export const WARRANTY_YEARS = 2
 export const RETURNS_DAYS = 30
 

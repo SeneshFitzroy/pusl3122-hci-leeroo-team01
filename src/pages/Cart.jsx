@@ -19,7 +19,7 @@ import {
 } from 'lucide-react'
 import useCartStore from '@/store/useCartStore'
 import useThemeStore from '@/store/useThemeStore'
-import { FREE_SHIPPING_THRESHOLD } from '@/lib/constants'
+import { FREE_SHIPPING_THRESHOLD, STANDARD_SHIPPING_COST } from '@/lib/constants'
 import Mini3DPreview from '@/components/Mini3DPreview'
 import { useTranslation } from 'react-i18next'
 
@@ -29,7 +29,7 @@ export default function Cart() {
   const { t } = useTranslation()
 
   const subtotal = cart.reduce((sum, item) => sum + (item.price * (item.quantity || 1)), 0)
-  const shipping = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 9.99
+  const shipping = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : STANDARD_SHIPPING_COST
   const total = subtotal + shipping
 
   const handleQuantityChange = (item, newQty) => {

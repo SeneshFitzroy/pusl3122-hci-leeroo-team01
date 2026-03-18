@@ -12,6 +12,7 @@ import { db } from '@/lib/firebase'
 import useCartStore from '@/store/useCartStore'
 import useAuthStore from '@/store/useAuthStore'
 import useThemeStore from '@/store/useThemeStore'
+import { FREE_SHIPPING_THRESHOLD, STANDARD_SHIPPING_COST } from '@/lib/constants'
 import Mini3DPreview from '@/components/Mini3DPreview'
 
 const fadeInUp = { initial: { opacity: 0, y: 20 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.5 } }
@@ -38,7 +39,7 @@ export default function Checkout() {
   const [errors, setErrors] = useState({})
 
   const subtotal = cart.reduce((s, i) => s + i.price * (i.quantity || 1), 0)
-  const shippingCost = subtotal > 50 ? 0 : 9.99
+  const shippingCost = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : STANDARD_SHIPPING_COST
   const tax = subtotal * 0.1
   const total = subtotal + shippingCost + tax
 

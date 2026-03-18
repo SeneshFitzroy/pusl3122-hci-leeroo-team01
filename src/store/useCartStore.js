@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
+import { FREE_SHIPPING_THRESHOLD, STANDARD_SHIPPING_COST } from '@/lib/constants'
 
 /* Helper – save cart/wishlist to Firestore for logged-in users */
 const syncToFirestore = async (uid, items, wishlistItems) => {
@@ -155,7 +156,7 @@ const useCartStore = create(
 
       getShippingCost: () => {
         const total = get().getCartTotal()
-        return total > 500 ? 0 : 25
+        return total >= FREE_SHIPPING_THRESHOLD ? 0 : STANDARD_SHIPPING_COST
       },
 
       getFinalTotal: () => get().getCartTotal() + get().getShippingCost(),
